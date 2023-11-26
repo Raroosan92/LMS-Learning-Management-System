@@ -1,13 +1,14 @@
 ﻿@model LMS_Learning_Management_System.Models.Enrollment
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = null;
+    ViewData["Title"] = "التفاصيل";
 }
 
-<h1>Details</h1>
+<h1>التفاصيل</h1>
 
 <div>
-    <h4>Enrollment</h4>
+    <h4>التسجيل</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -32,11 +33,11 @@
             @Html.DisplayNameFor(model => model.User)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
+            @Html.DisplayFor(model => model.Userdesc)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |*@
+    <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>

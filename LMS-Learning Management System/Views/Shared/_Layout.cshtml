@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - LMS_Learning_Management_System</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/base/jquery-ui.css" rel="stylesheet" />
 </head>
 <body>
     <partial name="_NavBar" />
@@ -18,12 +19,25 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - LMS_Learning_Management_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; جميع الحقوق محفوظة - @DateTime.Now.Year
         </div>
     </footer>
+    <script src="~/js/jquery-1.12.4.js"></script>
+
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/notify.min.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/js/jquery-ui-1.12.1.js"></script>
 </body>
 </html>

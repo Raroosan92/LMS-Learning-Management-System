@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>المحتويات</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
 </p>
 <table class="table">
     <thead>
@@ -23,6 +23,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Class)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Subject)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
@@ -46,12 +52,18 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Class.Descriptions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject.Abbreviation)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.User.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">تعديل</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">عرض التفاصيل</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">حذف</a>
             </td>
         </tr>
 }

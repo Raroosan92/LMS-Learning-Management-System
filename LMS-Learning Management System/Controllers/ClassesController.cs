@@ -12,6 +12,10 @@ namespace LMS_Learning_Management_System.Controllers
     public class ClassesController : Controller
     {
         private readonly LMSContext _context;
+        string time;
+        string Year;
+        string Month;
+        DateTime Jor;
 
         public ClassesController(LMSContext context)
         {
@@ -21,9 +25,10 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Classes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Classes.ToListAsync());
+            return View();
+            //return View(await _context.Classes.OrderByDescending(r=>r.Id).ToListAsync());
         }
-
+       
         // GET: Classes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -34,6 +39,17 @@ namespace LMS_Learning_Management_System.Controllers
 
             var @class = await _context.Classes
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (@class.Status == true)
+            {
+                @class.Status2 = "فعال";
+
+            }
+            else
+            {
+                @class.Status2 = "غير فعال";
+
+            }
             if (@class == null)
             {
                 return NotFound();
@@ -57,7 +73,11 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                GetTime();
+                @class.CreatedDate = DateTime.Parse(time);
+                @class.CreatedUser = HttpContext.User.Identity.Name;
                 _context.Add(@class);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,6 +93,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
 
             var @class = await _context.Classes.FindAsync(id);
+
+
             if (@class == null)
             {
                 return NotFound();
@@ -85,7 +107,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descriptions,Status,CreatedDate,CreatedUser")] Class @class)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Descriptions,Status")] Class @class)
         {
             if (id != @class.Id)
             {
@@ -97,6 +119,9 @@ namespace LMS_Learning_Management_System.Controllers
                 try
                 {
                     _context.Update(@class);
+                    _context.Entry(@class).State = EntityState.Modified;
+                    _context.Entry(@class).Property(x => x.CreatedDate).IsModified = false;
+                    _context.Entry(@class).Property(x => x.CreatedUser).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -115,38 +140,81 @@ namespace LMS_Learning_Management_System.Controllers
             return View(@class);
         }
 
-        // GET: Classes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        //// GET: Classes/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var @class = await _context.Classes
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (@class == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(@class);
+        //}
+
+        //// POST: Classes/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var @class = await _context.Classes.FindAsync(id);
+        //    _context.Classes.Remove(@class);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+        [HttpPost]
+        public IActionResult GetData()
         {
-            if (id == null)
+            var stList = _context.Classes.OrderByDescending(r => r.Id).ToList();
+            for (int i = 0; i < stList.Count; i++)
             {
-                return NotFound();
-            }
+                if (stList[i].Status == true)
+                {
+                    stList[i].Status2 = "فعال";
 
-            var @class = await _context.Classes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@class == null)
-            {
-                return NotFound();
-            }
+                }
+                else
+                {
+                    stList[i].Status2 = "غير فعال";
 
-            return View(@class);
+                }
+            }
+            return new JsonResult(new { data = stList });
+
         }
-
-        // POST: Classes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public ActionResult Delete(int id)
         {
-            var @class = await _context.Classes.FindAsync(id);
-            _context.Classes.Remove(@class);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            using (LMSContext db = new LMSContext())
+            {
+                Class std = db.Classes.Where(x => x.Id == id).FirstOrDefault<Class>();
+                db.Classes.Remove(std);
+                db.SaveChanges();
+                return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+            }
         }
+        public void GetTime()
+        {
 
+            TimeZoneInfo AST = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
+            DateTime utc = DateTime.UtcNow;
+            Jor = TimeZoneInfo.ConvertTimeFromUtc(utc, AST);
+            time = Jor.ToString();
+            Year = Jor.Year.ToString();
+            Month = Jor.Month.ToString();
+
+        }
         private bool ClassExists(int id)
         {
             return _context.Classes.Any(e => e.Id == id);
         }
+
+
     }
 }

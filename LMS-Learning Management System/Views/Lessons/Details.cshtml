@@ -1,66 +1,80 @@
 ﻿@model LMS_Learning_Management_System.Models.Lesson
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = null;
+    ViewData["Title"] = "التفاصيل";
 }
 
-<h1>Details</h1>
+<h1>التفاصيل</h1>
 
 <div>
-    <h4>Lesson</h4>
+    <h4>الدروس</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UrlVideo)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UrlVideo)
+        @*******************************************************@
+        <dd class="col-sm-10">
+
+            @{ var video = Model.UrlVideo;}
+
+            <script src="https://player.vimeo.com/api/player.js"></script>
+            <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="y2mate.com - حروف الجر  أغنية حروف الجر  أنشودة حروف الجر للأطفال_1080p"></iframe></div>
+            @*<div id="trailer" class="section d-flex justify-content-center embed-responsive embed-responsive-21by9">
+                    <video class="embed-responsive-item" controls autoplay loop muted>
+                        <source src="@video" type="video/mp4">
+                        المتصفح الخاص بك لا يدعم عرض الفيديو يرجة اختيار متصفح اخر
+                    </video>
+                </div>*@
+            @*******************************************************@
+            @*@Html.DisplayFor(model => model.UrlVideo)*@
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Status)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedUser)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreatedUser)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CreatedDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Class)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Class.Descriptions)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Subject)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Subject.Abbreviation)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |*@
+    <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>

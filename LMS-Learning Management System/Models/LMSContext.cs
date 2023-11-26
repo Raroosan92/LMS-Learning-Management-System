@@ -144,12 +144,28 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.CardStatus).HasColumnName("Card_Status");
 
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
                 entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(450)
                     .HasColumnName("User_ID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.HasOne(d => d.Class)
+                    .WithMany(p => p.Cards)
+                    .HasForeignKey(d => d.ClassId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cards_Classes");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany(p => p.Cards)
+                    .HasForeignKey(d => d.SubjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cards_Subjects");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Cards)

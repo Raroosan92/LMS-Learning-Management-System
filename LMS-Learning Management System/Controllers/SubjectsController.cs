@@ -12,7 +12,10 @@ namespace LMS_Learning_Management_System.Controllers
     public class SubjectsController : Controller
     {
         private readonly LMSContext _context;
-
+        string time;
+        string Year;
+        string Month;
+        DateTime Jor;
         public SubjectsController(LMSContext context)
         {
             _context = context;
@@ -21,7 +24,7 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Subjects
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Subjects.ToListAsync());
+            return View();
         }
 
         // GET: Subjects/Details/5
@@ -34,6 +37,16 @@ namespace LMS_Learning_Management_System.Controllers
 
             var subject = await _context.Subjects
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (subject.Status == true)
+            {
+                subject.Status2 = "فعال";
+
+            }
+            else
+            {
+                subject.Status2 = "غير فعال";
+
+            }
             if (subject == null)
             {
                 return NotFound();
@@ -57,7 +70,12 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                GetTime();
+
+                subject.CreatedDate = DateTime.Parse(time);
+                subject.CreatedUser = HttpContext.User.Identity.Name;
                 _context.Add(subject);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -85,7 +103,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Abbreviation,Status,CreatedDate,CreatedUser")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Abbreviation,Status")] Subject subject)
         {
             if (id != subject.Id)
             {
@@ -97,6 +115,9 @@ namespace LMS_Learning_Management_System.Controllers
                 try
                 {
                     _context.Update(subject);
+                    _context.Entry(subject).State = EntityState.Modified;
+                    _context.Entry(subject).Property(x => x.CreatedDate).IsModified = false;
+                    _context.Entry(subject).Property(x => x.CreatedUser).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -115,34 +136,77 @@ namespace LMS_Learning_Management_System.Controllers
             return View(subject);
         }
 
-        // GET: Subjects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        public IActionResult GetData()
         {
-            if (id == null)
+            var stList = _context.Subjects.OrderByDescending(r => r.Id).ToList();
+            for (int i = 0; i < stList.Count; i++)
             {
-                return NotFound();
-            }
+                if (stList[i].Status == true)
+                {
+                    stList[i].Status2 = "فعال";
 
-            var subject = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (subject == null)
+                }
+                else
+                {
+                    stList[i].Status2 = "غير فعال";
+
+                }
+            }
+            return new JsonResult(new { data = stList });
+
+        }
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            using (LMSContext db = new LMSContext())
             {
-                return NotFound();
+                Subject std = db.Subjects.Where(x => x.Id == id).FirstOrDefault<Subject>();
+                db.Subjects.Remove(std);
+                db.SaveChanges();
+                return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
             }
+        }
+        public void GetTime()
+        {
 
-            return View(subject);
+            TimeZoneInfo AST = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
+            DateTime utc = DateTime.UtcNow;
+            Jor = TimeZoneInfo.ConvertTimeFromUtc(utc, AST);
+            time = Jor.ToString();
+            Year = Jor.Year.ToString();
+            Month = Jor.Month.ToString();
+
         }
 
-        // POST: Subjects/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var subject = await _context.Subjects.FindAsync(id);
-            _context.Subjects.Remove(subject);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// GET: Subjects/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var subject = await _context.Subjects
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (subject == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(subject);
+        //}
+
+        //// POST: Subjects/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var subject = await _context.Subjects.FindAsync(id);
+        //    _context.Subjects.Remove(subject);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool SubjectExists(int id)
         {

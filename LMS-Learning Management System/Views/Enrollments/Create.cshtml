@@ -1,12 +1,12 @@
 ﻿@model LMS_Learning_Management_System.Models.Enrollment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "اضافة";
 }
 
-<h1>Create</h1>
+<h1>اضافة جديدة</h1>
 
-<h4>Enrollment</h4>
+<h4>التسجيل</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,20 +24,20 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="CreatedDate" class="control-label"></label>
                 <input asp-for="CreatedDate" class="form-control" />
                 <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="اضافة" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>
 
 @section Scripts {

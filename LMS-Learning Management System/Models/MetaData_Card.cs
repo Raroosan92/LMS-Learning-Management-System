@@ -26,7 +26,10 @@ namespace LMS_Learning_Management_System.Models
         public string UserId { get; set; }
         [Display(Name = "اسم الطالب")]
         public string UserName { get; set; }
-
+        [Display(Name = "المادة")]
+        public int SubjectId { get; set; }
+        [Display(Name = "المستوى")]
+        public int ClassId { get; set; }
         public virtual AspNetUser User { get; set; }
     }
 }

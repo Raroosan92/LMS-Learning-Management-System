@@ -21,7 +21,7 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Cards
         public async Task<IActionResult> Index()
         {
-            var lMSContext = _context.Cards.Include(c => c.User);
+            var lMSContext = _context.Cards.Include(c => c.Class).Include(c => c.Subject).Include(c => c.User);
             return View(await lMSContext.ToListAsync());
         }
 
@@ -34,6 +34,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
 
             var card = await _context.Cards
+                .Include(c => c.Class)
+                .Include(c => c.Subject)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (card == null)
@@ -47,6 +49,8 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Cards/Create
         public IActionResult Create()
         {
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
@@ -56,7 +60,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName,SubjectId,ClassId")] Card card)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +68,8 @@ namespace LMS_Learning_Management_System.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", card.UserId);
             return View(card);
         }
@@ -81,6 +87,8 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", card.UserId);
             return View(card);
         }
@@ -90,7 +98,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName,SubjectId,ClassId")] Card card)
         {
             if (id != card.Id)
             {
@@ -117,6 +125,8 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", card.UserId);
             return View(card);
         }
@@ -130,6 +140,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
 
             var card = await _context.Cards
+                .Include(c => c.Class)
+                .Include(c => c.Subject)
                 .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (card == null)

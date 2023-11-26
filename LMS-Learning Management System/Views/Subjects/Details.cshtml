@@ -1,13 +1,14 @@
 ﻿@model LMS_Learning_Management_System.Models.Subject
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = null;
+    ViewData["Title"] = "التفاصيل";
 }
 
-<h1>Details</h1>
+<h1>التفاصيل</h1>
 
 <div>
-    <h4>Subject</h4>
+    <h4>المواد</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -26,7 +27,7 @@
             @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model.Status2)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedDate)
@@ -43,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |*@
+    <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>

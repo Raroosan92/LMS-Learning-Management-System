@@ -1,34 +1,24 @@
 ﻿@model IEnumerable<LMS_Learning_Management_System.Models.Lesson>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "عرض الدروس";
 }
 
-<h1>Index</h1>
+<h1>المحتويات</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
 </p>
-<table class="table">
+<table id="Lessons" class="table table-striped table-bordered table-inverse table-responsive ">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UrlVideo)
-            </th>
+           
+           
             <th>
                 @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Class)
@@ -36,42 +26,101 @@
             <th>
                 @Html.DisplayNameFor(model => model.Subject)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
             <th></th>
         </tr>
+
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UrlVideo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Class.Descriptions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject.Abbreviation)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
 </table>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Lessons").DataTable({
+                "ajax": {
+                    "url": "/Lessons/GetData",
+                    "type": "POST",
+                    "data": "{}",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "name" },
+                    { "data": "status2" },
+                    { "data": "classdesc" },
+                    { "data": "subjectdesc" },
+                    { "data": "createdUser" },
+                    { "data": "createdDate" },
+                    {
+                        "data": "id", "render": function (data) {
+                            return "<a asp-action='Edit' onclick=PopupFormCource('@Url.Action("Edit", "Lessons")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
+                        },
+                        "orderable": true,
+                        "searchable": true,
+                        "width": "auto"
+                    }
+                ],
+                "language": {
+                    "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
+                }
+
+
+
+            });
+
+
+
+
+        });
+
+
+
+        function PopupFormCource(url) {
+            var formDiv = $('<div/>');
+                $.get(url)
+                .done(function (response) {
+                    formDiv.html(response);
+
+                    Popup = formDiv.dialog({
+                        autoOpen: true,
+                        resizable: false,
+                        title: 'الدروس',
+                        height: 700,
+                        width: 1100,
+                        close: function () {
+                            Popup.dialog('destroy').remove();
+                        }
+                    });
+
+                });
+        }
+
+
+
+        function DeleteCource(id) {
+            if (confirm('هل أنت متأكد أنك تريد حذف السجل؟'))
+            {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete", "Lessons")/' + id,
+                    success: function (data) {
+                        if (data.success)
+                        {
+                            $.notify(data.message, {
+                                globalPosition: "top center",
+                                className: "success"
+                            })
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 2000);
+                        }
+                    }
+
+                });
+            }
+        }
+    </script>
+}
