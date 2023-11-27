@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -27,9 +28,28 @@ namespace LMS_Learning_Management_System.Models
         [Display(Name = "اسم الطالب")]
         public string UserName { get; set; }
         [Display(Name = "المادة")]
-        public int SubjectId { get; set; }
+        public int? SubjectId { get; set; }
         [Display(Name = "المستوى")]
-        public int ClassId { get; set; }
+        public int? ClassId { get; set; }
+
+        [Display(Name = "المستوى")]
+        public virtual Class Class { get; set; }
+        [NotMapped]
+        [Display(Name = "المستوى")]
+        public string Classdesc { get; set; }
+        [Display(Name = "المادة")]
+
+        public virtual Subject Subject { get; set; }
+        [NotMapped]
+        [Display(Name = "المادة")]
+
+        public string Subjectdesc { get; set; }
+
+        [Display(Name = "اسم الطالب")]
         public virtual AspNetUser User { get; set; }
+        [NotMapped]
+        [Display(Name = "اسم الطالب")]
+        public string Userdesc { get; set; }
+
     }
 }

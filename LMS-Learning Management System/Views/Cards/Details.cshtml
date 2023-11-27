@@ -1,6 +1,7 @@
 ﻿@model LMS_Learning_Management_System.Models.Card
 
 @{
+    Layout = null;
     ViewData["Title"] = "التفاصيل";
 }
 
@@ -55,6 +56,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |
+    @*<a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |*@
     <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>

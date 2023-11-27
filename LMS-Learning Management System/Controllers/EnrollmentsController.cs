@@ -183,7 +183,7 @@ namespace LMS_Learning_Management_System.Controllers
         [HttpPost]
         public IActionResult GetData()
         {
-            var stList = _context.Enrollments.OrderByDescending(r => r.Id).ToList();
+            var stList = _context.Enrollments.Include(e => e.Class).Include(e => e.Subject).Include(e => e.User).OrderByDescending(r => r.Id).ToList();
             for (int i = 0; i < stList.Count; i++)
             {
                 var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
