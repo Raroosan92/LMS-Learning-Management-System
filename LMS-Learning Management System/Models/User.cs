@@ -13,5 +13,9 @@ namespace LMS_Learning_Management_System.Models
 
         [Required]
         public string Password { get; set; }
+
+        public string BRANCHID { get; set; }
+
+        public int UserType { get; set; }
     }
 }

@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Controllers
 {
-
+    //[Authorize]
+    
     public class AdminController : Controller
     {
         private UserManager<AppUser> userManager;
         private IPasswordHasher<AppUser> passwordHasher;
 
-        public AdminController(UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHash)
+        public LMSContext _context = new LMSContext();
+        public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
+
+        public AdminController(UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHash, AppIdentityDbContext iden)
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
+            _contextUsers = iden;
+
         }
 
         public IActionResult Index()
@@ -30,6 +36,7 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                var UserBranchNo = user.BRANCHID;
                 AppUser appUser = new AppUser
                 {
                     UserName = user.Name,
