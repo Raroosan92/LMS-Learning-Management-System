@@ -2,7 +2,7 @@
 
 namespace LMS_Learning_Management_System.Models
 {
-    public class Login
+    public partial  class Login
     {
         [Required]
         public string Email { get; set; }

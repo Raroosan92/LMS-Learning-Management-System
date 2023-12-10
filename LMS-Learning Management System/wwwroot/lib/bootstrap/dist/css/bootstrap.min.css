@@ -7496,7 +7496,7 @@ textarea.form-control-lg {
     display: inline-block;
     min-height: 1em;
     vertical-align: middle;
-    cursor: wait;
+    cursor: context-menu;
     background-color: currentcolor;
     opacity: .5
 }

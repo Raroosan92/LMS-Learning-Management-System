@@ -66,6 +66,8 @@ namespace LMS_Learning_Management_System.Controllers
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName");
             return View();
         }
+        public List<SelectListItem> _Classes { get; set; }
+        public List<SelectListItem> _Subjecs { get; set; }
 
         // POST: Cards/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -76,6 +78,23 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                _Classes = (from Classes in _context.Cards
+                            select new SelectListItem
+                            {
+                                Text = Classes.Classdesc,
+                                Value = Classes.ClassId.ToString()
+                            }).ToList();
+                _Classes = _Classes.OrderBy(v => v.Text).Distinct().ToList();
+                string[] MarketId = Request.Form["lstSubjecs"].ToString().Split(",");
+                {
+
+                }
+
+
+
+
+
+
                 _context.Add(card);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
