@@ -25,6 +25,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<Card> Cards { get; set; }
+        public virtual DbSet<CardSubject> CardSubjects { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<Enrollment> Enrollments { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
@@ -142,11 +143,11 @@ namespace LMS_Learning_Management_System.Models
                     .IsRequired()
                     .HasColumnName("Card_Password");
 
+                entity.Property(e => e.CardPrice)
+                   .IsRequired()
+                   .HasColumnName("Card_Price");
+
                 entity.Property(e => e.CardStatus).HasColumnName("Card_Status");
-
-                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
-
-                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -155,23 +156,42 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
 
-                entity.HasOne(d => d.Class)
-                    .WithMany(p => p.Cards)
-                    .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Cards_Classes");
-
-                entity.HasOne(d => d.Subject)
-                    .WithMany(p => p.Cards)
-                    .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Cards_Subjects");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Cards)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Cards_AspNetUsers");
+            });
+
+            modelBuilder.Entity<CardSubject>(entity =>
+            {
+                entity.ToTable("Card_Subjects");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
+                entity.HasOne(d => d.Class)
+                    .WithMany(p => p.CardSubjects)
+                    .HasForeignKey(d => d.ClassId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Card_Subjects_Classes");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany(p => p.CardSubjects)
+                    .HasForeignKey(d => d.SubjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Card_Subjects_Subjects");
+
+                entity.HasOne(d => d.Card)
+                   .WithMany(p => p.CardSubjects)
+                   .HasForeignKey(d => d.CardNo)
+                   .OnDelete(DeleteBehavior.ClientSetNull)
+                   .HasConstraintName("FK_Card_Subjects_Cards");
             });
 
             modelBuilder.Entity<Class>(entity =>

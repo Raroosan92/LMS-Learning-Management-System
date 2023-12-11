@@ -6,6 +6,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Cards1\**" />
+    <Compile Remove="Views\Classes1\**" />
+    <Compile Remove="Views\Subjects1\**" />
+    <Content Remove="Views\Cards1\**" />
+    <Content Remove="Views\Classes1\**" />
+    <Content Remove="Views\Subjects1\**" />
+    <EmbeddedResource Remove="Views\Cards1\**" />
+    <EmbeddedResource Remove="Views\Classes1\**" />
+    <EmbeddedResource Remove="Views\Subjects1\**" />
+    <None Remove="Views\Cards1\**" />
+    <None Remove="Views\Classes1\**" />
+    <None Remove="Views\Subjects1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Cards1Controller.cs" />
+    <Compile Remove="Controllers\Classes1Controller.cs" />
+    <Compile Remove="Controllers\Subjects1Controller.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />

@@ -1,20 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
-#nullable disable
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Models
 {
-    [ModelMetadataType(typeof(MetaData_Card))]
-    public partial class Card
-    {
-
-    }
-
-    public class MetaData_Card
+    public class Mixed_Cards_CardDetails
     {
         public int Id { get; set; }
         [Display(Name = "رقم البطاقة")]
@@ -53,7 +46,22 @@ namespace LMS_Learning_Management_System.Models
         [Display(Name = "اسم الطالب")]
         public string Userdesc { get; set; }
 
+        public int Id_details { get; set; }
+        [Display(Name = "رقم البطاقة")]
+        public int CardNo_details { get; set; }
+        [Display(Name = "المادة")]
+        public int SubjectId { get; set; }
+        [Display(Name = "المستوى")]
+        public int ClassId { get; set; }
+
+        [Display(Name = "المستوى")]
+        public virtual Class Class { get; set; }
+        [Display(Name = "الموضوع")]
+        public virtual Subject Subject { get; set; }
 
 
+
+        public IEnumerable<Card> HD_Collection { get; set; }
+        public IEnumerable<CardSubject> DTL_Collection { get; set; }
     }
 }

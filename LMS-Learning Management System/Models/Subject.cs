@@ -10,7 +10,7 @@ namespace LMS_Learning_Management_System.Models
     {
         public Subject()
         {
-            Cards = new HashSet<Card>();
+            CardSubjects = new HashSet<CardSubject>();
             Enrollments = new HashSet<Enrollment>();
             Lessons = new HashSet<Lesson>();
         }
@@ -24,7 +24,7 @@ namespace LMS_Learning_Management_System.Models
         public DateTime? CreatedDate { get; set; }
         public string CreatedUser { get; set; }
 
-        public virtual ICollection<Card> Cards { get; set; }
+        public virtual ICollection<CardSubject> CardSubjects { get; set; }
         public virtual ICollection<Enrollment> Enrollments { get; set; }
         public virtual ICollection<Lesson> Lessons { get; set; }
     }

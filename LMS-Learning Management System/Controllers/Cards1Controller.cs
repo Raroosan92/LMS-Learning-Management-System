@@ -9,14 +9,14 @@ using LMS_Learning_Management_System.Models;
 
 namespace LMS_Learning_Management_System.Controllers
 {
-    public class CardsController : Controller
+    public class Cards1Controller : Controller
     {
         private readonly LMSContext _context;
         string time;
         string Year;
         string Month;
         DateTime Jor;
-        public CardsController(LMSContext context)
+        public Cards1Controller(LMSContext context)
         {
             _context = context;
         }
@@ -25,8 +25,8 @@ namespace LMS_Learning_Management_System.Controllers
         public async Task<IActionResult> Index()
         {
             return View();
-            // var lMSContext = _context.Cards.Include(c => c.User);
-            // return View(await lMSContext.ToListAsync());
+            //var lMSContext = _context.Cards.Include(c => c.Class).Include(c => c.Subject).Include(c => c.User);
+            //return View(await lMSContext.ToListAsync());
         }
 
         // GET: Cards/Details/5
@@ -37,13 +37,18 @@ namespace LMS_Learning_Management_System.Controllers
                 return NotFound();
             }
 
-            var card = await _context.Cards.Include(c => c.User)
+            var card = await _context.Cards
+                .Include(c => c.Class)
+                .Include(c => c.Subject)
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            //var subjects = _context.Subjects.Where(r => r.Id == card.SubjectId).SingleOrDefault();
-            //var classes = _context.Classes.Where(r => r.Id == card.ClassId).SingleOrDefault();
+
+
+            var subjects = _context.Subjects.Where(r => r.Id == card.SubjectId).SingleOrDefault();
+            var classes = _context.Classes.Where(r => r.Id == card.ClassId).SingleOrDefault();
             var users = _context.AspNetUsers.Where(r => r.Id == card.UserId).SingleOrDefault();
-            //card.Classdesc = classes.Descriptions;
-            //card.Subjectdesc = subjects.Name;
+            card.Classdesc = classes.Descriptions;
+            card.Subjectdesc = subjects.Name;
             card.Userdesc = users.UserName;
             if (card == null)
             {
@@ -56,89 +61,37 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Cards/Create
         public IActionResult Create()
         {
-            //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName");
             return View();
-            //return View();
         }
         public List<SelectListItem> _Classes { get; set; }
         public List<SelectListItem> _Subjecs { get; set; }
-
-        List<string> _ClassesLst = new List<string>();
-        List<string> _SubjecsLst = new List<string>();
-
 
         // POST: Cards/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName,SubjectId,ClassId")] Card card)
         {
             if (ModelState.IsValid)
             {
-                var CardSubjects = new CardSubject();
-
-                _Classes = (from Classes1 in _context.Classes
+                _Classes = (from Classes in _context.Cards
                             select new SelectListItem
                             {
-                                Text = Classes1.Descriptions,
-                                Value = Classes1.Id.ToString()
+                                Text = Classes.Classdesc,
+                                Value = Classes.ClassId.ToString()
                             }).ToList();
-
-
-
-                _Subjecs = (from Subjects1 in _context.Subjects
-                            select new SelectListItem
-                            {
-                                Text = Subjects1.Name,
-                                Value = Subjects1.Id.ToString()
-                            }).ToList();
-
-
-                _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
-
-                string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
-
-
-
-                foreach (string id in ClassId)
+                _Classes = _Classes.OrderBy(v => v.Text).Distinct().ToList();
+                string[] MarketId = Request.Form["lstSubjecs"].ToString().Split(",");
                 {
-                    if (!string.IsNullOrEmpty(id))
-                    {
-                        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                        _ClassesLst.Add(id);
-                    }
-                }
 
-                foreach (string id2 in SubjecsId)
-                {
-                    if (!string.IsNullOrEmpty(id2))
-                    {
-                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                        _SubjecsLst.Add(id2);
-                    }
                 }
 
 
-                for (int a = 0; a < _ClassesLst.Count; a++)
-                {
-                    for (int b = 0; b < _SubjecsLst.Count; b++)
-                    {
-                        CardSubjects = new CardSubject
-                        {
-                            CardNo = card.Id,
-                            SubjectId = int.Parse(_SubjecsLst[b]),
-                            ClassId = int.Parse(_ClassesLst[a])
-                        };
-                        _context.CardSubjects.Add(CardSubjects);
-                        await _context.SaveChangesAsync();
-                    }
-                }
+
 
 
 
@@ -146,8 +99,8 @@ namespace LMS_Learning_Management_System.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
             return View(card);
         }
@@ -165,8 +118,8 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
             return View(card);
         }
@@ -176,7 +129,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardStatus,UserId,UserName,SubjectId,ClassId")] Card card)
         {
             if (id != card.Id)
             {
@@ -203,13 +156,13 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
             return View(card);
         }
 
-        // GET: Cards/Delete/5
+        //// GET: Cards/Delete/5
         //public async Task<IActionResult> Delete(int? id)
         //{
         //    if (id == null)
@@ -218,6 +171,8 @@ namespace LMS_Learning_Management_System.Controllers
         //    }
 
         //    var card = await _context.Cards
+        //        .Include(c => c.Class)
+        //        .Include(c => c.Subject)
         //        .Include(c => c.User)
         //        .FirstOrDefaultAsync(m => m.Id == id);
         //    if (card == null)
@@ -241,38 +196,29 @@ namespace LMS_Learning_Management_System.Controllers
         [HttpPost]
         public IActionResult GetData()
         {
-            try
+            var stList = _context.Cards.Include(c => c.Class).Include(c => c.Subject).Include(c => c.User).ToList();
+            for (int i = 0; i < stList.Count; i++)
             {
+                var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
+                var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
+                var users = _context.AspNetUsers.Where(r => r.Id == stList[i].UserId).SingleOrDefault();
+                stList[i].Classdesc = classes.Descriptions;
+                stList[i].Subjectdesc = subjects.Name;
+                stList[i].Userdesc = users.UserName;
 
-
-                var stList = _context.Cards.Include(c => c.User).ToList();
-                for (int i = 0; i < stList.Count; i++)
+                if (stList[i].CardStatus == true)
                 {
-                    //var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
-                    //var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
-                    var users = _context.AspNetUsers.Where(r => r.Id == stList[i].UserId).SingleOrDefault();
-                    //stList[i].Classdesc = classes.Descriptions;
-                    //stList[i].Subjectdesc = subjects.Name;
-                    stList[i].Userdesc = users.UserName;
-
-                    if (stList[i].CardStatus == true)
-                    {
-                        stList[i].Status2 = "فعال";
-
-                    }
-                    else
-                    {
-                        stList[i].Status2 = "غير فعال";
-
-                    }
+                    stList[i].Status2 = "فعال";
 
                 }
-                return new JsonResult(new { data = stList });
+                else
+                {
+                    stList[i].Status2 = "غير فعال";
+
+                }
+
             }
-            catch (Exception dd)
-            {
-                return new JsonResult("Error");
-            }
+            return new JsonResult(new { data = stList });
 
         }
         [HttpPost]
@@ -301,25 +247,6 @@ namespace LMS_Learning_Management_System.Controllers
         private bool CardExists(int id)
         {
             return _context.Cards.Any(e => e.Id == id);
-        }
-
-
-
-        public Mixed_Cards_CardDetails GetCards_And_Details()
-        {
-
-
-            List<CardSubject> query = (from d in _context.CardSubjects
-                                       join h in _context.Cards on d.CardNo equals h.Id
-                                       select d).ToList();
-
-            var model = new Mixed_Cards_CardDetails()
-            {
-                HD_Collection = _context.Cards.ToList(),
-                DTL_Collection = query.AsEnumerable()
-            };
-            return (model);
-
         }
     }
 }
