@@ -25,11 +25,25 @@
 
                     foreach (var item in Model.DTL_Collection.OrderBy(x => x.ClassId))
                     {
-                        <tr class="table-light">
-                            <th>@item.CardNo</th>
-                            <td class="DstpItemsNo">@item.ClassId</td>
-                            <td class="DstpItemDesc">@item.SubjectId</td>
-                        </tr>
+                                <tr class="table-light">
+                                    @{foreach (var cardno in Model.HD_Collection.Where(c => c.Id == @item.CardNo).Distinct())
+                                        {
+
+                                            <th>@cardno.CardNo</th>
+                                        }
+                                        foreach (var classdesc in Model.Class_Collection.Where(c => c.Id == @item.ClassId).Distinct())
+                                        {
+
+                                            <td>@classdesc.Descriptions</td>
+
+                                        }
+                                        foreach (var subjectdesc in Model.Subject_Collection.Where(c => c.Id == @item.SubjectId).Distinct())
+                                        {
+
+                                            <th>@subjectdesc.Name</th>
+                                        }
+                                    }
+                                </tr>
                     }
 
                 }

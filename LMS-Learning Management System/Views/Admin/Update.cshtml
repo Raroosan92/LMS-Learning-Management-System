@@ -1,10 +1,10 @@
 ﻿@model AppUser
 @{
-	ViewData["Title"] = "UPDATE USER";
+	ViewData["Title"] = "تعديل مستخدم";
 }
 
-<h1 class="bg-info text-white">Update User</h1>
-<a asp-action="Index" class="btn btn-secondary">Back</a>
+<h1 class="bg-info text-white">تعديل مستخدم</h1>
+<a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form asp-action="Update" method="post">
@@ -20,5 +20,5 @@
 		<label for="password">Password</label>
 		<input name="password" class="form-control" />
 	</div>
-	<button type="submit" class="btn btn-primary">Save</button>
+	<button type="submit" class="btn btn-primary">حفظ</button>
 </form>

@@ -13,7 +13,7 @@ namespace LMS_Learning_Management_System.Models
             CardSubjects = new HashSet<CardSubject>();
         }
         public int Id { get; set; }
-        public string CardNo { get; set; }
+        public int CardNo { get; set; }
         public string CardPassword { get; set; }
         public string CardPrice { get; set; }
         public bool CardStatus { get; set; }

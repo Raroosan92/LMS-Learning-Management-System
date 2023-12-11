@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Controllers
 {
-    //[Authorize]
+    [Authorize]
     
     public class AdminController : Controller
     {
@@ -28,9 +28,10 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return View(userManager.Users);
         }
+        [AllowAnonymous]
 
         public IActionResult Create() => View();
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(User user)
         {

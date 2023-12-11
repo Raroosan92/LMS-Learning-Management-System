@@ -4,10 +4,10 @@
     ViewData["Title"] = "Authentication";
 }
 
-<h1 class="bg-info text-white">Index</h1>
+<h1 class="bg-info text-white">تسجيل الدخول</h1>
 @Model
 
 @if (User?.Identity?.IsAuthenticated ?? false)
 {
-    <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Logout</a>
+    <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">تسجيل الخروج</a>
 }

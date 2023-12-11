@@ -36,21 +36,23 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-
-            var card = await _context.Cards.Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            //var subjects = _context.Subjects.Where(r => r.Id == card.SubjectId).SingleOrDefault();
-            //var classes = _context.Classes.Where(r => r.Id == card.ClassId).SingleOrDefault();
-            var users = _context.AspNetUsers.Where(r => r.Id == card.UserId).SingleOrDefault();
-            //card.Classdesc = classes.Descriptions;
-            //card.Subjectdesc = subjects.Name;
-            card.Userdesc = users.UserName;
+            var card = GetCards_And_Details();
             if (card == null)
             {
                 return NotFound();
             }
 
             return View(card);
+            //var card = await _context.Cards.Include(c => c.User)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            ////var subjects = _context.Subjects.Where(r => r.Id == card.SubjectId).SingleOrDefault();
+            ////var classes = _context.Classes.Where(r => r.Id == card.ClassId).SingleOrDefault();
+            //var users = _context.AspNetUsers.Where(r => r.Id == card.UserId).SingleOrDefault();
+            ////card.Classdesc = classes.Descriptions;
+            ////card.Subjectdesc = subjects.Name;
+            //card.Userdesc = users.UserName;
+
+
         }
 
         // GET: Cards/Create
@@ -280,9 +282,17 @@ namespace LMS_Learning_Management_System.Controllers
         {
             using (LMSContext db = new LMSContext())
             {
-                Enrollment std = db.Enrollments.Where(x => x.Id == id).FirstOrDefault<Enrollment>();
-                db.Enrollments.Remove(std);
+                //CardSubject cardsdtl = db.CardSubjects.Where(x => x.CardNo == id).FirstOrDefault<CardSubject>();
+                //db.CardSubjects.Remove(cardsdtl);
+                //db.SaveChanges();
+
+
+
+                Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
+                db.Cards.Remove(cards);
                 db.SaveChanges();
+
+
                 return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
             }
         }
@@ -316,7 +326,9 @@ namespace LMS_Learning_Management_System.Controllers
             var model = new Mixed_Cards_CardDetails()
             {
                 HD_Collection = _context.Cards.ToList(),
-                DTL_Collection = query.AsEnumerable()
+                DTL_Collection = query.AsEnumerable(),
+                Subject_Collection=_context.Subjects.ToList(),
+                Class_Collection=_context.Classes.ToList()
             };
             return (model);
 

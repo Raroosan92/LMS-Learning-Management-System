@@ -135,17 +135,13 @@ namespace LMS_Learning_Management_System.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.CardNo)
-                    .IsRequired()
-                    .HasColumnName("Card_No");
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
 
                 entity.Property(e => e.CardPassword)
                     .IsRequired()
                     .HasColumnName("Card_Password");
 
-                entity.Property(e => e.CardPrice)
-                   .IsRequired()
-                   .HasColumnName("Card_Price");
+                entity.Property(e => e.CardPrice).HasColumnName("Card_Price");
 
                 entity.Property(e => e.CardStatus).HasColumnName("Card_Status");
 
@@ -175,6 +171,12 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
 
+                entity.HasOne(d => d.CardNoNavigation)
+                    .WithMany(p => p.CardSubjects)
+                    .HasForeignKey(d => d.CardNo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Card_Subjects_Cards");
+
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.CardSubjects)
                     .HasForeignKey(d => d.ClassId)
@@ -186,12 +188,6 @@ namespace LMS_Learning_Management_System.Models
                     .HasForeignKey(d => d.SubjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Card_Subjects_Subjects");
-
-                entity.HasOne(d => d.Card)
-                   .WithMany(p => p.CardSubjects)
-                   .HasForeignKey(d => d.CardNo)
-                   .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK_Card_Subjects_Cards");
             });
 
             modelBuilder.Entity<Class>(entity =>

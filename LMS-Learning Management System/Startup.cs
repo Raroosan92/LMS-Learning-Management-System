@@ -152,7 +152,6 @@ namespace LMS_Learning_Management_System
                 endpoints
        .MapControllers()
        .RequireAuthorization();
-
                 endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
