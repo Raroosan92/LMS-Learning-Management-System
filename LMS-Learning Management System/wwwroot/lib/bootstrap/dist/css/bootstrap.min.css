@@ -2454,6 +2454,7 @@ progress {
 }
 
 .form-control {
+    text-align: right;
     display: block;
     width: 100%;
     padding: .375rem .75rem;

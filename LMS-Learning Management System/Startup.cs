@@ -96,6 +96,7 @@ namespace LMS_Learning_Management_System
                 opts.Lockout.AllowedForNewUsers = true;
                 opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 opts.Lockout.MaxFailedAccessAttempts = 3;
+
             });
 
             /*services.Configure<IdentityOptions>(opts =>

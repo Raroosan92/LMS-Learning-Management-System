@@ -7,7 +7,7 @@ namespace LMS_Learning_Management_System.Models
         [Required]
         public string Password { get; set; }
 
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("كلمة المرور", ErrorMessage = "كلمة المرور غير مطابقة !")]
         public string ConfirmPassword { get; set; }
 
         public string Email { get; set; }
