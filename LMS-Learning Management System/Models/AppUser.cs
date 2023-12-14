@@ -7,7 +7,7 @@ namespace LMS_Learning_Management_System.Models
     {
 
 
-        public int UserType { get; set; }
+        public string UserType { get; set; }
         public string UserTypeDesc { get; set; }
 
         public DateTime BirthDate { get; set; }

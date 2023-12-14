@@ -40,11 +40,12 @@ namespace LMS_Learning_Management_System.Controllers
         }
         [AllowAnonymous]
 
-        public IActionResult Create() {
+        public IActionResult Create()
+        {
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName");
-            return  View(); 
+            ViewData["RoleId"] = new SelectList(_context.AspNetRoles, "Id", "Name");
+            return View();
         }
         public List<SelectListItem> _Classes { get; set; }
         public List<SelectListItem> _Subjecs { get; set; }
@@ -59,6 +60,18 @@ namespace LMS_Learning_Management_System.Controllers
             if (ModelState.IsValid)
             {
                 GetTime();
+                string UserTypeDesc;
+                string UserType;
+                if (GetUserRole().ToUpper() != "ADMIN")
+                {
+                    UserTypeDesc = "Student";
+                    UserType = "7c72ca3d-4714-4340-b0d0-99cc56ef6623";
+                }
+                else
+                {
+                    UserTypeDesc = user.UserTypeDesc;
+                    UserType = user.RoleId;
+                }
                 AppUser appUser = new AppUser
                 {
                     UserName = user.Name,
@@ -67,10 +80,12 @@ namespace LMS_Learning_Management_System.Controllers
                     CreatedDateTime = Jor,
                     FullName = user.FullName,
                     Country = user.Country,
-                    UserTypeDesc = "Student",
+
+                    UserTypeDesc = UserTypeDesc,
+                    UserType = UserType,
                     BirthDate = user.BirthDate
 
-                    
+
                 };
 
                 IdentityResult result = await userManager.CreateAsync(appUser, user.Password);
@@ -153,23 +168,23 @@ namespace LMS_Learning_Management_System.Controllers
                                 _SubjecsLst.Add(id2);
                             }
                         }
-                        var CardSubjects = new CardSubject();
+                        var TeacherEnrollment = new TeacherEnrollment();
 
 
-                        //for (int a = 0; a < _ClassesLst.Count; a++)
-                        //{
-                        //    for (int b = 0; b < _SubjecsLst.Count; b++)
-                        //    {
-                        //        CardSubjects = new Teacher_Enrollments
-                        //        {
-                        //            CardNo = card.Id,
-                        //            SubjectId = int.Parse(_SubjecsLst[b]),
-                        //            ClassId = int.Parse(_ClassesLst[a])
-                        //        };
-                        //        _context.CardSubjects.Add(CardSubjects);
-                        //        await _context.SaveChangesAsync();
-                        //    }
-                        //}
+                        for (int a = 0; a < _ClassesLst.Count; a++)
+                        {
+                            for (int b = 0; b < _SubjecsLst.Count; b++)
+                            {
+                                TeacherEnrollment = new TeacherEnrollment
+                                {
+                                    UserId = userid1.Id,
+                                    SubjectId = int.Parse(_SubjecsLst[b]),
+                                    ClassId = int.Parse(_ClassesLst[a])
+                                };
+                                _context.TeacherEnrollments.Add(TeacherEnrollment);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
 
 
 
@@ -184,6 +199,9 @@ namespace LMS_Learning_Management_System.Controllers
                         ModelState.AddModelError("", error.Description);
                 }
             }
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+            ViewData["RoleId"] = new SelectList(_context.AspNetRoles, "Id", "Name");
             return View(user);
         }
         public void GetTime()
@@ -264,9 +282,9 @@ namespace LMS_Learning_Management_System.Controllers
         {
             try
             {
-            var userid1 = User.Identity.GetUserId();
-            var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc }).Where(m => m.Id == userid1).SingleOrDefault();
-            return username.UserTypeDesc.ToString();
+                var userid1 = User.Identity.GetUserId();
+                var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc }).Where(m => m.Id == userid1).SingleOrDefault();
+                return username.UserTypeDesc.ToString();
 
             }
             catch (Exception ex)

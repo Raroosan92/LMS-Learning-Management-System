@@ -7,48 +7,49 @@
 <a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
-<form method="post">
+<form method="post" onsubmit="return CheckList();">
+
     <div class="form-group">
         <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control" required />
         <span asp-validation-for="Name" class="text-danger"></span>
 
     </div>
 
     <div class="form-group">
         <label asp-for="FullName"></label>
-        <input asp-for="FullName" class="form-control" />
+        <input asp-for="FullName" class="form-control" required />
         <span asp-validation-for="FullName" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" type="email" />
+        <input asp-for="Email" class="form-control" type="email" required />
         <span asp-validation-for="Email" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
+        <input asp-for="Password" class="form-control" required />
         <span asp-validation-for="Password" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
+        <input asp-for="PhoneNumber" class="form-control" required />
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="BirthDate"></label>
-        <input asp-for="BirthDate" class="form-control" type="date" />
+        <input asp-for="BirthDate" class="form-control" type="date" required />
         <span asp-validation-for="BirthDate" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="Country"></label>
         <select name="Country" asp-for="Country" class="form-control" required>
-            <option value="" disabled selected>إختر</option>
+            <option disabled selected>إختر</option>
             <option value="الأردن" selected>الاردن</option>
             <option value="أفغانستان">أفغانستان</option>
             <option value="ألبانيا">ألبانيا</option>
@@ -254,45 +255,133 @@
         if (User.IsInRole("admin"))
         {
 
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
-                    <option value="">-- أختر --</option>
+            @*<div class="form-group">
+                    <label asp-for="UserId" class="control-label"></label>
+                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                        <option value="">-- أختر --</option>
 
-                </select>
-            </div>
-            <div class="form-group" style="display:none">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" readonly/>
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubjectId" class="control-label"></label>
-                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" required>
-                    <option value="">-- أختر --</option>
-                </select>
+                    </select>
+                </div>
+                <div class="form-group" style="display:none">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" readonly />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>*@
 
-                @*<select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId" required></select>*@
-            </div>
             <div class="form-group">
-                <label asp-for="ClassId" class="control-label"></label>
-                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" required>
-                    <option value="">-- أختر --</option>
+                <label asp-for="RoleId" class="control-label"></label>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId">
+
+                    <option>-- أختر --</option>
                 </select>
 
                 @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
             </div>
+            <div class="form-group" style="display:none">
+                <input asp-for="UserTypeDesc" id="UserTypeDesc" />
+            </div>
+            <div class="form-group" id="SubjectId_D" style="display:none">
+                <label asp-for="SubjectId" class="control-label"></label>
+                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control">
+                    <option>-- أختر --</option>
+                </select>
+
+            </div>
+            <div class="form-group" id="Class_D" style="display:none">
+                <label asp-for="ClassId" class="control-label"></label>
+                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control">
+                    <option>-- أختر --</option>
+                </select>
+
+            </div>
+
+
         }
 
     }
     <button type="submit" class="btn btn-primary">انشاء</button>
+    @{
+        var Role = "";
+        if (User.IsInRole("admin"))
+        {
+            Role = "admin";
+            <input type="hidden" id="Role_H" value="@Role" />
+        }
+        else
+        {
+            Role = "other";
+            <input type="hidden" id="Role_H" value="@Role" />
+        }
+
+    }
 </form>
+
+@*<button onclick="CheckList();" class="btn btn-primary">انccccشاء</button>*@
+
 <link href="~/css/select2.css" rel="stylesheet" />
 <script src="~/js/2.1.3jquery.js"></script>
 <script src="~/js/select2.full.js"></script>
 
 <script>$('#Country').select2();</script>
+<script>
+    $("[id$=RoleId]").on('change', function () {
 
+        var SelectedRoleId = $("#RoleId :selected").text();
+        if (SelectedRoleId.toLocaleLowerCase() == "teacher") {
+            $("#SubjectId_D").css("display", "block");
+            $("#Class_D").css("display", "block");
+        }
+        else {
+            $("#SubjectId_D").css("display", "none");
+            $("#Class_D").css("display", "none");
+        }
+        $('#UserTypeDesc').val($("#RoleId :selected").text());
+
+    });
+
+
+    function CheckList() {
+        var role = $("#Role_H").val();
+        var Subject = $("#lstSubjecs").val();
+        var Class = $("#lstClasses").val();
+        var Role = $("#RoleId").val();
+
+        var Selected_role = $("#RoleId :selected").text();
+        if (role.toLocaleLowerCase() == "admin" && Selected_role.toLocaleLowerCase() == "teacher")
+        {
+
+            if (Role == '-- أختر --') {
+                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
+                event.preventDefault();
+                return false;
+            }
+
+            else if (Subject == "" || Subject == '-- أختر --') {
+                alert("يرجى اختيار المواد الخاصة بالمعلم")
+                event.preventDefault();
+                return false;
+            }
+
+            else if (Class == "" || Class == '-- أختر --') {
+                alert("يرجى اختيار الصفوف الخاصة بالمعلم")
+                event.preventDefault();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+
+            if (Role == '-- أختر --') {
+                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
+                event.preventDefault();
+                return false;
+            }
+        }
+    }
+
+</script>
 
 <script src="~/js/jquery3.3.1.js"></script>
 <script src="~/js/multiselect-dropdown.js"></script>
@@ -310,13 +399,6 @@
     });
 
 
-    $("[id$=UserId]").on('change', function () {
-        $('#UserName').val($("#CompName_DDL").val());
-        $('#UserName').prop('readonly', true);
-
-
-
-    });
 </script>
 
 

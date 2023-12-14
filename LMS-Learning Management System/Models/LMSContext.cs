@@ -30,7 +30,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<Enrollment> Enrollments { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
-
+        public virtual DbSet<TeacherEnrollment> TeacherEnrollments { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -283,6 +283,21 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.CreatedUser).HasColumnName("Created_User");
             });
 
+            modelBuilder.Entity<TeacherEnrollment>(entity =>
+            {
+                entity.ToTable("Teacher_Enrollments");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450)
+                    .HasColumnName("User_ID");
+            });
             OnModelCreatingPartial(modelBuilder);
         }
 
