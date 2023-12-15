@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" onsubmit="CheckList()">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CardNo" class="control-label"></label>
@@ -24,7 +24,7 @@
                 <input asp-for="CardPassword" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="CardPassword" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="CardPrice" class="control-label"></label>
                 <input asp-for="CardPrice" class="form-control" required autocomplete="off" />
@@ -32,16 +32,18 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CardStatus" required  checked="checked"/> @Html.DisplayNameFor(model => model.CardStatus)
+                    <input class="form-check-input" asp-for="CardStatus" required checked="checked" /> @Html.DisplayNameFor(model => model.CardStatus)
                 </label>
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+                    <option value="">-- أختر --</option>
+                </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none">
                 <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
+                <input asp-for="UserName" class="form-control" readonly />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -83,4 +85,33 @@
         });
     });
 
+
+    $("[id$=UserId]").on('change', function () {
+        $('#UserName').val($("#UserId :selected").text());
+    });
+
+
+
+
+
+    function CheckList() {
+        var Subject = $("#lstSubjecs").val();
+        var Class = $("#lstClasses").val();
+
+        if (Subject == "" || Subject == '-- أختر --') {
+            alert("يرجى اختيار المواد الخاصة بالبطاقة")
+            event.preventDefault();
+            return false;
+        }
+
+        else if (Class == "" || Class == '-- أختر --') {
+            alert("يرجى اختيار الصفوف الخاصة بالبطاقة")
+            event.preventDefault();
+            return false;
+        }
+        else {
+            return true;
+
+        }
+    }
 </script>

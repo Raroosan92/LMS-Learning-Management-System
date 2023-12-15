@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
@@ -11,7 +12,10 @@ namespace LMS_Learning_Management_System.Models
         public int Id { get; set; }
         public int ClassId { get; set; }
         public int SubjectId { get; set; }
+        [Required]
         public string UserId { get; set; }
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:MM:ss tt}")]
+
         public DateTime CreatedDate { get; set; }
 
         public virtual Class Class { get; set; }
@@ -23,5 +27,10 @@ namespace LMS_Learning_Management_System.Models
         public virtual AspNetUser User { get; set; }
         [NotMapped]
         public string Userdesc { get; set; }
+
+        [NotMapped]
+        public long Card_No { get; set; }
+        [NotMapped]
+        public string Password_Card { get; set; }
     }
 }

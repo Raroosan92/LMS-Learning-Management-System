@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS_Learning_Management_System.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LMS_Learning_Management_System.Controllers
 {
@@ -171,7 +172,26 @@ namespace LMS_Learning_Management_System.Controllers
         [HttpPost]
         public IActionResult GetData()
         {
-            var stList = _context.Classes.OrderByDescending(r => r.Id).ToList();
+            List<Class> stList = new List<Class>();
+
+            if (User.IsInRole("admin"))
+            {
+                stList = _context.Classes.OrderByDescending(r => r.Id).ToList();
+
+            }
+            else
+            {
+                var teacher_Classes = _context.TeacherEnrollments.Select(r => new { r.ClassId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_Classes.Count; i++)
+                {
+                    var x = _context.Classes.Where(r => r.Id == teacher_Classes[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (x != null)
+                    {
+                        stList.Add(x);
+                    }
+
+                }
+            }
             for (int i = 0; i < stList.Count; i++)
             {
                 if (stList[i].Status == true)

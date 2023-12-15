@@ -1,0 +1,193 @@
+﻿@model LMS_Learning_Management_System.Models.Lesson
+
+@{
+    ViewData["Title"] = "تفاصيل الدرس";
+}
+
+
+<style>
+
+
+    .decor-default {
+    }
+
+    .contact .controls {
+        position: relative;
+    }
+
+        .contact .controls .write {
+            position: absolute;
+            z-index: 2;
+            right: 20px;
+            bottom: -24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 5px #d8d8d8;
+            background: #39bee8 no-repeat 50% 50%;
+        }
+
+        .contact .controls .icon {
+            position: absolute;
+            z-index: 2;
+            top: 18px;
+            width: 16px;
+            height: 16px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .contact .controls .cover {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            min-height: 150px;
+        }
+
+    .cover {
+        position: relative;
+        overflow: hidden;
+        height: 500px;
+    }
+
+    .contact .controls .cont {
+        position: absolute;
+        z-index: 2;
+        top: 80px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .contact .controls .avatar {
+        display: inline-block;
+        width: 90px;
+        height: 90px;
+        border-radius: 45px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .contact .controls .name {
+        font-size: 20px;
+        line-height: 36px;
+        color: #ffffff;
+        margin: 0 0 10px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .contact .controls .ui-mark {
+        display: inline-block;
+        border: 1px solid #ffffff;
+        font-size: 16px;
+        line-height: 32px;
+        color: #ffffff;
+        text-align: center;
+        margin: 0 2px;
+        padding: 0 26px;
+        border-radius: 2px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .container-contact div[class^="col-"] {
+        position: relative;
+        min-height: 1px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 20px;
+    }
+
+    .contact-description {
+        font-size: 16px;
+        line-height: 36px;
+    }
+</style>
+
+
+
+
+
+
+<div class="container container-contact bootstrap snippets bootdeys bootdey">
+    <div class="row decor-default">
+        <div class="col-md-12">
+            <h2>@Model.Name</h2>
+            <br />
+            <div class="contact">
+                <div class="controls">
+                    @*<span class="icon icon-close" data-toggle="tooltip" data-placement="top" title="" data-original-title="Close"></span>*@
+                    @*<img src="https://www.bootdey.com/image/900x320/FF69B4/000000" alt="cover" class="cover">
+                <div class="cont">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar" class="avatar">
+                    <div class="name">Seevisual</div>
+                    <div class="ui-mark">Designer</div>
+                    <div class="ui-mark">UI</div>
+                    <div class="ui-mark">Rocket</div>
+                </div>*@
+
+                    @{ var video = Model.UrlVideo;}
+
+                    <script src="https://player.vimeo.com/api/player.js"></script>
+                    <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="y2mate.com - حروف الجر  أغنية حروف الجر  أنشودة حروف الجر للأطفال_1080p"></iframe></div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4 col-md-5 col-xs-12">
+                        @*<div class="row">
+                        <div class="col-xs-3">
+                            Email:
+                        </div>
+                        <div class="col-xs-9">
+                            example@yourdomain.com
+                        </div>
+                        <div class="col-xs-3">
+                            Phone:
+                        </div>
+                        <div class="col-xs-9">
+                            +1-800-600-9898
+                        </div>
+                        <div class="col-xs-3">
+                            Address:
+                        </div>
+                        <div class="col-xs-9">
+                            Sacramento, CA
+                        </div>
+                        <div class="col-xs-3">
+                            Birthday:
+                        </div>
+                        <div class="col-xs-9">
+                            1975/8/17
+                        </div>
+                        <div class="col-xs-3">
+                            URL:
+                        </div>
+                        <div class="col-xs-9">
+                            http://yourdomain.com
+                        </div>
+                    </div>*@
+                    </div>
+
+                    <div class="col-lg-8 col-md-7 col-xs-12">
+                        <h2>وصف الدرس</h2>
+                        <p class="contact-description">
+                            @Model.Description;
+                        </p>
+                    </div>
+                </div>
+                <br />
+                <a asp-action="GetLessons" class="btn btn-outline-warning">الرجوع الى القائمة</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('span[data-toggle="tooltip"]').tooltip();
+    })
+</script>

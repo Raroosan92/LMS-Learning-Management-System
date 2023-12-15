@@ -81,6 +81,10 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                _context.Add(card);
+                await _context.SaveChangesAsync();
+
                 var CardSubjects = new CardSubject();
 
                 _Classes = (from Classes1 in _context.Classes
@@ -144,8 +148,6 @@ namespace LMS_Learning_Management_System.Controllers
 
 
 
-                _context.Add(card);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
@@ -247,7 +249,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
 
 
-                var stList = _context.Cards.Include(c => c.User).ToList();
+                var stList = _context.Cards.ToList();
                 for (int i = 0; i < stList.Count; i++)
                 {
                     //var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
@@ -255,7 +257,17 @@ namespace LMS_Learning_Management_System.Controllers
                     var users = _context.AspNetUsers.Where(r => r.Id == stList[i].UserId).SingleOrDefault();
                     //stList[i].Classdesc = classes.Descriptions;
                     //stList[i].Subjectdesc = subjects.Name;
+                    try
+                    {
                     stList[i].Userdesc = users.UserName;
+
+                    }
+                    catch (Exception xx)
+                    {
+                        stList[i].Userdesc = "";
+
+                    }
+
 
                     if (stList[i].CardStatus == true)
                     {

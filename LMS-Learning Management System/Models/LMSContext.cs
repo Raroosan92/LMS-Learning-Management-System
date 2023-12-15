@@ -146,7 +146,6 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.CardStatus).HasColumnName("Card_Status");
 
                 entity.Property(e => e.UserId)
-                    .IsRequired()
                     .HasMaxLength(450)
                     .HasColumnName("User_ID");
 

@@ -64,7 +64,7 @@ namespace LMS_Learning_Management_System.Controllers
                 string UserType;
                 if (GetUserRole().ToUpper() != "ADMIN")
                 {
-                    UserTypeDesc = "Student";
+                    UserTypeDesc = "student";
                     UserType = "7c72ca3d-4714-4340-b0d0-99cc56ef6623";
                 }
                 else
@@ -103,7 +103,7 @@ namespace LMS_Learning_Management_System.Controllers
                         AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
                         if (user2 != null)
                         {
-                            result = await userManager.AddToRoleAsync(user2, "Student");
+                            result = await userManager.AddToRoleAsync(user2, "student");
                             if (!result.Succeeded)
                                 Errors(result);
 
@@ -119,7 +119,7 @@ namespace LMS_Learning_Management_System.Controllers
                         AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
                         if (user2 != null)
                         {
-                            result = await userManager.AddToRoleAsync(user2, "Teacher");
+                            result = await userManager.AddToRoleAsync(user2, "teacher");
                             if (!result.Succeeded)
                                 Errors(result);
 

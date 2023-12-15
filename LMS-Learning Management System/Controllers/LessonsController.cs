@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS_Learning_Management_System.Models;
+using Microsoft.AspNet.Identity;
 
 namespace LMS_Learning_Management_System.Controllers
 {
+    
     public class LessonsController : Controller
     {
         private readonly LMSContext _context;
@@ -52,8 +54,44 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Lessons/Create
         public IActionResult Create()
         {
+            //var dd = new SelectList(_context.Classes, "Id", "Descriptions");
+            List<Subject> Subject_List = new List<Subject>();
+            List<Class> Class_List = new List<Class>();
+
+            if (User.IsInRole("admin"))
+            {
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+
+            }
+            else
+            {
+                var teacher_subjects = _context.TeacherEnrollments.Select(r => new { r.SubjectId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_subjects.Count; i++)
+                {
+                    var x = _context.Subjects.Where(r => r.Id == teacher_subjects[i].SubjectId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (x != null)
+                    {
+                        Subject_List.Add(x);
+                    }
+
+                }
+
+                var teacher_Classes = _context.TeacherEnrollments.Select(r => new { r.ClassId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_Classes.Count; i++)
+                {
+                    var y = _context.Classes.Where(r => r.Id == teacher_Classes[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (y != null)
+                    {
+                        Class_List.Add(y);
+                    }
+
+                }
+                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+            }
+
+
             return View();
         }
 
@@ -91,8 +129,42 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", lesson.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", lesson.SubjectId);
+            List<Subject> Subject_List = new List<Subject>();
+            List<Class> Class_List = new List<Class>();
+
+            if (User.IsInRole("admin"))
+            {
+                ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+
+            }
+            else
+            {
+                var teacher_subjects = _context.TeacherEnrollments.Select(r => new { r.SubjectId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_subjects.Count; i++)
+                {
+                    var x = _context.Subjects.Where(r => r.Id == teacher_subjects[i].SubjectId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (x != null)
+                    {
+                        Subject_List.Add(x);
+                    }
+
+                }
+
+                var teacher_Classes = _context.TeacherEnrollments.Select(r => new { r.ClassId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_Classes.Count; i++)
+                {
+                    var y = _context.Classes.Where(r => r.Id == teacher_Classes[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (y != null)
+                    {
+                        Class_List.Add(y);
+                    }
+
+                }
+                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+            }
+
             return View(lesson);
         }
 
@@ -171,8 +243,26 @@ namespace LMS_Learning_Management_System.Controllers
         public IActionResult GetData()
         {
 
-            var stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
-           
+            List<Lesson> stList = new List<Lesson>();
+
+            if (User.IsInRole("admin"))
+            {
+                  stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
+
+            }
+            else
+            {
+                var teacher_Lessons = _context.TeacherEnrollments.Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                for (int i = 0; i < teacher_Lessons.Count; i++)
+                {
+                    var x = _context.Lessons.Where(r => r.SubjectId == teacher_Lessons[i].SubjectId && r.ClassId== teacher_Lessons[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    if (x != null)
+                    {
+                    stList.Add(x);
+                    }
+
+                }
+            }
             for (int i = 0; i < stList.Count; i++)
             {
             var subjects = _context.Subjects.Where(r=>r.Id== stList[i].SubjectId).SingleOrDefault();
@@ -218,6 +308,52 @@ namespace LMS_Learning_Management_System.Controllers
         private bool LessonExists(int id)
         {
             return _context.Lessons.Any(e => e.Id == id);
+        }
+
+
+
+
+
+        public IActionResult GetLessons()
+        {
+            //return View();
+            //var lMSContext = _context.Lessons.Include(l => l.Class).Include(l => l.Subject);
+            //var Lessons = new Lesson();
+            List<Lesson> _Lessons = new List<Lesson>();
+
+            var Enrollments_Std = _context.Enrollments.Include(l => l.Class).Include(l => l.Subject).Where(r=>r.UserId== User.Identity.GetUserId());
+
+            foreach (var item in Enrollments_Std)
+            {
+                var lesson = _context.Lessons.Where(r=>r.ClassId==item.ClassId && r.SubjectId==item.SubjectId && r.Status == true).FirstOrDefault();
+                if (lesson != null)
+                {
+                    lesson.Classdesc = _context.Classes.Select(r=>new { r.Descriptions,r.Id,r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
+                    lesson.Subjectdesc = _context.Subjects.Select(r=>new { r.Abbreviation,r.Id,r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
+                _Lessons.Add(lesson);
+                }
+            }
+            return View(_Lessons);
+        }
+
+        // GET: Lessons/Details/5
+        public async Task<IActionResult> ShowLesson(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var lesson = await _context.Lessons
+                .Include(l => l.Class)
+                .Include(l => l.Subject)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (lesson == null)
+            {
+                return NotFound();
+            }
+
+            return View(lesson);
         }
     }
 }
