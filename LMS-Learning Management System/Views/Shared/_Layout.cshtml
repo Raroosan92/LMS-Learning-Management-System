@@ -3,12 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LMS_Learning_Management_System</title>
+    <title>@ViewData["Title"] - LMS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/css/base/jquery-ui.css" rel="stylesheet" />
+    @*<style>
+        #canvas-wrapper.dark-mode {
+            background: #e9e9e9;
+            color: black;
+        }
+        table.dark-mode {
+            background: #e9e9e9;
+            color: black;
+            --bs-table-bg: #e9e9e9;
+            --bs-table-color: black;
+            --bs-table-striped-color: black;
+            --bs-table-active-color: black;
+            --bs-table-hover-color: black;
+        }
+    </style>*@
 </head>
-<body>
+<body id="canvas-wrapper">
     <partial name="_NavBar" />
 
     <div class="container">
@@ -40,6 +55,13 @@
     <script src="~/js/dataTables.bootstrap.min.js"></script>
     <script src="~/js/jquery-ui-1.12.1.js"></script>
 
-
+    @*<script>
+        $(function () {
+            $(".switch").click(function () {
+                $("#canvas-wrapper").toggleClass("dark-mode");
+                $("table").toggleClass("dark-mode");
+            });
+        });
+    </script>*@
 </body>
 </html>

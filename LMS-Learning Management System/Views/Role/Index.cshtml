@@ -3,11 +3,12 @@
     ViewData["Title"] = "الصلاحيات";
 }
   
-<h1 class="bg-info text-white">جميع الصلاحيات</h1>
-<a asp-action="Create" class="btn btn-secondary">انشاء صلاحية</a>
+<h1 >جميع الصلاحيات</h1>
+
+@*<a asp-action="Create" class="btn btn-secondary">انشاء صلاحية</a>*@
   
 <table class="table table-sm table-bordered table-bordered">
-    <tr><th>المعرف</th><th>الاسم</th><th>المستخدم</th><th>تعديل</th><th>حذف</th></tr>
+    <tr><th>المعرف</th><th>الاسم</th><th>المستخدم</th><th>تعديل</th></tr>
     @foreach (var role in Model)
     {
         <tr>
@@ -15,13 +16,13 @@
             <td>@role.Name</td>
             <td i-role="@role.Id"></td>
             <td><a class="btn btn-sm btn-primary" asp-action="Update" asp-route-id="@role.Id">تعديل</a></td>
-            <td>
+            @*<td>
                 <form asp-action="Delete" asp-route-id="@role.Id" method="post">
                     <button type="submit" class="btn btn-sm btn-danger">
                         حذف
                     </button>
                 </form>
-            </td>
+            </td>*@
         </tr>
     }
 </table>

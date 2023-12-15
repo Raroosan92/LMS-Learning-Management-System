@@ -61,7 +61,7 @@ namespace LMS_Learning_Management_System.Controllers
             //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r=>r.UserType== "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
             return View();
             //return View();
         }

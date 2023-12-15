@@ -3,7 +3,7 @@
     ViewData["Title"] = "تعديل صلاحية";
 }
 
-<h1 class="bg-info text-white">تعديل صلاحية</h1>
+<h1 >تعديل صلاحية</h1>
 <a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -11,7 +11,7 @@
     <input type="hidden" name="roleName" value="@Model.Role.Name" />
     <input type="hidden" name="roleId" value="@Model.Role.Id" />
 
-    <h2 class="bg-info p-1 text-white">Add To @Model.Role.Name</h2>
+    <h2 class="bg-info p-1 text-white">اضافة الى  @Model.Role.Name</h2>
     <table class="table table-bordered table-sm">
         @if (Model.NonMembers.Count() == 0)
         {
@@ -31,7 +31,7 @@
         }
     </table>
 
-    <h2 class="bg-info p-1 text-white">Remove From @Model.Role.Name</h2>
+    <h2 class="bg-info p-1 text-white">ازالة من  @Model.Role.Name</h2>
     <table class="table table-bordered table-sm">
         @if (Model.Members.Count() == 0)
         {
