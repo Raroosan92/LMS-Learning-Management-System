@@ -1,14 +1,22 @@
 ﻿using LMS_Learning_Management_System.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Controllers
 {
     [Authorize]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+
     public class AccountController : Controller
     {
         private UserManager<AppUser> userManager;
@@ -41,8 +49,49 @@ namespace LMS_Learning_Management_System.Controllers
                     await signInManager.SignOutAsync();
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
 
-                    if (result.Succeeded)
+
+
+                    bool val1 = (appUser != null) && User.Identity.IsAuthenticated;
+
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        // Log or print information about the authenticated user
+                        Console.WriteLine($"User {User.Identity.Name} is authenticated.");
+                        // Your logic here
+                        return View("LoggedInView");
+                    }
+                    else
+                    {
+                        Console.WriteLine("User is not authenticated.");
+                        // Your logic for handling unauthenticated users
+                        return RedirectToAction("Login");
+                    }
+                }
+
+
+                var user = await userManager.FindByEmailAsync(login.Email);
+
+                    if (user != null && await userManager.CheckPasswordAsync(user, login.Password))
+                    {
+                        // Update the security stamp to invalidate previous sessions
+                        user.SecurityStamp = Guid.NewGuid().ToString();
+                        await userManager.UpdateSecurityStampAsync(user);
+
+                        // Log in the user as usual
+                        await signInManager.SignInAsync(user, isPersistent: false);
+                    }
+
+
+
+
+
+
+
+
+                        if (result.Succeeded)
                         return Redirect(login.ReturnUrl ?? "/");
+
+
 
                     // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
                     /*if (result.RequiresTwoFactor)
@@ -65,6 +114,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
             return View(login);
         }
+
+
 
         public async Task<IActionResult> Logout()
         {
@@ -223,5 +274,13 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return View();
         }
+
+
+
+
+        
+
+
+
     }
 }

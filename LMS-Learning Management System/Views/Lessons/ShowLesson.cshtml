@@ -7,7 +7,12 @@
 
 <style>
 
-
+    .hideVideo {
+        display: block;
+        z-index: 999;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
     .decor-default {
     }
 
@@ -120,55 +125,77 @@
                 <div class="controls">
                     @*<span class="icon icon-close" data-toggle="tooltip" data-placement="top" title="" data-original-title="Close"></span>*@
                     @*<img src="https://www.bootdey.com/image/900x320/FF69B4/000000" alt="cover" class="cover">
-                <div class="cont">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar" class="avatar">
-                    <div class="name">Seevisual</div>
-                    <div class="ui-mark">Designer</div>
-                    <div class="ui-mark">UI</div>
-                    <div class="ui-mark">Rocket</div>
-                </div>*@
+        <div class="cont">
+            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar" class="avatar">
+            <div class="name">Seevisual</div>
+            <div class="ui-mark">Designer</div>
+            <div class="ui-mark">UI</div>
+            <div class="ui-mark">Rocket</div>
+        </div>*@
 
                     @{ var video = Model.UrlVideo;}
 
-                    <script src="https://player.vimeo.com/api/player.js"></script>
-                    <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="y2mate.com - حروف الجر  أغنية حروف الجر  أنشودة حروف الجر للأطفال_1080p"></iframe></div>
+                    @*<div style="position:relative;height:0;padding-bottom:56.25%">
+        <iframe class='sproutvideo-player' src='@video' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen referrerpolicy='no-referrer-when-downgrade' title='Video Player'>
+             </iframe></div>*@
+                    @*https://iframe.mediadelivery.net/embed/97050/2708d88a-de96-4109-80fb-11bc61b0fd84?autoplay=true*@
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            var allowedReferrer = "https://localhost:44392/"; // تحديد المواقع المسموح بها
+
+                            // التحقق من الرابط المرجعي
+                            if (document.referrer.indexOf(allowedReferrer) === -1) {
+                                // قم بتوجيه المستخدم إلى صفحة أخرى أو أظهر رسالة تنبيه
+                                window.location.href = "https://google.com";
+                            }
+                        });
+                    </script>
+
+                    <iframe class='sproutvideo-player' src='@video' width='640' height='360' frameborder='0' allowfullscreen referrerpolicy='no-referrer-when-downgrade' title='Video Player'></iframe>
+
+                    @*<script src="https://player.vimeo.com/api/player.js"></script>
+        <div style="padding:56.25% 0 0 0;position:relative;">
+            <iframe id="Ved" src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="">
+            </iframe>
+        </div>*@
 
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-md-4 col-md-5 col-xs-12">
                         @*<div class="row">
-                        <div class="col-xs-3">
-                            Email:
-                        </div>
-                        <div class="col-xs-9">
-                            example@yourdomain.com
-                        </div>
-                        <div class="col-xs-3">
-                            Phone:
-                        </div>
-                        <div class="col-xs-9">
-                            +1-800-600-9898
-                        </div>
-                        <div class="col-xs-3">
-                            Address:
-                        </div>
-                        <div class="col-xs-9">
-                            Sacramento, CA
-                        </div>
-                        <div class="col-xs-3">
-                            Birthday:
-                        </div>
-                        <div class="col-xs-9">
-                            1975/8/17
-                        </div>
-                        <div class="col-xs-3">
-                            URL:
-                        </div>
-                        <div class="col-xs-9">
-                            http://yourdomain.com
-                        </div>
-                    </div>*@
+                                <div class="col-xs-3">
+                                    Email:
+                                </div>
+                                <div class="col-xs-9">
+                                    example@yourdomain.com
+                                </div>
+                                <div class="col-xs-3">
+                                    Phone:
+                                </div>
+                                <div class="col-xs-9">
+                                    +1-800-600-9898
+                                </div>
+                                <div class="col-xs-3">
+                                    Address:
+                                </div>
+                                <div class="col-xs-9">
+                                    Sacramento, CA
+                                </div>
+                                <div class="col-xs-3">
+                                    Birthday:
+                                </div>
+                                <div class="col-xs-9">
+                                    1975/8/17
+                                </div>
+                                <div class="col-xs-3">
+                                    URL:
+                                </div>
+                                <div class="col-xs-9">
+                                    http://yourdomain.com
+                                </div>
+                            </div>*@
                     </div>
 
                     <div class="col-lg-8 col-md-7 col-xs-12">
@@ -185,9 +212,132 @@
         </div>
     </div>
 </div>
+<script src="~/js/jquery3.3.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
 
 <script>
     $(function () {
         $('span[data-toggle="tooltip"]').tooltip();
     })
+
+
+
+    //// منع عمليات النسخ واللصق
+    //document.addEventListener('copy', function (e) {
+    //    e.preventDefault();
+    //});
+
+    //document.addEventListener('cut', function (e) {
+    //    e.preventDefault();
+    //});
+
+    //document.addEventListener('paste', function (e) {
+    //    e.preventDefault();
+    //});
+
+    //// منع زر الفأرة الأيمن
+    //document.addEventListener('contextmenu', function (e) {
+    //    e.preventDefault();
+    //});
+
+
+    //// عند فتح صفحة الويب
+    //window.onload = function () {
+    //    document.addEventListener('contextmenu', function (e) {
+    //        // منع زر الفأرة الأيمن
+    //        e.preventDefault();
+    //    });
+
+    //    document.addEventListener('keydown', function (e) {
+    //        // منع Ctrl + Shift + I (فتح أدوات المطور)
+    //        if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+    //            e.preventDefault();
+    //        }
+    //    });
+    //};
+
+
+
+    //// منع فتح أدوات المطور
+    //document.onkeydown = function (e) {
+    //    if (event.keyCode == 123) {
+    //        return false;
+    //    }
+    //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+    //        return false;
+    //    }
+    //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+    //        return false;
+    //    }
+    //    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+    //        return false;
+    //    }
+    //    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+    //        return false;
+    //    }
+    //}
+
+
+    //$(document).ready(function () {
+    //    $('#ved').each(function (num, val) {
+    //        console.log($(this).attr('src'));        // i am not getting this..
+    //        strSrc = $(this).attr('src');
+    //        alert(strSrc)
+    //        strPath = strSrc.substring(0, strSrc.lastIndexOf('/'));
+    //        alert(strPath)
+    //        strExtenion = strSrc.substring(strSrc.lastIndexOf('.'));
+    //        alert(strExtenion)
+    //        $(this).attr('src', strPath + "/" + "newFileName" + strExtenion);
+    //    });
+
+
+    //    var encryptText = $('#Ved').val();
+    //    strSrc = $('#Ved').attr('src');
+    //    alert(strSrc)
+    //    var strPath = CryptoJS.AES.encrypt(strSrc, "/")
+    //    alert(strPath)
+    //    //$('#Ved').attr('src', strPath);
+
+    //    $('#Ved').text(CryptoJS.AES.encrypt(strSrc, "/"));
+
+
+    //    $('#btnDecrypt').click(function () {
+    //        var decryptText = $('span#EncryptText').text();
+    //        $('#DezzcryptText').text((CryptoJS.AES.decrypt(decryptText, "/")).toString(CryptoJS.enc.Utf8));
+
+    //    });
+    //});
+
+
+
+    //function postContent(data) {
+    //    var $h2 = $("<h2>");
+    //    var $div = $("<div>");
+
+    //    $h2.html(data.title);
+    //    $div.addClass("imgPlaceholder " + data.color);
+
+    //    var $h3 = $("<h3>");
+    //    var $src = $("<src>");
+
+    //    $h3.html(data.videoTitle);
+    //    $src.html(data.videoSrc);
+    //    alert($src);
+    //    var video = $('<video />', {
+    //        id: 'video',
+    //        src: data.videoSrc,
+    //        type: 'video/webm',
+    //        controls: true
+    //    });
+
+    //    //$src.appendTo($('#video')); This broke the page
+
+    //    $("#display")
+    //        .append($h2)
+    //        .append($div)
+    //        .append($h3);
+
+    //    video.appendTo($('#display'))
+
+    //}
 </script>

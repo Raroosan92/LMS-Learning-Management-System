@@ -3,7 +3,7 @@
     ViewData["Title"] = "تسجيل الدخول";
 }
 <style>
-   
+
     /************animation*****/
 
     .circles {
@@ -117,7 +117,7 @@
     }
     /***********************************/
 
-   
+
     * {
         margin: 0;
         padding: 0;
@@ -276,6 +276,7 @@
         color: #fff;
         border: none;
     }
+
 </style>
 
 
@@ -316,13 +317,16 @@
                             تذكرني؟ <input type="checkbox" asp-for="Remember" />
                         </div>
                         <br />
-                        <button class="btn btn-primary" type="submit">تسجيل الدخول</button> 
+
+
+
+                        <button class="btn btn-primary" type="submit">تسجيل الدخول</button>
                         @*<a class="btn btn-info" asp-action="GoogleLogin">Log In With Google</a>*@
-                        <a class="btn btn-warning" asp-controller="Admin" asp-action="create">انشاء مستخدم جديد</a> 
+                        <a class="btn btn-warning" asp-controller="Admin" asp-action="create">انشاء مستخدم جديد</a>
                         <a class="btn btn-secondary" asp-action="ForgotPassword">نسيت كلمة المرور؟</a>
                     </form>
                 </div>
-              
+
             </section>
         </div>
     </div>

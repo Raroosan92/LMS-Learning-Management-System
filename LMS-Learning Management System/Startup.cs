@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Owin.Security.Cookies;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,13 @@ namespace LMS_Learning_Management_System
             //   options.UseOracle(
             //         Configuration.GetConnectionString("DefaultConnection"), b => b.UseOracleSQLCompatibility("11")));
 
-
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationType)
+       .AddCookie(options =>
+       {
+           options.LoginPath = "/Account/Login";
+           options.AccessDeniedPath = "/Account/AccessDenied";
+           // Additional options...
+       });
             services.AddDbContext<LMSContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
@@ -93,7 +100,7 @@ namespace LMS_Learning_Management_System
 
             services.Configure<IdentityOptions>(opts =>
             {
-                opts.Lockout.AllowedForNewUsers = true;
+                opts.Lockout.AllowedForNewUsers = false;
                 opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
                 opts.Lockout.MaxFailedAccessAttempts = 3;
 
@@ -143,6 +150,8 @@ namespace LMS_Learning_Management_System
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+
 
             //app.Run(async (context) => {
             //    var msg = Configuration["message"];
