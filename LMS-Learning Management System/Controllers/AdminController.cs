@@ -33,6 +33,7 @@ namespace LMS_Learning_Management_System.Controllers
             _contextUsers = iden;
 
         }
+        [Authorize(Roles = "admin")]
 
         public IActionResult Index()
         {
@@ -59,144 +60,165 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                GetTime();
-                string UserTypeDesc;
-                string UserType;
-                if (GetUserRole().ToUpper() != "ADMIN")
+                string email;
+                try
                 {
-                    UserTypeDesc = "student";
-                    UserType = "7c72ca3d-4714-4340-b0d0-99cc56ef6623";
+                     email = userManager.Users.Where(c => c.PhoneNumber == user.PhoneNumber).FirstOrDefault().Email;
+
+                }
+                catch (Exception)
+                {
+                     email = null;
+                }
+
+                if (email != null)
+                {
+                    ModelState.AddModelError("", "رقم الهاتف تم استخدامه مسبقاً");
                 }
                 else
                 {
-                    UserTypeDesc = user.UserTypeDesc;
-                    UserType = user.RoleId;
-                }
-                AppUser appUser = new AppUser
-                {
-                    UserName = user.Name,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber,
-                    CreatedDateTime = Jor,
-                    FullName = user.FullName,
-                    Country = user.Country,
-
-                    UserTypeDesc = UserTypeDesc,
-                    UserType = UserType,
-                    BirthDate = user.BirthDate
 
 
-                };
-
-                IdentityResult result = await userManager.CreateAsync(appUser, user.Password);
-
-
-
-                if (result.Succeeded)
-                {
+                    GetTime();
+                    string UserTypeDesc;
+                    string UserType;
                     if (GetUserRole().ToUpper() != "ADMIN")
                     {
-
-                        RoleModification model = new RoleModification();
-                        var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email }).Where(m => m.Email == user.Email).SingleOrDefault();
-
-                        AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
-                        if (user2 != null)
-                        {
-                            result = await userManager.AddToRoleAsync(user2, "student");
-                            if (!result.Succeeded)
-                                Errors(result);
-
-                        }
+                        UserTypeDesc = "student";
+                        UserType = "7c72ca3d-4714-4340-b0d0-99cc56ef6623";
                     }
                     else
                     {
+                        UserTypeDesc = user.UserTypeDesc;
+                        UserType = user.RoleId;
+                    }
+                    AppUser appUser = new AppUser
+                    {
+                        UserName = user.Name,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        CreatedDateTime = Jor,
+                        FullName = user.FullName,
+                        Country = user.Country,
+
+                        UserTypeDesc = UserTypeDesc,
+                        UserType = UserType,
+                        BirthDate = user.BirthDate
 
 
-                        RoleModification model = new RoleModification();
-                        var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email }).Where(m => m.Email == user.Email).SingleOrDefault();
+                    };
 
-                        AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
-                        if (user2 != null)
+                    IdentityResult result = await userManager.CreateAsync(appUser, user.Password);
+
+
+
+                    if (result.Succeeded)
+                    {
+                        if (GetUserRole().ToUpper() != "ADMIN")
                         {
-                            result = await userManager.AddToRoleAsync(user2, "teacher");
-                            if (!result.Succeeded)
-                                Errors(result);
 
-                        }
+                            RoleModification model = new RoleModification();
+                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email }).Where(m => m.Email == user.Email).SingleOrDefault();
 
-
-                        _Classes = (from Classes1 in _context.Classes
-                                    select new SelectListItem
-                                    {
-                                        Text = Classes1.Descriptions,
-                                        Value = Classes1.Id.ToString()
-                                    }).ToList();
-
-
-
-                        _Subjecs = (from Subjects1 in _context.Subjects
-                                    select new SelectListItem
-                                    {
-                                        Text = Subjects1.Name,
-                                        Value = Subjects1.Id.ToString()
-                                    }).ToList();
-
-
-                        _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                        _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
-
-                        string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                        string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
-
-
-
-                        foreach (string id in ClassId)
-                        {
-                            if (!string.IsNullOrEmpty(id))
+                            AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
+                            if (user2 != null)
                             {
-                                string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                                _ClassesLst.Add(id);
+                                result = await userManager.AddToRoleAsync(user2, "student");
+                                if (!result.Succeeded)
+                                    Errors(result);
+
                             }
                         }
-
-                        foreach (string id2 in SubjecsId)
+                        else
                         {
-                            if (!string.IsNullOrEmpty(id2))
+
+
+                            RoleModification model = new RoleModification();
+                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email }).Where(m => m.Email == user.Email).SingleOrDefault();
+
+                            AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
+                            if (user2 != null)
                             {
-                                string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                                _SubjecsLst.Add(id2);
+                                result = await userManager.AddToRoleAsync(user2, "teacher");
+                                if (!result.Succeeded)
+                                    Errors(result);
+
                             }
-                        }
-                        var TeacherEnrollment = new TeacherEnrollment();
 
 
-                        for (int a = 0; a < _ClassesLst.Count; a++)
-                        {
-                            for (int b = 0; b < _SubjecsLst.Count; b++)
+                            _Classes = (from Classes1 in _context.Classes
+                                        select new SelectListItem
+                                        {
+                                            Text = Classes1.Descriptions,
+                                            Value = Classes1.Id.ToString()
+                                        }).ToList();
+
+
+
+                            _Subjecs = (from Subjects1 in _context.Subjects
+                                        select new SelectListItem
+                                        {
+                                            Text = Subjects1.Name,
+                                            Value = Subjects1.Id.ToString()
+                                        }).ToList();
+
+
+                            _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                            _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                            string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                            string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                            foreach (string id in ClassId)
                             {
-                                TeacherEnrollment = new TeacherEnrollment
+                                if (!string.IsNullOrEmpty(id))
                                 {
-                                    UserId = userid1.Id,
-                                    SubjectId = int.Parse(_SubjecsLst[b]),
-                                    ClassId = int.Parse(_ClassesLst[a])
-                                };
-                                _context.TeacherEnrollments.Add(TeacherEnrollment);
-                                await _context.SaveChangesAsync();
+                                    string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                                    _ClassesLst.Add(id);
+                                }
                             }
+
+                            foreach (string id2 in SubjecsId)
+                            {
+                                if (!string.IsNullOrEmpty(id2))
+                                {
+                                    string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                                    _SubjecsLst.Add(id2);
+                                }
+                            }
+                            var TeacherEnrollment = new TeacherEnrollment();
+
+
+                            for (int a = 0; a < _ClassesLst.Count; a++)
+                            {
+                                for (int b = 0; b < _SubjecsLst.Count; b++)
+                                {
+                                    TeacherEnrollment = new TeacherEnrollment
+                                    {
+                                        UserId = userid1.Id,
+                                        SubjectId = int.Parse(_SubjecsLst[b]),
+                                        ClassId = int.Parse(_ClassesLst[a])
+                                    };
+                                    _context.TeacherEnrollments.Add(TeacherEnrollment);
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+
+
+
+
                         }
-
-
-
+                        TempData["AlertMessage"] = "تم انشاء الحساب بنجاح";
+                        return RedirectToAction("login","Account");
 
                     }
-                    return RedirectToAction("Index");
-
-                }
-                else
-                {
-                    foreach (IdentityError error in result.Errors)
-                        ModelState.AddModelError("", error.Description);
+                    else
+                    {
+                        foreach (IdentityError error in result.Errors)
+                            ModelState.AddModelError("", error.Description);
+                    }
                 }
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
@@ -215,6 +237,9 @@ namespace LMS_Learning_Management_System.Controllers
             Month = Jor.Month.ToString();
 
         }
+        [Authorize(Roles = "admin")]
+
+
         public async Task<IActionResult> Update(string id)
         {
             AppUser user = await userManager.FindByIdAsync(id);
@@ -223,6 +248,7 @@ namespace LMS_Learning_Management_System.Controllers
             else
                 return RedirectToAction("Index");
         }
+        [Authorize(Roles = "admin")]
 
         [HttpPost]
         public async Task<IActionResult> Update(string id, string email, string password)

@@ -12,9 +12,11 @@ namespace LMS_Learning_Management_System.Models
 
     public partial class MetaData_Login
     {
+        [Required]
+        [Display(Name = "رقم الهاتف")]
+        public string PhoneNumber { get; set; }
         [Display(Name = "الايميل")]
 
-        [Required]
         public string Email { get; set; }
         [Display(Name = "كلمة المرور")]
 
@@ -26,6 +28,8 @@ namespace LMS_Learning_Management_System.Models
 
         public bool Remember { get; set; }
 
+        public string SessionId { get; set; }
+        public string SecurityStamp { get; set; }
 
 
     }

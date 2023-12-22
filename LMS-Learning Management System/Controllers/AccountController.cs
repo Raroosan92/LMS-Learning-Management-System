@@ -1,31 +1,28 @@
 ﻿using LMS_Learning_Management_System.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Controllers
 {
     [Authorize]
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-
     public class AccountController : Controller
     {
-        private UserManager<AppUser> userManager;
+        private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
-
-        public AccountController(UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr)
+        private readonly LMSContext _context;
+        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context)
         {
             userManager = userMgr;
             signInManager = signinMgr;
+            _context = context;
         }
 
         [AllowAnonymous]
@@ -35,92 +32,145 @@ namespace LMS_Learning_Management_System.Controllers
             login.ReturnUrl = returnUrl;
             return View(login);
         }
+        string time;
+        string Year;
+        string Month;
+        DateTime Jor;
+        public void GetTime()
+        {
 
+            TimeZoneInfo AST = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
+            DateTime utc = DateTime.UtcNow;
+            Jor = TimeZoneInfo.ConvertTimeFromUtc(utc, AST);
+            time = Jor.ToString();
+            Year = Jor.Year.ToString();
+            Month = Jor.Month.ToString();
+
+        }
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(Login login)
+        public async Task<IActionResult> Login(Login login, ActiveSession activesession)
         {
             if (ModelState.IsValid)
             {
-                AppUser appUser = await userManager.FindByEmailAsync(login.Email);
-                if (appUser != null)
+                var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
+                AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
+                if (GetActiveSession(userdetails.Id))
                 {
-                    await signInManager.SignOutAsync();
-                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
 
-
-
-                    bool val1 = (appUser != null) && User.Identity.IsAuthenticated;
-
-                    if (User.Identity.IsAuthenticated)
+                    if (appUser != null)
                     {
-                        // Log or print information about the authenticated user
-                        Console.WriteLine($"User {User.Identity.Name} is authenticated.");
-                        // Your logic here
-                        return View("LoggedInView");
-                    }
-                    else
-                    {
-                        Console.WriteLine("User is not authenticated.");
-                        // Your logic for handling unauthenticated users
-                        return RedirectToAction("Login");
-                    }
-                }
-
-
-                var user = await userManager.FindByEmailAsync(login.Email);
-
-                    if (user != null && await userManager.CheckPasswordAsync(user, login.Password))
-                    {
-                        // Update the security stamp to invalidate previous sessions
-                        user.SecurityStamp = Guid.NewGuid().ToString();
-                        await userManager.UpdateSecurityStampAsync(user);
-
-                        // Log in the user as usual
-                        await signInManager.SignInAsync(user, isPersistent: false);
-                    }
-
-
-
-
-
-
-
+                        await signInManager.SignOutAsync();
+                        Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
 
                         if (result.Succeeded)
-                        return Redirect(login.ReturnUrl ?? "/");
+                        {
+                            GetTime();
 
+                            activesession.LoginDate = DateTime.Parse(time);
+                            activesession.UserId = appUser.Id;
+                            activesession.UserName = appUser.FullName;
+                            activesession.PhoneNumber = appUser.PhoneNumber;
+                            _context.Add(activesession);
 
+                            await _context.SaveChangesAsync();
+                            return Redirect(login.ReturnUrl ?? "/");
+                        }
 
-                    // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
-                    /*if (result.RequiresTwoFactor)
-                    {
-                        return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
-                    }*/
+                        // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
+                        /*if (result.RequiresTwoFactor)
+                        {
+                            return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
+                        }*/
 
-                    // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
-                    /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
-                    if (emailStatus == false)
-                    {
-                        ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
-                    }*/
+                        // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
+                        /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
+                        if (emailStatus == false)
+                        {
+                            ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
+                        }*/
 
-                    // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
-                    /*if (result.IsLockedOut)
-                        ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
+                        // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
+                        /*if (result.IsLockedOut)
+                            ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
+                    }
+                    ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
                 }
-                ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                else
+                {
+                    TempData["AlertMessage"] = "تم تسجيل الدخول من جهاز آخر. قم بعملية تسجل الخروج منه ثم تسجيل الدخول هنا مرة اخرى";
+
+                }
             }
             return View(login);
         }
 
+        public bool GetActiveSession(string userId)
+        {
+            try
+            {
+                var username = _context.ActiveSessions.Where(m => m.UserId == userId).SingleOrDefault();
+                if (username != null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
 
+            }
+            catch (Exception ex)
+            {
 
+                return false;
+            }
+
+        }
+
+        public bool DeleteActiveSession()
+        {
+            try
+            {
+                ActiveSession activesession = new ActiveSession();
+                var userid1 = User.Identity.GetUserId();
+                var username = _context.ActiveSessions.Where(m => m.UserId == userid1).SingleOrDefault();
+
+                var session = _context.ActiveSessions.Find(username.Id);
+
+                if (session != null)
+                {
+                    _context.ActiveSessions.Remove(session);
+                    _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return true;
+            }
+
+        }
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            if (DeleteActiveSession())
+            {
+
+                await signInManager.SignOutAsync();
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+
+            }
         }
 
         public IActionResult AccessDenied()
@@ -128,7 +178,8 @@ namespace LMS_Learning_Management_System.Controllers
             return View();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
+
         public IActionResult GoogleLogin()
         {
             string redirectUrl = Url.Action("GoogleResponse", "Account");
@@ -136,7 +187,7 @@ namespace LMS_Learning_Management_System.Controllers
             return new ChallengeResult("Google", properties);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GoogleResponse()
         {
             ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
@@ -155,7 +206,7 @@ namespace LMS_Learning_Management_System.Controllers
                     UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
                 };
 
-                IdentityResult identResult = await userManager.CreateAsync(user);
+                Microsoft.AspNetCore.Identity.IdentityResult identResult = await userManager.CreateAsync(user);
                 if (identResult.Succeeded)
                 {
                     identResult = await userManager.AddLoginAsync(user, info);
@@ -274,13 +325,5 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return View();
         }
-
-
-
-
-        
-
-
-
     }
 }

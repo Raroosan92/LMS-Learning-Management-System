@@ -41,6 +41,14 @@ namespace LMS_Learning_Management_System
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
 
             //services.AddDbContext<ModelContext>(options =>
             //   options.UseOracle(
@@ -55,12 +63,16 @@ namespace LMS_Learning_Management_System
        });
             services.AddDbContext<LMSContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
+
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+
+
             services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(10));
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = ".AspNetCore.Identity.Application";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+                options.ExpireTimeSpan = TimeSpan.FromDays(3900);
                 options.SlidingExpiration = true;
             });
 

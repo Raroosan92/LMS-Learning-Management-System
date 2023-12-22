@@ -3,28 +3,28 @@
     ViewData["Title"] = "انشاء مستخدم";
 }
 
-<h1 >انشاء مستخدم</h1>
+<h1>انشاء مستخدم</h1>
 <a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
 <form method="post" onsubmit="return CheckList();">
 
-    <div class="form-group">
+    <div class="form-group" style="display:none">
         <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" required />
+        <input asp-for="Name" class="form-control" required readonly/>
         <span asp-validation-for="Name" class="text-danger"></span>
 
     </div>
 
     <div class="form-group">
         <label asp-for="FullName"></label>
-        <input asp-for="FullName" class="form-control" required />
+        <input asp-for="FullName" class="form-control" required type="text" />
         <span asp-validation-for="FullName" class="text-danger"></span>
 
     </div>
     <div class="form-group">
         <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" type="email" required />
+        <input asp-for="Email" class="form-control" type="email" required style=" direction: ltr; display: none" />
         <span asp-validation-for="Email" class="text-danger"></span>
 
     </div>
@@ -36,7 +36,7 @@
     </div>
     <div class="form-group">
         <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" required />
+        <input asp-for="PhoneNumber" class="form-control" required style=" direction: ltr;" />
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
 
     </div>
@@ -347,8 +347,7 @@
         var Role = $("#RoleId").val();
 
         var Selected_role = $("#RoleId :selected").text();
-        if (role.toLocaleLowerCase() == "admin" && Selected_role.toLocaleLowerCase() == "teacher")
-        {
+        if (role.toLocaleLowerCase() == "admin" && Selected_role.toLocaleLowerCase() == "teacher") {
 
             if (Role == '-- أختر --') {
                 alert("يرجى اختيار نوع المستخدم (الصلاحية)");
@@ -399,6 +398,42 @@
     });
 
 
+    var PhoneNoResult;
+    $("[id$=PhoneNumber]").on('change', function () {
+       
+        formatJordanianMobileNumber();
+        if (PhoneNoResult==true) {
+            $('#Name').val($('#PhoneNumber').val());
+            var email = $('#PhoneNumber').val() + '@@' + $('#PhoneNumber').val() + '.com';
+            $('#Email').val(email);
+        }
+    });
+
+    function formatJordanianMobileNumber() {
+        var mobileNumber = $('#PhoneNumber').val();
+
+        // Remove non-digit characters
+        var cleanedNumber = mobileNumber.replace(/\D/g, '');
+        // Check if the number starts with '7' (Jordanian mobile number prefix)
+        if (/^962/.test(cleanedNumber) && (cleanedNumber.length == 10 || cleanedNumber.length == 12)) {
+            // Format the number to the Jordanian pattern
+            var formattedNumber = '0' + cleanedNumber.substring(3, 12);
+            $('#PhoneNumber').val(formattedNumber)
+            $("#PhoneNumber").attr('maxlength', '10');
+            PhoneNoResult = true;
+        }
+        else if (/^0/.test(cleanedNumber) && cleanedNumber.length==10 ) {
+            $('#PhoneNumber').val(cleanedNumber)
+            $("#PhoneNumber").attr('maxlength', '10');
+            PhoneNoResult = true;
+
+        }
+        else {
+            alert('الرقم الذي تحاول التسجيل به رقم غير اردني يرجى كتابة رقم الهاتف والذي يبدأ ب +962');
+            PhoneNoResult = false;
+
+        }
+    }
 </script>
 
 

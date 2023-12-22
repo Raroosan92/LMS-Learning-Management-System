@@ -24,6 +24,7 @@
     <Compile Remove="Controllers\Cards1Controller.cs" />
     <Compile Remove="Controllers\Classes1Controller.cs" />
     <Compile Remove="Controllers\Subjects1Controller.cs" />
+    <Compile Remove="Models\CustomUserValidator.cs" />
   </ItemGroup>
 
   <ItemGroup>

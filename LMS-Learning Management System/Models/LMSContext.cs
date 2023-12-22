@@ -31,6 +31,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<Lesson> Lessons { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TeacherEnrollment> TeacherEnrollments { get; set; }
+        public virtual DbSet<ActiveSession> ActiveSessions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -44,6 +45,30 @@ namespace LMS_Learning_Management_System.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+
+            modelBuilder.Entity<ActiveSession>(entity =>
+            {
+                entity.ToTable("Active_Sessions");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LoginDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Login_Date");
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(450)
+                    .HasColumnName("User_ID");
+
+                entity.Property(e => e.UserName)
+                    .HasMaxLength(256)
+                    .HasColumnName("User_Name");
+
+
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(256)
+                    .HasColumnName("PhoneNumber");
+            });
             modelBuilder.Entity<AspNetRole>(entity =>
             {
                 entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
