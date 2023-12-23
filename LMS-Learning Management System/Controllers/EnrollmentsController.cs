@@ -11,30 +11,53 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace LMS_Learning_Management_System.Controllers
 {
+    [Authorize]
     public class EnrollmentsController : Controller
     {
         public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
-
+        private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private readonly LMSContext _context;
         string time;
         string Year;
         string Month;
         DateTime Jor;
-        public EnrollmentsController(LMSContext context, AppIdentityDbContext iden)
+        public EnrollmentsController(LMSContext context, Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
         {
             _context = context;
             _contextUsers = iden;
+            // BaseController aa = new BaseController(userMgr,iden);
+            //aa.GetUserRole();
+
 
         }
 
+        public void GetUserRole()
+        {
+            try
+            {
+                var userid1 = User.Identity.GetUserId();
+                var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc, o.FullName }).Where(m => m.Id == userid1).SingleOrDefault();
+                TempData["FullName"] = username.FullName;
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+
+        [Authorize(Roles = "admin")]
         // GET: Enrollments
         public async Task<IActionResult> Index()
         {
+            GetUserRole();
             return View();
             //var lMSContext = _context.Enrollments.Include(e => e.Class).Include(e => e.Subject).Include(e => e.User);
             //return View(await lMSContext.ToListAsync());
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Enrollments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -66,6 +89,7 @@ namespace LMS_Learning_Management_System.Controllers
             return View(enrollment);
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Enrollments/Create
         public IActionResult Create()
         {
@@ -106,8 +130,10 @@ namespace LMS_Learning_Management_System.Controllers
             }
 
             ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r=>r.UserType== "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
+            GetUserRole(); 
             return View();
         }
+        [Authorize(Roles = "admin")]
 
         // POST: Enrollments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -127,9 +153,11 @@ namespace LMS_Learning_Management_System.Controllers
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", enrollment.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", enrollment.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
+            GetUserRole(); 
             return View(enrollment);
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Enrollments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -182,6 +210,7 @@ namespace LMS_Learning_Management_System.Controllers
             ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
             return View(enrollment);
         }
+        [Authorize(Roles = "admin")]
 
         // POST: Enrollments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -255,6 +284,8 @@ namespace LMS_Learning_Management_System.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
         [HttpPost]
+        [Authorize(Roles = "admin")]
+
         public IActionResult GetData()
         {
             List<Enrollment> stList = new List<Enrollment>();
@@ -323,11 +354,13 @@ namespace LMS_Learning_Management_System.Controllers
         }
 
 
+        [Authorize(Roles = "student,admin")]
 
         [HttpGet]
         // GET: Enrollments/Create
         public IActionResult EnrollSTD()
         {
+            GetUserRole();
             return View();
         }
 
@@ -373,27 +406,10 @@ namespace LMS_Learning_Management_System.Controllers
 
                 return RedirectToAction("GetLessons", "Lessons");
             }
+            GetUserRole(); 
             return View();
 
         }
 
-
-
-        public string GetUserRole()
-        {
-            try
-            {
-                var userid1 = User.Identity.GetUserId();
-                var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc }).Where(m => m.Id == userid1).SingleOrDefault();
-                return username.UserTypeDesc.ToString();
-
-            }
-            catch (Exception ex)
-            {
-
-                return "null";
-            }
-
-        }
     }
 }

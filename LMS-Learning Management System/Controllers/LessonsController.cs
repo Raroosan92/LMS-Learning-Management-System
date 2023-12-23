@@ -7,30 +7,60 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMS_Learning_Management_System.Controllers
 {
-    
+    [Authorize]
+
+
     public class LessonsController : Controller
     {
         private readonly LMSContext _context;
+        private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
+        public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
+
         string time;
         string Year;
         string Month;
         DateTime Jor;
-        public LessonsController(LMSContext context)
+        public LessonsController(LMSContext context, Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
         {
             _context = context;
+            // BaseController aa = new BaseController(userMgr,iden);
+            //aa.GetUserRole();
+
+            userManager = userMgr;
+            _contextUsers = iden;
         }
 
+        public void GetUserRole()
+        {
+            try
+            {
+                var userid1 = User.Identity.GetUserId();
+                var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc, o.FullName }).Where(m => m.Id == userid1).SingleOrDefault();
+                TempData["FullName"] = username.FullName;
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        [Authorize(Roles = "admin,teacher")]
         // GET: Lessons
         public async Task<IActionResult> Index()
         {
+            GetUserRole();
             return View();
             //var lMSContext = _context.Lessons.Include(l => l.Class).Include(l => l.Subject);
             //return View(await lMSContext.ToListAsync());
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Lessons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -51,6 +81,7 @@ namespace LMS_Learning_Management_System.Controllers
             return View(lesson);
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Lessons/Create
         public IActionResult Create()
         {
@@ -90,11 +121,11 @@ namespace LMS_Learning_Management_System.Controllers
                 ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
                 ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
             }
-
-
+            GetUserRole();
             return View();
         }
 
+    [Authorize(Roles = "admin")]
         // POST: Lessons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -113,9 +144,11 @@ namespace LMS_Learning_Management_System.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Lessons, "Id", "Descriptions", lesson.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", lesson.SubjectId);
+            GetUserRole(); 
             return View(lesson);
         }
 
+    [Authorize(Roles = "admin")]
         // GET: Lessons/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -170,6 +203,7 @@ namespace LMS_Learning_Management_System.Controllers
 
         // POST: Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
+    [Authorize(Roles = "admin")]
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -238,6 +272,7 @@ namespace LMS_Learning_Management_System.Controllers
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}
+        [Authorize(Roles = "admin")]
 
         [HttpPost]
         public IActionResult GetData()
@@ -283,6 +318,7 @@ namespace LMS_Learning_Management_System.Controllers
             return new JsonResult(new { data = stList });
 
         }
+    [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -309,10 +345,7 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return _context.Lessons.Any(e => e.Id == id);
         }
-
-
-
-
+        [Authorize(Roles = "student,admin")]
 
         public IActionResult GetLessons()
         {
@@ -333,8 +366,11 @@ namespace LMS_Learning_Management_System.Controllers
                 _Lessons.Add(lesson);
                 }
             }
+            GetUserRole();
             return View(_Lessons);
         }
+
+        [Authorize(Roles = "student,admin")]
 
         // GET: Lessons/Details/5
         public async Task<IActionResult> ShowLesson(int? id)
@@ -352,7 +388,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-
+            GetUserRole();
             return View(lesson);
         }
     }

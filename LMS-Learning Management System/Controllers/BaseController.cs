@@ -1,28 +1,30 @@
 ﻿using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+
 
 namespace LMS_Learning_Management_System.Controllers
 {
-    public class UsersController : Controller
+    public class BaseController : Controller
     {
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
-        public UsersController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
+
+        public BaseController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
         {
             userManager = userMgr;
-            // BaseController aa = new BaseController(userMgr,iden);
-            //aa.GetUserRole();
-
-            userManager = userMgr;
             _contextUsers = iden;
-        }
 
+        }
+       
         public void GetUserRole()
         {
             try
@@ -39,14 +41,5 @@ namespace LMS_Learning_Management_System.Controllers
 
         }
 
-        [Authorize]
-        //[Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Index()
-        {
-            AppUser user = await userManager.GetUserAsync(HttpContext.User);
-            string message = "Hello " + user.FullName;
-            GetUserRole();
-            return View((object)message);
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS_Learning_Management_System.Models
 {
@@ -13,6 +14,11 @@ namespace LMS_Learning_Management_System.Models
         public string Password { get; set; }
 
         public string ReturnUrl { get; set; }
+        [NotMapped]
+        public string FullName { get; set; }
+        
+        [NotMapped]
+        public string devicetype { get; set; }
 
         public bool Remember { get; set; }
 

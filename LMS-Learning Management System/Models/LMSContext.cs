@@ -68,6 +68,10 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(256)
                     .HasColumnName("PhoneNumber");
+
+                entity.Property(e => e.DeviceType)
+                    .HasMaxLength(256)
+                    .HasColumnName("DeviceType");
             });
             modelBuilder.Entity<AspNetRole>(entity =>
             {

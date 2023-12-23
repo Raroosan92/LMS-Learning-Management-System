@@ -1,6 +1,7 @@
 ﻿using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,9 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+
                 var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
                 AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
                 if (GetActiveSession(userdetails.Id))
@@ -62,19 +66,29 @@ namespace LMS_Learning_Management_System.Controllers
                     if (appUser != null)
                     {
                         await signInManager.SignOutAsync();
-                        Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
+                        Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember,false);
 
                         if (result.Succeeded)
                         {
                             GetTime();
 
-                            activesession.LoginDate = DateTime.Parse(time);
-                            activesession.UserId = appUser.Id;
-                            activesession.UserName = appUser.FullName;
-                            activesession.PhoneNumber = appUser.PhoneNumber;
-                            _context.Add(activesession);
+                            //activesession.LoginDate = DateTime.Parse(time);
+                            //activesession.UserId = appUser.Id;
+                            //activesession.UserName = appUser.FullName;
+                            //activesession.PhoneNumber = appUser.PhoneNumber;
+                            //activesession.DeviceType = login.devicetype;
+                            //_context.Add(activesession);
 
-                            await _context.SaveChangesAsync();
+                            //await _context.SaveChangesAsync();
+                            TempData["FullName"] = appUser.FullName;
+
+                            //// In your controller or middleware
+                            //HttpContext.Session.SetString("TestKey", "TestValue");
+
+                            //// Check if the value is present in subsequent requests
+                            //var testValue = HttpContext.Session.GetString("TestKey");
+
+
                             return Redirect(login.ReturnUrl ?? "/");
                         }
 
@@ -100,6 +114,14 @@ namespace LMS_Learning_Management_System.Controllers
                 else
                 {
                     TempData["AlertMessage"] = "تم تسجيل الدخول من جهاز آخر. قم بعملية تسجل الخروج منه ثم تسجيل الدخول هنا مرة اخرى";
+
+                }
+
+                }
+                catch (Exception ex)
+                {
+
+                    TempData["AlertMessage"] = "يوجد خطأ في عملية تسجيل الدخول يرجى التأكد من اسم المستخدم وكلمة المرور اولاً";
 
                 }
             }
@@ -129,40 +151,41 @@ namespace LMS_Learning_Management_System.Controllers
 
         }
 
-        public bool DeleteActiveSession()
+        public async Task<bool> DeleteActiveSession()
+    
         {
-            try
-            {
-                ActiveSession activesession = new ActiveSession();
-                var userid1 = User.Identity.GetUserId();
-                var username = _context.ActiveSessions.Where(m => m.UserId == userid1).SingleOrDefault();
+            return true;
+            //try
+            //{
+            //    ActiveSession activesession = new ActiveSession();
+            //    var userid1 =   User.Identity.GetUserId();
+            //    var username =  _context.ActiveSessions.Where(m => m.UserId == userid1).SingleOrDefault();
 
-                var session = _context.ActiveSessions.Find(username.Id);
+            //    var session =  _context.ActiveSessions.Find(username.Id);
 
-                if (session != null)
-                {
-                    _context.ActiveSessions.Remove(session);
-                    _context.SaveChangesAsync();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+            //    if (session != null)
+            //    {
+            //         _context.ActiveSessions.Remove(session);
+            //        await _context.SaveChangesAsync();
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
 
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
 
-                return true;
-            }
+            //    return true;
+            //}
 
         }
         public async Task<IActionResult> Logout()
         {
-            if (DeleteActiveSession())
+            if (await DeleteActiveSession())
             {
-
                 await signInManager.SignOutAsync();
                 return RedirectToAction("Login", "Account");
             }

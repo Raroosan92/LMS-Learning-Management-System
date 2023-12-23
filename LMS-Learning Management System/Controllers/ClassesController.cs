@@ -7,25 +7,52 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS_Learning_Management_System.Controllers
 {
+    [Authorize(Roles = "admin")]
+
+
     public class ClassesController : Controller
     {
+        private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
+        public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
         private readonly LMSContext _context;
         string time;
         string Year;
         string Month;
         DateTime Jor;
 
-        public ClassesController(LMSContext context)
+        public ClassesController(LMSContext context, Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
         {
             _context = context;
+            // BaseController aa = new BaseController(userMgr,iden);
+            //aa.GetUserRole();
+
+            userManager = userMgr;
+            _contextUsers = iden;
         }
 
+        public void GetUserRole()
+        {
+            try
+            {
+                var userid1 = User.Identity.GetUserId();
+                var username = _contextUsers.Users.Select(o => new { o.Id, o.UserName, o.Email, o.UserTypeDesc, o.FullName }).Where(m => m.Id == userid1).SingleOrDefault();
+                TempData["FullName"] = username.FullName;
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
         // GET: Classes
         public async Task<IActionResult> Index()
         {
+            GetUserRole();
             return View();
             //return View(await _context.Classes.OrderByDescending(r=>r.Id).ToListAsync());
         }
@@ -62,6 +89,7 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Classes/Create
         public IActionResult Create()
         {
+            GetUserRole();
             return View();
         }
 
@@ -80,8 +108,10 @@ namespace LMS_Learning_Management_System.Controllers
                 _context.Add(@class);
 
                 await _context.SaveChangesAsync();
+                GetUserRole();
                 return RedirectToAction(nameof(Index));
             }
+            GetUserRole();
             return View(@class);
         }
 
