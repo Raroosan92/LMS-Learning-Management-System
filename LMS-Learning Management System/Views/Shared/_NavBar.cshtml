@@ -23,7 +23,7 @@
                                     <span class="visually-hidden">(current)</span>
                                 </a>
                             </li>
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("teacher"))
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Classes" asp-action="index">
@@ -55,7 +55,7 @@
 
                             }
 
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("teacher") || User.IsInRole("student"))
+                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("student"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Enrollments" asp-action="EnrollSTD">

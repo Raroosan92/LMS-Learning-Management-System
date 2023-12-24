@@ -5,14 +5,21 @@
 }
 
 <h1>المحتويات</h1>
-@{
-    if (User.IsInRole("teacher") || User.IsInRole("admin"))
+@{ string role = "";
+    if (User.IsInRole("admin"))
     {
         <p>
             <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
         </p>
+        role = "admin";
+    }
+    if (User.IsInRole("teacher"))
+    {
+        role = "teacher";
 
     }
+
+    <input type="hidden" id="role_hidden" value="@role" />
 }
 <table id="Lessons" class="table table-striped table-bordered table-inverse table-responsive ">
     <thead>
@@ -64,54 +71,75 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+            var role = $('#role_hidden').val();
+            if (role == "admin") {
 
-            //setTimeout(function () {
-              
-            //}, 1000);
-
-            //var role = $("#Role_H").val();
-            //alert(role)
-            //if (role.toLocaleLowerCase() == "admin" || role.toLocaleLowerCase() == "teacher") {
-            //    var xx = $("#Edit").val();
-            //    alert(xx)
-            //    $(".edit").css("display", "inline-block");
-            //    $(".delete").css("display", "inline-block");
-            //}
-
-            $("#Lessons").DataTable({
-                "ajax": {
-                    "url": "/Lessons/GetData",
-                    "type": "POST",
-                    "data": "{}",
-                    "datatype": "json"
-                },
-                "columns": [
-                    { "data": "name" },
-                    { "data": "status2" },
-                    { "data": "classdesc" },
-                    { "data": "subjectdesc" },
-                    { "data": "createdUser" },
-                    { "data": "createdDate" },
-                    {
-                        "data": "id", "render": function (data) {
-                            return "<a asp-action='Edit' onclick=PopupFormCource('@Url.Action("Edit", "Lessons")/" + data + "') class='btn btn-warning'>تعديل</a> | </div><a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> | <a asp-action='Delete' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
-                        },
-                        "orderable": true,
-                        "searchable": true,
-                        "width": "auto"
+                $("#Lessons").DataTable({
+                    "ajax": {
+                        "url": "/Lessons/GetData",
+                        "type": "POST",
+                        "data": "{}",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "name" },
+                        { "data": "status2" },
+                        { "data": "classdesc" },
+                        { "data": "subjectdesc" },
+                        { "data": "createdUser" },
+                        { "data": "createdDate" },
+                        {
+                            "data": "id", "render": function (data) {
+                                return "<a asp-action='Edit' onclick=PopupFormCource('@Url.Action("Edit", "Lessons")/" + data + "') class='btn btn-warning'>تعديل</a> | </div><a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> | <a asp-action='Delete' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> ";
+                            },
+                            "orderable": true,
+                            "searchable": true,
+                            "width": "auto"
+                        }
+                    ],
+                    "language": {
+                        "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
                     }
-                ],
-                "language": {
-                    "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
-                }
 
 
 
-            });
+                });
+            }
+            else if (role == "teacher") {
+ $("#Lessons").DataTable({
+                    "ajax": {
+                        "url": "/Lessons/GetData",
+                        "type": "POST",
+                        "data": "{}",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "name" },
+                        { "data": "status2" },
+                        { "data": "classdesc" },
+                        { "data": "subjectdesc" },
+                        { "data": "createdUser" },
+                        { "data": "createdDate" },
+                        {
+                            "data": "id", "render": function (data) {
+                                return "<a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> ";
+                            },
+                            "orderable": true,
+                            "searchable": true,
+                            "width": "auto"
+                        }
+                    ],
+                    "language": {
+                        "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
+                    }
 
+
+
+                });
+            }
         });
 
-           
+
 
 
         function PopupFormCource(url) {

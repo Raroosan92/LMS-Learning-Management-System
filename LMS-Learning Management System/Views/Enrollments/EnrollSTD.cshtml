@@ -1,11 +1,12 @@
-﻿@model LMS_Learning_Management_System.Models.Enrollment
+﻿@model LMS_Learning_Management_System.Models.Mixed_Enrollments_CardDetails
+
 
 @{
     ViewData["Title"] = "التسجيل في الحصص";
 }
 
 <style>
-   
+
 
     .global-container {
         height: 100%;
@@ -14,7 +15,7 @@
         justify-content: center;
     }
 
-   
+
 
     .card-title {
         font-weight: 300;
@@ -40,6 +41,7 @@
         font-size: 13px;
         margin-top: 20px;
     }
+
     .wrapper {
         margin: 10vh;
     }
@@ -53,16 +55,48 @@
                     <div class="card-body">
                         <h3 class="card-title text-center">ادخل تفاصيل البطاقة</h3>
                         <div class="card-text">
+                            <form asp-action="EnrollSTD1" onsubmit="CheckList()" id="myForm">
+                                <div class="form-group">
+                                    <input type="hidden" id="numberOfSubjects_Hidden" readonly>
+                                    <label>رقم البطاقة</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="Card_No" autocomplete="off">
+                                    <span asp-validation-for="Card_No" class="text-danger"></span>
 
-                            <div class="form-group">
-                                <label>رقم البطاقة</label>
-                                <input type="number" class="form-control form-control-sm" asp-for="Card_No">
-                            </div>
-                            <div class="form-group">
-                                <label>الرقم السري للبطاقة</label>
-                                <input class="form-control form-control-sm" asp-for="Password_Card">
-                            </div>
-                            <a id="Enroll_Btn" class="btn btn-outline-danger">تسجيل</a>
+                                </div>
+                                <div class="form-group">
+                                    <label>الرقم السري للبطاقة</label>
+                                    <input class="form-control form-control-sm" asp-for="Password_Card" autocomplete="off">
+                                    <span asp-validation-for="Password_Card" class="text-danger"></span>
+
+                                </div>
+                                <a id="Check_Btn" class="btn btn-outline-danger">تحقق من المعلومات</a>
+
+
+                                <div class="form-group" id="NumberOfSubjects_div" style="display:none">
+                                    <label>عدد المواد المسموح بالتسجيل بها</label>
+                                    <input class="form-control form-control-sm" asp-for="NumberOfSubjects" disabled readonly>
+                                </div>
+
+                                <div class="form-group" id="subject_div" style="display:none">
+
+                                    <div class="form-group">
+                                        <label asp-for="SubjectId" class="control-label"></label>
+                                        <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" required></select>
+
+                                        @*<select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId" required></select>*@
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="ClassId" class="control-label"></label>
+                                        <select id="lstClasses" name="lstClasses"  asp-items="ViewBag.ClassId" class="form-control" required>
+                                            <option value="">-- أختر --</option>
+                                        </select>
+
+                                        @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
+                                    </div>
+                                    <input type="submit" value="تسجيل" class="btn btn-outline-danger" />
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -71,23 +105,146 @@
     </div>
 </section>
 
+
 <script src="~/js/jquery3.3.1.js"></script>
+<script src="~/js/multiselect-dropdown.js"></script>
 <script>
-    $('#Enroll_Btn').on('click', function () {
+
+
+    //$(function () {
+    //    $('#lstSubjecs').multiselect({
+    //        includeSelectAllOption: true
+    //    });
+    //});
+
+    //$(function () {
+    //    $('#lstClasses').multiselect({
+    //        includeSelectAllOption: true
+    //    });
+    //});
+    $(function () {
+        $("#lstSubjecs").change(function () {
+            var NumberOfSubjects = $('#NumberOfSubjects').val();
+
+            var selectedCount = $("#lstSubjecs option:selected").length;
+            if (selectedCount > NumberOfSubjects) {
+                alert("لقد تخطيت عدد المواد المسموح بالتسجيل بها, العدد المسموح به هو " + NumberOfSubjects + "");
+                window.location.reload()
+
+            }
+        });
+    });
+
+    function CheckList() {
+        var Subject = $("#lstSubjecs").val();
+        var Class = $("#lstClasses").val();
+
+        if (Subject == "" || Subject == '-- أختر --') {
+            alert("يرجى اختيار المواد ")
+            event.preventDefault();
+            return false;
+        }
+
+        else if (Class == "" || Class == '-- أختر --') {
+            alert("يرجى اختيار الصف ")
+            event.preventDefault();
+            return false;
+        }
+        else {
+            return true;
+
+        }
+    }
+    //$('#Enroll_Btn').on('click', function () {
+    //    var Card_No = $('#Card_No').val();
+    //    var Password_Card = $('#Password_Card').val();
+    //    if (confirm("هل انت متأكد من معلومات البطاقة")) {
+    //        $.ajax({
+    //            url: "/Enrollments/EnrollSTD1",
+    //            type: "POST",
+    //            data: { "Card_No": Card_No, "Password_Card": Password_Card },
+    //            success: function (response) {
+    //                alert(response.message);
+    //            },
+    //            error: function (response) {
+    //                alert(response.message);
+    //            }
+    //        });
+    //    }
+    //});
+
+
+
+
+    $("[id$=Check_Btn]").on('click', function (e) {
+
         var Card_No = $('#Card_No').val();
         var Password_Card = $('#Password_Card').val();
         if (confirm("هل انت متأكد من معلومات البطاقة")) {
             $.ajax({
-                url: "/Enrollments/EnrollSTD1",
+                url: "/Enrollments/Check_Crad",
                 type: "POST",
                 data: { "Card_No": Card_No, "Password_Card": Password_Card },
                 success: function (response) {
-                    alert(response.message);
+                    if (response.length != 0) {
+                        $(response).each(function () {
+                            if (response != null) {
+                                if (this.cardStatus == false) {
+                                    $('#NumberOfSubjects_div').css('display', 'none');
+                                    $('#NumberOfSubjects').val();
+                                    $('#subject_div').css('display', 'none');
+                                    $('#Class_div').css('display', 'none');
+                                    $('#Enroll_Btn').css('display', 'none');
+                                    $('#Card_No').select();
+                                    alert("البطاقة المدخلة غير مفعلة")
+                                }
+                                else if (this.userId != null) {
+                                    $('#NumberOfSubjects_div').css('display', 'none');
+                                    $('#NumberOfSubjects').val();
+                                    $('#subject_div').css('display', 'none');
+                                    $('#Class_div').css('display', 'none');
+                                    $('#Enroll_Btn').css('display', 'none');
+                                    $('#Card_No').select();
+                                    alert("البطاقة المدخلة مستخدمة مسبقاً")
+                                }
+                                else {
+
+
+                                    $('#NumberOfSubjects_div').css('display', 'block');
+                                    $('#NumberOfSubjects').val(this.numberOfSubjects);
+                                    $('#subject_div').css('display', 'block');
+                                    $('#Class_div').css('display', 'block');
+                                    $('#Enroll_Btn').css('display', 'block');
+
+                                }
+                            }
+                           
+
+                        })
+                    }
+                    else {
+                        $('#NumberOfSubjects_div').css('display', 'none');
+                        $('#NumberOfSubjects').val();
+                        $('#subject_div').css('display', 'none');
+                        $('#Class_div').css('display', 'none');
+                        $('#Card_No').select();
+                        alert("معلومات البطاقة غير صحيحة يرجى التأكدة من المعلومات المدخلة")
+                    }
                 },
-                error: function (response) {
-                    alert(response.message);
+                error: function (request, status, error) {
+                    alert("معلومات البطاقة غير صحيحة يرجى التأكدة من المعلومات المدخلة")
+                    $('#Card_No').select();
                 }
             });
         }
+
     });
+
+    const form = document.getElementById('myForm');
+    form.addEventListener('keypress', function (e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+        }
+    });
+
 </script>

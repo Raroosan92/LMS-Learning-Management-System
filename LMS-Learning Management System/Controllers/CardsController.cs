@@ -88,18 +88,18 @@ namespace LMS_Learning_Management_System.Controllers
         public IActionResult Create()
         {
             //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r=>r.Status==true), "Id", "Abbreviation");
             ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r=>r.UserType== "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
             GetUserRole(); 
             return View();
             //return View();
         }
-        public List<SelectListItem> _Classes { get; set; }
-        public List<SelectListItem> _Subjecs { get; set; }
+        //public List<SelectListItem> _Classes { get; set; }
+        //public List<SelectListItem> _Subjecs { get; set; }
 
-        List<string> _ClassesLst = new List<string>();
-        List<string> _SubjecsLst = new List<string>();
+        //List<string> _ClassesLst = new List<string>();
+        //List<string> _SubjecsLst = new List<string>();
 
 
         // POST: Cards/Create
@@ -107,7 +107,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName,NumberOfSubjects")] Card card)
         {
             if (ModelState.IsValid)
             {
@@ -115,66 +115,66 @@ namespace LMS_Learning_Management_System.Controllers
                 _context.Add(card);
                 await _context.SaveChangesAsync();
 
-                var CardSubjects = new CardSubject();
+                //var CardSubjects = new CardSubject();
 
-                _Classes = (from Classes1 in _context.Classes
-                            select new SelectListItem
-                            {
-                                Text = Classes1.Descriptions,
-                                Value = Classes1.Id.ToString()
-                            }).ToList();
-
-
-
-                _Subjecs = (from Subjects1 in _context.Subjects
-                            select new SelectListItem
-                            {
-                                Text = Subjects1.Name,
-                                Value = Subjects1.Id.ToString()
-                            }).ToList();
-
-
-                _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
-
-                string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+                //_Classes = (from Classes1 in _context.Classes
+                //            select new SelectListItem
+                //            {
+                //                Text = Classes1.Descriptions,
+                //                Value = Classes1.Id.ToString()
+                //            }).ToList();
 
 
 
-                foreach (string id in ClassId)
-                {
-                    if (!string.IsNullOrEmpty(id))
-                    {
-                        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                        _ClassesLst.Add(id);
-                    }
-                }
-
-                foreach (string id2 in SubjecsId)
-                {
-                    if (!string.IsNullOrEmpty(id2))
-                    {
-                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                        _SubjecsLst.Add(id2);
-                    }
-                }
+                //_Subjecs = (from Subjects1 in _context.Subjects
+                //            select new SelectListItem
+                //            {
+                //                Text = Subjects1.Name,
+                //                Value = Subjects1.Id.ToString()
+                //            }).ToList();
 
 
-                for (int a = 0; a < _ClassesLst.Count; a++)
-                {
-                    for (int b = 0; b < _SubjecsLst.Count; b++)
-                    {
-                        CardSubjects = new CardSubject
-                        {
-                            CardNo = card.Id,
-                            SubjectId = int.Parse(_SubjecsLst[b]),
-                            ClassId = int.Parse(_ClassesLst[a])
-                        };
-                        _context.CardSubjects.Add(CardSubjects);
-                        await _context.SaveChangesAsync();
-                    }
-                }
+                //_Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                //_Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                //string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                //string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                //foreach (string id in ClassId)
+                //{
+                //    if (!string.IsNullOrEmpty(id))
+                //    {
+                //        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                //        _ClassesLst.Add(id);
+                //    }
+                //}
+
+                //foreach (string id2 in SubjecsId)
+                //{
+                //    if (!string.IsNullOrEmpty(id2))
+                //    {
+                //        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                //        _SubjecsLst.Add(id2);
+                //    }
+                //}
+
+
+                //for (int a = 0; a < _ClassesLst.Count; a++)
+                //{
+                //    for (int b = 0; b < _SubjecsLst.Count; b++)
+                //    {
+                //        CardSubjects = new CardSubject
+                //        {
+                //            CardNo = card.Id,
+                //            SubjectId = int.Parse(_SubjecsLst[b]),
+                //            ClassId = int.Parse(_ClassesLst[a])
+                //        };
+                //        _context.CardSubjects.Add(CardSubjects);
+                //        await _context.SaveChangesAsync();
+                //    }
+                //}
 
 
 

@@ -123,30 +123,16 @@
             <br />
             <div class="contact">
                 <div class="controls">
-                    @*<span class="icon icon-close" data-toggle="tooltip" data-placement="top" title="" data-original-title="Close"></span>*@
-                    @*<img src="https://www.bootdey.com/image/900x320/FF69B4/000000" alt="cover" class="cover">
-        <div class="cont">
-            <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar" class="avatar">
-            <div class="name">Seevisual</div>
-            <div class="ui-mark">Designer</div>
-            <div class="ui-mark">UI</div>
-            <div class="ui-mark">Rocket</div>
-        </div>*@
+
 
                     @{ var video = Model.UrlVideo;}
 
-                    @*<div style="position:relative;height:0;padding-bottom:56.25%">
-        <iframe class='sproutvideo-player' src='@video' style='position:absolute;width:100%;height:100%;left:0;top:0' frameborder='0' allowfullscreen referrerpolicy='no-referrer-when-downgrade' title='Video Player'>
-             </iframe></div>*@
-                    @*https://iframe.mediadelivery.net/embed/97050/2708d88a-de96-4109-80fb-11bc61b0fd84?autoplay=true*@
-
-                    <iframe class='sproutvideo-player' src='@video' width='640' height='360' frameborder='0' allowfullscreen referrerpolicy='no-referrer-when-downgrade' title='Video Player'></iframe>
-
-                    @*<script src="https://player.vimeo.com/api/player.js"></script>
-        <div style="padding:56.25% 0 0 0;position:relative;">
-            <iframe id="Ved" src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="">
-            </iframe>
-        </div>*@
+                    <div style="padding:56.25% 0 0 0;position:relative;">
+                    <iframe src="@video" 
+                            frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="">
+                        </iframe>
+                    </div>
+                    <script src="https://player.vimeo.com/api/player.js"></script>
 
                 </div>
                 <br />

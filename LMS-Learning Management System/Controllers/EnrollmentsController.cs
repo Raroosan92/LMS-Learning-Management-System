@@ -57,7 +57,7 @@ namespace LMS_Learning_Management_System.Controllers
             //return View(await lMSContext.ToListAsync());
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // GET: Enrollments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -89,7 +89,7 @@ namespace LMS_Learning_Management_System.Controllers
             return View(enrollment);
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // GET: Enrollments/Create
         public IActionResult Create()
         {
@@ -98,7 +98,7 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                ViewData["ClassId"] = new SelectList(_context.Classes.Where(r=>r.Status == true), "Id", "Descriptions");
+                ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
                 ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
 
             }
@@ -107,7 +107,7 @@ namespace LMS_Learning_Management_System.Controllers
                 var teacher_subjects = _context.TeacherEnrollments.Select(r => new { r.SubjectId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
                 for (int i = 0; i < teacher_subjects.Count; i++)
                 {
-                    var x = _context.Subjects.Where(r => r.Id == teacher_subjects[i].SubjectId && r.Status==true).OrderByDescending(r => r.Id).FirstOrDefault();
+                    var x = _context.Subjects.Where(r => r.Id == teacher_subjects[i].SubjectId && r.Status == true).OrderByDescending(r => r.Id).FirstOrDefault();
                     if (x != null)
                     {
                         Subject_List.Add(x);
@@ -125,12 +125,12 @@ namespace LMS_Learning_Management_System.Controllers
                     }
 
                 }
-                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
-                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
             }
 
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r=>r.UserType== "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
-            GetUserRole(); 
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
+            GetUserRole();
             return View();
         }
         [Authorize(Roles = "admin")]
@@ -150,14 +150,14 @@ namespace LMS_Learning_Management_System.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", enrollment.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", enrollment.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions", enrollment.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", enrollment.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
-            GetUserRole(); 
+            GetUserRole();
             return View(enrollment);
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // GET: Enrollments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -176,8 +176,8 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-                ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
 
             }
             else
@@ -203,8 +203,8 @@ namespace LMS_Learning_Management_System.Controllers
                     }
 
                 }
-                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
-                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
             }
 
             ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
@@ -246,8 +246,8 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", enrollment.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", enrollment.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions", enrollment.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", enrollment.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
             return View(enrollment);
         }
@@ -292,7 +292,7 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                 stList = _context.Enrollments.Include(e => e.Class).Include(e => e.Subject).Include(e => e.User).OrderByDescending(r => r.Id).ToList();
+                stList = _context.Enrollments.Include(e => e.Class).Include(e => e.Subject).Include(e => e.User).OrderByDescending(r => r.Id).ToList();
 
             }
             else
@@ -360,28 +360,117 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Enrollments/Create
         public IActionResult EnrollSTD()
         {
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
+
             GetUserRole();
             return View();
         }
 
+        public List<SelectListItem> _Classes { get; set; }
+        public List<SelectListItem> _Subjecs { get; set; }
+
+        List<string> _ClassesLst = new List<string>();
+        List<string> _SubjecsLst = new List<string>();
 
 
         [Authorize(Roles = "student,admin")]
 
-        public IActionResult EnrollSTD1(string Card_No, string Password_Card)
+        public async Task<IActionResult> EnrollSTD1(Mixed_Enrollments_CardDetails mixed_Enrollments_CardDetails)
         {
+            var Check_EnrollmentExists = true;
             Enrollment enrollment2 = new Enrollment();
+
             if (ModelState.IsValid)
             {
                 GetTime();
-                var Card_Details = _context.Cards.Where(r => r.CardNo == int.Parse(Card_No) && r.CardPassword == Password_Card).FirstOrDefault();
+                var Card_Details = _context.Cards.Where(r => r.CardNo == mixed_Enrollments_CardDetails.Card_No && r.CardPassword == mixed_Enrollments_CardDetails.Password_Card).FirstOrDefault();
                 if (Card_Details.CardNo > 0)
                 {
+
+
+                    //*************To assign subjects to card***************************
+
+                    var CardSubjects = new CardSubject();
+
+                    _Classes = (from Classes1 in _context.Classes
+                                select new SelectListItem
+                                {
+                                    Text = Classes1.Descriptions,
+                                    Value = Classes1.Id.ToString()
+                                }).ToList();
+
+
+
+                    _Subjecs = (from Subjects1 in _context.Subjects
+                                select new SelectListItem
+                                {
+                                    Text = Subjects1.Name,
+                                    Value = Subjects1.Id.ToString()
+                                }).ToList();
+
+
+                    _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                    _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                    string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                    string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                    foreach (string id in ClassId)
+                    {
+                        if (!string.IsNullOrEmpty(id))
+                        {
+                            string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                            _ClassesLst.Add(id);
+                        }
+                    }
+
+                    foreach (string id2 in SubjecsId)
+                    {
+                        if (!string.IsNullOrEmpty(id2))
+                        {
+                            string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                            _SubjecsLst.Add(id2);
+                        }
+                    }
+
+
+                    for (int a = 0; a < _ClassesLst.Count; a++)
+                    {
+                        for (int b = 0; b < _SubjecsLst.Count; b++)
+                        {
+                            Check_EnrollmentExists = _context.Enrollments.Any(r => r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
+                            if (Check_EnrollmentExists == false)
+                            {
+
+                                CardSubjects = new CardSubject
+                                {
+                                    CardNo = Card_Details.Id,
+                                    SubjectId = int.Parse(_SubjecsLst[b]),
+                                    ClassId = int.Parse(_ClassesLst[a])
+                                };
+                                _context.CardSubjects.Add(CardSubjects);
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                TempData["AlertMessage1"] = "المواد التي تم اختيارها مسجلة مسبقا لنفس الصف";
+                                return View("EnrollSTD");
+                            }
+
+                        }
+                    }
+
+                    //*************To assign subjects to card***************************
+                    int cardid = 0;
 
                     var card_Enrollments = _context.CardSubjects.Where(r => r.CardNo == Card_Details.Id).ToList();
                     foreach (var item in card_Enrollments)
                     {
-                        var Check_EnrollmentExists = _context.Enrollments.Any(r => r.UserId == User.Identity.GetUserId() && r.SubjectId == item.SubjectId && r.ClassId == item.ClassId);
+                        cardid = item.CardNo;
                         if (Check_EnrollmentExists == false)
                         {
 
@@ -393,23 +482,90 @@ namespace LMS_Learning_Management_System.Controllers
                                 CreatedDate = DateTime.Parse(time)
                             };
                             _context.Add(enrollment2);
-                            _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
+
+
+
                         }
                         else
                         {
+                            Check_EnrollmentExists = true;
                             return Json(new { success = false, message = "هذه البطاقة مضافة مسبقاً" });
 
 
                         }
                     }
+                    if (Check_EnrollmentExists == false)
+                    {
+
+                        var Card_Details2 = _context.Cards
+    .Where(r => r.CardNo == mixed_Enrollments_CardDetails.Card_No && r.CardPassword == mixed_Enrollments_CardDetails.Password_Card)
+    .FirstOrDefault();
+
+                        if (Card_Details2 != null)
+                        {
+                            // Update the properties directly on the tracked entity
+                            Card_Details2.UserName = User.Identity.GetUserName();
+                            Card_Details2.UserId = User.Identity.GetUserId();
+
+                            // Exclude specific properties from modification
+                            _context.Entry(Card_Details2).Property(x => x.CardPassword).IsModified = false;
+                            _context.Entry(Card_Details2).Property(x => x.CardNo).IsModified = false;
+                            _context.Entry(Card_Details2).Property(x => x.CardPrice).IsModified = false;
+                            _context.Entry(Card_Details2).Property(x => x.CardStatus).IsModified = false;
+                            _context.Entry(Card_Details2).Property(x => x.NumberOfSubjects).IsModified = false;
+
+                            await _context.SaveChangesAsync();
+                        }
+
+
+                        //var Card_Details2 = _context.Cards.Where(r => r.CardNo == mixed_Enrollments_CardDetails.Card_No && r.CardPassword == mixed_Enrollments_CardDetails.Password_Card).FirstOrDefault();
+
+                        //Card cards = new Card
+
+                        //{
+                        //    Id = int.Parse(Card_Details2.Id.ToString()),
+                        //    UserName = User.Identity.GetUserName(),
+                        //    UserId = User.Identity.GetUserId(),
+                        //};
+                        //_context.Attach(Card_Details2);
+
+
+                        //_context.Entry(cards).State = EntityState.Modified;
+                        //_context.Entry(cards).Property(x => x.CardPassword).IsModified = false;
+                        //_context.Entry(cards).Property(x => x.CardNo).IsModified = false;
+                        //_context.Entry(cards).Property(x => x.CardPrice).IsModified = false;
+                        //_context.Entry(cards).Property(x => x.CardStatus).IsModified = false;
+                        //_context.Entry(cards).Property(x => x.NumberOfSubjects).IsModified = false;
+
+                        //await _context.SaveChangesAsync();
+                    }
+
                 }
 
                 return RedirectToAction("GetLessons", "Lessons");
             }
-            GetUserRole(); 
+            GetUserRole();
             return View();
 
         }
+        [HttpPost]
+        public JsonResult Check_Crad(string Card_No, string Password_Card)
+        {
+            if (ModelState.IsValid)
+            {
+                var Card_Details = _context.Cards.Where(r => r.CardNo == int.Parse(Card_No) && r.CardPassword == Password_Card);
+
+                return new JsonResult(Card_Details.ToList());
+            }
+            else
+            {
+                return Json(null, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+
+            }
+
+        }
+
 
     }
 }

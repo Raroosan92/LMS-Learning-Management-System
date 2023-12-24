@@ -60,7 +60,7 @@ namespace LMS_Learning_Management_System.Controllers
             //return View(await lMSContext.ToListAsync());
         }
 
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "teacher,admin")]
         // GET: Lessons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -91,8 +91,8 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
 
             }
             else
@@ -118,8 +118,8 @@ namespace LMS_Learning_Management_System.Controllers
                     }
 
                 }
-                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
-                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
             }
             GetUserRole();
             return View();
@@ -142,8 +142,8 @@ namespace LMS_Learning_Management_System.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Lessons, "Id", "Descriptions", lesson.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", lesson.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
             GetUserRole(); 
             return View(lesson);
         }
@@ -167,8 +167,8 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-                ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
 
             }
             else
@@ -194,8 +194,8 @@ namespace LMS_Learning_Management_System.Controllers
                     }
 
                 }
-                ViewData["SubjectId"] = new SelectList(Subject_List, "Id", "Abbreviation");
-                ViewData["ClassId"] = new SelectList(Class_List, "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
             }
 
             return View(lesson);
@@ -237,8 +237,8 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassId"] = new SelectList(_context.Lessons, "Id", "Descriptions", lesson.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", lesson.SubjectId);
+            ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
             return View(lesson);
         }
 
@@ -272,7 +272,7 @@ namespace LMS_Learning_Management_System.Controllers
         //    await _context.SaveChangesAsync();
         //    return RedirectToAction(nameof(Index));
         //}
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "teacher,admin")]
 
         [HttpPost]
         public IActionResult GetData()

@@ -38,7 +38,7 @@ namespace LMS_Learning_Management_System
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(300);
+                options.ExpireTimeSpan = TimeSpan.FromDays(99999);
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;

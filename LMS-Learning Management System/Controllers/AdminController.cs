@@ -43,8 +43,8 @@ namespace LMS_Learning_Management_System.Controllers
 
         public IActionResult Create()
         {
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
             ViewData["RoleId"] = new SelectList(_context.AspNetRoles, "Id", "Name");
             return View();
         }
@@ -221,8 +221,8 @@ namespace LMS_Learning_Management_System.Controllers
                     }
                 }
             }
-            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation");
+            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
             ViewData["RoleId"] = new SelectList(_context.AspNetRoles, "Id", "Name");
             return View(user);
         }

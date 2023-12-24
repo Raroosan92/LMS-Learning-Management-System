@@ -164,6 +164,8 @@ namespace LMS_Learning_Management_System.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.NumberOfSubjects).HasColumnName("Number_Of_Subjects");
+
                 entity.Property(e => e.CardNo).HasColumnName("Card_No");
 
                 entity.Property(e => e.CardPassword)

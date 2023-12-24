@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" onsubmit="CheckList()">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CardNo" class="control-label"></label>
@@ -26,16 +26,22 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="NumberOfSubjects" class="control-label"></label>
+                <input asp-for="NumberOfSubjects" class="form-control" required autocomplete="off" />
+                <span asp-validation-for="NumberOfSubjects" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="CardPrice" class="control-label"></label>
                 <input asp-for="CardPrice" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="CardPrice" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CardStatus" required checked="checked" /> @Html.DisplayNameFor(model => model.CardStatus)
+                    <input class="form-check-input" asp-for="CardStatus"/> @Html.DisplayNameFor(model => model.CardStatus)
                 </label>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
                     <option value="">-- أختر --</option>
@@ -48,18 +54,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="SubjectId" class="control-label"></label>
-                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" required></select>
+                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" required></select>-->
 
                 @*<select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId" required></select>*@
-            </div>
+            <!--</div>
             <div class="form-group">
                 <label asp-for="ClassId" class="control-label"></label>
-                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" required></select>
+                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" required></select>-->
 
                 @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
-            </div>
+            <!--</div>-->
             <div class="form-group">
-                <input type="submit" value="اضافة" class="btn btn-primary" />
+                <input type="submit" value="اضافة" class="btn btn-light" />
             </div>
         </form>
     </div>
@@ -72,25 +78,33 @@
 
 <script src="~/js/jquery3.3.1.js"></script>
 <script src="~/js/multiselect-dropdown.js"></script>
+
 <script type="text/javascript">
-    $(function () {
-        $('#lstSubjecs').multiselect({
-            includeSelectAllOption: true
-        });
-    });
 
-    $(function () {
-        $('#lstClasses').multiselect({
-            includeSelectAllOption: true
-        });
-    });
+    //$(function () {
+    //    $("#lstClasses").change(function () {
+    //        var selectedCount = $("#lstClasses option:selected").length;
+    //        alert("Number of selected options: " + selectedCount);
+    //    });
+    //});
 
 
-    $("[id$=UserId]").on('change', function () {
-        $('#UserName').val($("#UserId :selected").text());
-    });
+    //$(function () {
+    //    $('#lstSubjecs').multiselect({
+    //        includeSelectAllOption: true
+    //    });
+    //});
+
+    //$(function () {
+    //    $('#lstClasses').multiselect({
+    //        includeSelectAllOption: true
+    //    });
+    //});
 
 
+    //$("[id$=UserId]").on('change', function () {
+    //    $('#UserName').val($("#UserId :selected").text());
+    //});
 
 
 

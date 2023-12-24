@@ -29,6 +29,9 @@ namespace LMS_Learning_Management_System.Models
         public string UserId { get; set; }
         [Display(Name = "اسم الطالب")]
         public string UserName { get; set; }
+        
+        [Display(Name = "عدد المواد")]
+        public int NumberOfSubjects { get; set; }
         //[Display(Name = "المادة")]
         //public int? SubjectId { get; set; }
         //[Display(Name = "المستوى")]

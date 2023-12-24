@@ -21,6 +21,7 @@ namespace LMS_Learning_Management_System.Models
 
         public string Status2 { get; set; }
         public string UserId { get; set; }
+        public int NumberOfSubjects { get; set; }
         public string UserName { get; set; }
         [NotMapped]
         public string Classdesc { get; set; }
