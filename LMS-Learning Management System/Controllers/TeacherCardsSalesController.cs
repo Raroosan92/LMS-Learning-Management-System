@@ -1,14 +1,19 @@
 ﻿using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.WebPages.Html;
 
 namespace LMS_Learning_Management_System.Controllers
 {
+    [Authorize(Roles = "admin")]
+
     public class TeacherCardsSalesController : Controller
     {
 
@@ -46,8 +51,10 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Classes
         public async Task<IActionResult> Index()
         {
+
+            var model = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
             GetUserRole();
-            return View();
+            return View(await model.ToListAsync());
             //return View(await _context.Classes.OrderByDescending(r=>r.Id).ToListAsync());
         }
 
@@ -58,9 +65,9 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                stList = _context.TeacherSalesCards.OrderByDescending(r => r.UserName).ToList();
+                stList = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName).ToList();
 
-            
+
             }
             return new JsonResult(new { data = stList });
 
@@ -132,6 +139,54 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return View();
             }
+        }
+
+        public void GetTime()
+        {
+
+            TimeZoneInfo AST = TimeZoneInfo.FindSystemTimeZoneById("Jordan Standard Time");
+            DateTime utc = DateTime.UtcNow;
+            Jor = TimeZoneInfo.ConvertTimeFromUtc(utc, AST);
+            time = Jor.ToString();
+            Year = Jor.Year.ToString();
+            Month = Jor.Month.ToString();
+
+        }
+
+        [Authorize(Roles = "admin")]
+
+        public async Task<IActionResult> Pay(int cardno, int CardSer,double amount)
+        {
+            if (ModelState.IsValid)
+            {
+                GetTime();
+
+                var Card_Details = _context.CardSubjects.Where(r =>r.Id== CardSer).FirstOrDefault();
+
+                if (Card_Details.TeacherId != null)
+                {
+                    // Update the properties directly on the tracked entity
+                    Card_Details.PaymentAmount = amount;
+                    Card_Details.IsPayment = true;
+                    Card_Details.PaymentDate = Jor;
+
+                    // Exclude specific properties from modification
+                    _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.TeacherId).IsModified = false;
+                    await _context.SaveChangesAsync();
+                }
+
+                var model = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+                GetUserRole();
+                return View("index", model.ToList());
+
+            }
+            var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+            GetUserRole();
+            return View("index", model2.ToList());
+
         }
     }
 }

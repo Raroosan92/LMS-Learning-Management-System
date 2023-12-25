@@ -5,6 +5,18 @@
 }
 
 <h1>المحتويات</h1>
+
+<!-- إضافة حقلي إدخال لتحديد تاريخ البداية وتاريخ النهاية -->
+<label for="startDate">تاريخ البداية:</label>
+<input type="date" id="startDate" />
+
+<label for="endDate">تاريخ النهاية:</label>
+<input type="date" id="endDate" />
+
+<!-- زر بحث -->
+<button class="btn btn-primary" id="searchByDateRange">بحث</button>
+
+
 <table class="table table-striped table-bordered table-inverse table-responsive ">
     <thead>
         <tr>
@@ -37,7 +49,24 @@
             <th>
                 المحافظة
             </th>
-            <th></th>
+            <th>
+                المعلم
+            </th>
+            <th>
+                القيمة
+            </th>
+            <th>
+                مدفوع؟
+            </th>
+            <th>
+                اسم الطالب
+            </th>
+            <th>
+                تاريخ التسجيل
+            </th>
+            <th>
+                <input type="checkbox" id="selectAllCheckbox" />
+            </th>
 
         </tr>
     </thead>
@@ -48,43 +77,132 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CardNo)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.CardPrice)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.NumberOfSubjects)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.TeacherCardPrice)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
-                
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
+                    @Html.DisplayFor(modelItem => item.TeacherName)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Subject)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Class)
                 </td>
-                
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Country)
                 </td>
-                
                 <td>
-                   
+                    @Html.DisplayFor(modelItem => item.TeacherId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsPayment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td style="display:none">
+                    @Html.DisplayFor(modelItem => item.CardSer)
+                </td>
+                <td>
+                    <input type="checkbox" class="select-row-checkbox" />
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<br />
+<button class="btn btn-primary" id="deliverSelectedRows">تسليم المحدد</button>
+
+<script src="~/js/jquery3.3.1.js"></script>
+<script>
+    $(document).ready(function () {
+        // تحديد الكل
+        $("#selectAllCheckbox").on("change", function () {
+            $(".select-row-checkbox").prop("checked", $(this).prop("checked"));
+        });
+
+        // تحديد الصف الحالي
+        $(".select-row-checkbox").on("change", function () {
+            $("#selectAllCheckbox").prop("checked", false);
+        });
+
+        // زر تسليم
+        $("#deliverSelectedRows").on("click", function () {
+            // جمع الصفوف المحددة
+            var selectedRows = $(".select-row-checkbox:checked");
+
+            // التحقق من وجود صفوف محددة
+            if (selectedRows.length === 0) {
+                alert("الرجاء تحديد صفوف قبل النقر على زر 'تسليم'");
+                return;
+            }
+
+            // قم بتنفيذ الإجراء المناسب لتسليم الصفوف المحددة
+            var cardno = selectedRows.map(function () {
+                return $(this).closest("tr").find("td:first-child").text(); // تحديد العنصر الذي يمثل الهوية
+            }).get();
+            alert(cardno)
+            var amount = selectedRows.map(function () {
+                return $(this).closest("tr").find("td:eq(3)").text(); // تحديد العنصر amount
+            }).get();
+            alert(amount)
+            var CardSer = selectedRows.map(function () {
+                return $(this).closest("tr").find("td:eq(14)").text(); // تحديد العنصر الذي يمثل الهوية
+            }).get();
+            alert(CardSer)
+            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال طلب AJAX باستخدام $.post
+            $.post("/TeacherCardsSales/Pay", { cardno: cardno, CardSer: CardSer, amount: amount }, function (data) {
+                // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
+                alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+            });
+
+            // إذا كنت تستخدم ASP.NET MVC، يمكنك إرسال البيانات باستخدام $.ajax مباشرة وتكوين الطلب حسب احتياجاتك
+        });
+
+        $("#searchByDateRange").on("click", function () {
+            var startDateValue = $("#startDate").val();
+            var endDateValue = $("#endDate").val();
+
+            // التحقق من أن الحقول غير فارغة
+            if (!startDateValue || !endDateValue) {
+                alert("الرجاء إدخال تاريخ البداية وتاريخ النهاية");
+                return;
+            }
+
+            // قم بتنفيذ البحث بناءً على نطاق التاريخ
+            $.post("/TeacherCardsSales/SearchByDateRange", { startDate: startDateValue, endDate: endDateValue }, function (data) {
+                // تحديث جدول البيانات بناءً على النتائج المسترجعة
+                $("#dataTable tbody").empty(); // حذف البيانات الحالية
+                $.each(data, function (index, item) {
+                    $("#dataTable tbody").append("<tr><td>" + item.CardNumber + "</td><td>" + item.SaleDate + "</td></tr>");
+                    // ... (قم بإضافة الأعمدة الأخرى حسب الحاجة)
+                });
+            });
+        }); 
+    });
+
+</script>

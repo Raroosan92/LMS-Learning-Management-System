@@ -352,13 +352,13 @@ namespace LMS_Learning_Management_System.Controllers
             //return View();
             //var lMSContext = _context.Lessons.Include(l => l.Class).Include(l => l.Subject);
             //var Lessons = new Lesson();
-            List<Lesson> _Lessons = new List<Lesson>();
+            List<VLessonCardsSubject> _Lessons = new List<VLessonCardsSubject>();
 
             var Enrollments_Std = _context.Enrollments.Include(l => l.Class).Include(l => l.Subject).Where(r=>r.UserId== User.Identity.GetUserId());
 
             foreach (var item in Enrollments_Std)
             {
-                var lesson = _context.Lessons.Where(r=>r.ClassId==item.ClassId && r.SubjectId==item.SubjectId && r.Status == true).FirstOrDefault();
+                var lesson = _context.VLessonCardsSubjects.Where(r=>r.ClassId==item.ClassId && r.SubjectId==item.SubjectId && r.Status == true).FirstOrDefault();
                 if (lesson != null)
                 {
                     lesson.Classdesc = _context.Classes.Select(r=>new { r.Descriptions,r.Id,r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;

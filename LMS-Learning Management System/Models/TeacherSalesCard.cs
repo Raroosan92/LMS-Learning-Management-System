@@ -13,9 +13,17 @@ namespace LMS_Learning_Management_System.Models
         public int? TeacherCardPrice { get; set; }
         public string UserName { get; set; }
         public string UserTypeDesc { get; set; }
-        public string FullName { get; set; }
+        public string TeacherName { get; set; }
         public string Subject { get; set; }
         public string Class { get; set; }
         public string Country { get; set; }
+        public string TeacherId { get; set; }
+        public double? PaymentAmount { get; set; }
+        public bool? IsPayment { get; set; }
+        public string StudentName { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? PaymentDate { get; set; }
+        public int CardSer { get; set; }
+        public string TeacherUserID { get; set; }
     }
 }

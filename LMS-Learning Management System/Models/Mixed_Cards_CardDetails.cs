@@ -61,9 +61,18 @@ namespace LMS_Learning_Management_System.Models
         public virtual Class Class { get; set; }
         [Display(Name = "الموضوع")]
         public virtual Subject Subject { get; set; }
+        [Display(Name = "المعلم")]
 
+        public string TeacherId { get; set; }
+        [Display(Name = "القيمة")]
 
+        public double? PaymentAmount { get; set; }
+        [Display(Name = "مدفوع؟")]
 
+        public bool? IsPayment { get; set; }
+        [Display(Name = "تاريخ الدفع")]
+
+        public DateTime? PaymentDate { get; set; }
         public IEnumerable<Card> HD_Collection { get; set; }
         public IEnumerable<CardSubject> DTL_Collection { get; set; }
         public IEnumerable<Subject> Subject_Collection { get; set; }

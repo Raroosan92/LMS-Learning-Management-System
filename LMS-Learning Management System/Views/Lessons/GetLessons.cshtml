@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LMS_Learning_Management_System.Models.Lesson>
+﻿@model IEnumerable<LMS_Learning_Management_System.Models.VLessonCardsSubject>
 
 @{
     ViewData["Title"] = "عرض الدروس";
@@ -174,6 +174,9 @@
                 }
 </style>
 
+<!-- تضمين Bootstrap JS و jQuery -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6e6tf2h5KCzK5F/Y4XnJda2ZG99M6J5D0j8jM" crossorigin="anonymous"></script>
+
 
 <section class="wrapper">
     <div class="container">
@@ -186,6 +189,7 @@
         <div class="row">
             @{ if (Model.Count() > 0)
                 {
+
                     <section class="portfolio-area">
                         <div class="container">
 
@@ -194,7 +198,7 @@
                                     <div class="portfolio-menu">
                                         <ul>
                                             <li class="mixitup-control-active" data-filter="*">All</li>
-                                            @foreach (Lesson lesson in Model)
+                                            @foreach (VLessonCardsSubject lesson in Model)
                                             {
                                                 <li data-filter=".F_@lesson.SubjectId">@lesson.Subjectdesc</li>
                                             }
@@ -202,40 +206,101 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row portfolio-list">
-
-                                @foreach (Lesson lesson in Model)
+                                @foreach (VLessonCardsSubject lesson in Model)
                                 {
-                                    <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
-                                        <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
+                                    if (lesson.TeacherId != null)
+                                    {
 
-                                            <div class="card text-dark card-has-bg click-col">
+                                        <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
+                                            <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
 
-                                                @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
-                                                <div class="card-img-overlay d-flex flex-column">
-                                                    <a class="text-dark" href="ShowLesson/@lesson.Id">
-                                                        <div class="card-body">
-                                                            <small class="card-meta mb-2">@lesson.Classdesc</small>
-                                                            <br />
-                                                            <small class="card-meta mb-2">@lesson.Subjectdesc</small>
-                                                            <br />
-                                                            <br />
-                                                            <h4 class="card-title mt-0 ">
-                                                                @lesson.Name
-                                                            </h4>
-                                                        </div>
-                                                    </a>
+                                                <div class="card text-dark card-has-bg click-col">
 
+                                                    @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
+                                                    <div class="card-img-overlay d-flex flex-column">
+
+                                                        <a class="text-dark" href="ShowLesson/@lesson.Id">
+                                                            <div class="card-body">
+                                                                <small class="card-meta mb-2">@lesson.Classdesc</small>
+                                                                <br />
+                                                                <small class="card-meta mb-2">@lesson.Subjectdesc</small>
+                                                                <br />
+                                                                <br />
+                                                                <h4 class="card-title mt-0 ">
+                                                                    @lesson.Name
+                                                                </h4>
+                                                            </div>
+                                                        </a>
+
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                    else
+                                    {
+
+                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal')">
+                                            <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
+                                                <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
+
+                                                    <div class="card text-dark card-has-bg click-col">
+
+                                                        @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
+                                                        <div class="card-img-overlay d-flex flex-column">
+
+                                                            <div class="card-body">
+                                                                <small class="card-meta mb-2">@lesson.Classdesc</small>
+                                                                <br />
+                                                                <small class="card-meta mb-2">@lesson.Subjectdesc</small>
+                                                                <br />
+                                                                <br />
+                                                                <h4 class="card-title mt-0 ">
+                                                                    اختر المعلم
+                                                                </h4>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </a>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        
+                                                        <!-- إضافة نموذج اختيار المعلم هنا -->
+                                                        <!-- يمكنك استخدام قائمة منسدلة أو أي وسيلة أخرى لاختيار المعلم -->
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                                        <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 }
                             </div>
-
-
                         </div>
                     </section>
+
+
                 }
                 else
                 {
@@ -258,8 +323,28 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script>
 
+    function openTeacherModal(modalId) {
+        // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
+        $("#" + modalId).modal("show");
+    }
     $(document).ready(function () {
-
         var mixer = mixitup('.portfolio-list');
+
+        // كود jQuery للقيام بشيء ما عندما يتم اختيار المعلم
+        // يمكنك استخدام AJAX لإرسال القيمة إلى الخادم هنا
+
+        // على سبيل المثال:
+        $("#saveTeacherSelection").on("click", function () {
+            var selectedTeacher = $("#teacherDropdown").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
+
+            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
+            $.post("/YourController/SaveTeacherSelection", { teacherId: selectedTeacher }, function (data) {
+                // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
+                alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+            });
+
+            // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك
+        });
     });
+
 </script>

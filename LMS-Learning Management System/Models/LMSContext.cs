@@ -33,7 +33,8 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<TeacherEnrollment> TeacherEnrollments { get; set; }
         public virtual DbSet<ActiveSession> ActiveSessions { get; set; }
 
-        public virtual DbSet<TeacherSalesCard> TeacherSalesCards { get; set; }
+        public virtual DbSet<TeacherSalesCard> VTeacherSalesCards { get; set; }
+        public virtual DbSet<VLessonCardsSubject> VLessonCardsSubjects { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,6 +49,38 @@ namespace LMS_Learning_Management_System.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<VLessonCardsSubject>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Lesson_CardsSubjects");
+
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Created_Date");
+
+                entity.Property(e => e.CreatedUser).HasColumnName("Created_User");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsPayment).HasColumnName("Is_Payment");
+
+                entity.Property(e => e.PaymentAmount).HasColumnName("Payment_Amount");
+
+                entity.Property(e => e.PaymentDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Payment_Date");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
+            });
 
             modelBuilder.Entity<ActiveSession>(entity =>
             {
@@ -221,6 +254,17 @@ namespace LMS_Learning_Management_System.Models
                     .HasForeignKey(d => d.SubjectId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Card_Subjects_Subjects");
+
+                entity.Property(e => e.IsPayment).HasColumnName("Is_Payment");
+
+                entity.Property(e => e.PaymentAmount).HasColumnName("Payment_Amount");
+
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.PaymentDate)
+                   .HasColumnType("datetime")
+                   .HasColumnName("Payment_Date");
+
             });
 
             modelBuilder.Entity<Class>(entity =>
@@ -332,6 +376,8 @@ namespace LMS_Learning_Management_System.Models
                     .HasColumnName("User_ID");
             });
 
+            
+
             modelBuilder.Entity<TeacherSalesCard>(entity =>
             {
                 entity.HasNoKey();
@@ -344,13 +390,35 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.Class).IsRequired();
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Created_Date");
+
+                entity.Property(e => e.IsPayment).HasColumnName("Is_Payment");
+
                 entity.Property(e => e.NumberOfSubjects).HasColumnName("Number_Of_Subjects");
+
+                entity.Property(e => e.PaymentAmount).HasColumnName("Payment_Amount");
+
+                entity.Property(e => e.StudentName).HasColumnName("Student_Name");
 
                 entity.Property(e => e.Subject).IsRequired();
 
                 entity.Property(e => e.TeacherCardPrice).HasColumnName("Teacher_Card_Price");
 
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.TeacherName).HasColumnName("Teacher_Name");
+
+                entity.Property(e => e.TeacherUserID).HasColumnName("Teacher_UserID");
+               
+                entity.Property(e => e.CardSer).HasColumnName("CardSer");
+
                 entity.Property(e => e.UserName).HasMaxLength(256);
+
+                entity.Property(e => e.PaymentDate)
+                   .HasColumnType("datetime")
+                   .HasColumnName("Payment_Date");
             });
             OnModelCreatingPartial(modelBuilder);
         }
