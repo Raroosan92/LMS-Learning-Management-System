@@ -32,6 +32,9 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TeacherEnrollment> TeacherEnrollments { get; set; }
         public virtual DbSet<ActiveSession> ActiveSessions { get; set; }
+
+        public virtual DbSet<TeacherSalesCard> TeacherSalesCards { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -327,6 +330,27 @@ namespace LMS_Learning_Management_System.Models
                     .IsRequired()
                     .HasMaxLength(450)
                     .HasColumnName("User_ID");
+            });
+
+            modelBuilder.Entity<TeacherSalesCard>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("Teacher_Sales_Cards");
+
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
+                entity.Property(e => e.CardPrice).HasColumnName("Card_Price");
+
+                entity.Property(e => e.Class).IsRequired();
+
+                entity.Property(e => e.NumberOfSubjects).HasColumnName("Number_Of_Subjects");
+
+                entity.Property(e => e.Subject).IsRequired();
+
+                entity.Property(e => e.TeacherCardPrice).HasColumnName("Teacher_Card_Price");
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
             });
             OnModelCreatingPartial(modelBuilder);
         }

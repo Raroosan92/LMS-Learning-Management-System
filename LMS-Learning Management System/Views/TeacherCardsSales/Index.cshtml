@@ -1,0 +1,90 @@
+﻿@model IEnumerable<LMS_Learning_Management_System.Models.TeacherSalesCard>
+
+@{
+    ViewData["Title"] = "عرض البطاقات المباعة";
+}
+
+<h1>المحتويات</h1>
+<table class="table table-striped table-bordered table-inverse table-responsive ">
+    <thead>
+        <tr>
+
+            <th>
+                رقم البطاقة
+            </th>
+            <th>
+                قيمة البطاقة
+            </th>
+            <th>
+                عدد مواد البطاقة
+            </th>
+            <th>
+                القيمة النهائية لكل مادة
+            </th>
+            <th>
+                اسم المستخدم
+            </th>
+
+            <th>
+                الاسم الكامل
+            </th>
+            <th>
+                الموضوع
+            </th>
+            <th>
+                الصف
+            </th>
+            <th>
+                المحافظة
+            </th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CardNo)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.CardPrice)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfSubjects)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.TeacherCardPrice)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Class)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country)
+                </td>
+                
+                <td>
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
