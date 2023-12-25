@@ -366,6 +366,14 @@ namespace LMS_Learning_Management_System.Controllers
                 _Lessons.Add(lesson);
                 }
             }
+
+
+            var model = new VLessonCardsSubject()
+            {
+
+                VLessonCardsSubject_Collection = _Lessons,
+                TeacherInfo_Collection = _context.VTechersInfos.ToList(),
+            };
             GetUserRole();
             return View(_Lessons);
         }

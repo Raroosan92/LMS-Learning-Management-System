@@ -30,7 +30,8 @@ namespace LMS_Learning_Management_System.Models
         [NotMapped]
         public string Subjectdesc { get; set; }
 
-        public IEnumerable<TeacherSalesCard> TeacherInfo_Collection { get; set; }
+        public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
+        public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
 
     }
 }
