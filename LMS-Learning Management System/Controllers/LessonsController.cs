@@ -60,7 +60,7 @@ namespace LMS_Learning_Management_System.Controllers
             //return View(await lMSContext.ToListAsync());
         }
 
-    [Authorize(Roles = "teacher,admin")]
+        [Authorize(Roles = "teacher,admin")]
         // GET: Lessons/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -81,18 +81,21 @@ namespace LMS_Learning_Management_System.Controllers
             return View(lesson);
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // GET: Lessons/Create
         public IActionResult Create()
         {
+            GetUserRole();
+
             //var dd = new SelectList(_context.Classes, "Id", "Descriptions");
             List<Subject> Subject_List = new List<Subject>();
             List<Class> Class_List = new List<Class>();
-
+            var dd = _context.VTechersInfos.ToList().ToList();
             if (User.IsInRole("admin"))
             {
-            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
+                ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+                
 
             }
             else
@@ -120,18 +123,19 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
                 ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
+                
+
             }
-            GetUserRole();
             return View();
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // POST: Lessons/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate")] Lesson lesson)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID")] Lesson lesson)
         {
             if (ModelState.IsValid)
             {
@@ -144,11 +148,13 @@ namespace LMS_Learning_Management_System.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
-            GetUserRole(); 
+            
+
+            GetUserRole();
             return View(lesson);
         }
 
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // GET: Lessons/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -169,6 +175,8 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
                 ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+                
+
 
             }
             else
@@ -196,6 +204,8 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
                 ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
+                
+
             }
 
             return View(lesson);
@@ -203,7 +213,7 @@ namespace LMS_Learning_Management_System.Controllers
 
         // POST: Lessons/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -239,6 +249,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
+            
+
             return View(lesson);
         }
 
@@ -282,7 +294,7 @@ namespace LMS_Learning_Management_System.Controllers
 
             if (User.IsInRole("admin"))
             {
-                  stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
+                stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
 
             }
             else
@@ -290,18 +302,18 @@ namespace LMS_Learning_Management_System.Controllers
                 var teacher_Lessons = _context.TeacherEnrollments.Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
                 for (int i = 0; i < teacher_Lessons.Count; i++)
                 {
-                    var x = _context.Lessons.Where(r => r.SubjectId == teacher_Lessons[i].SubjectId && r.ClassId== teacher_Lessons[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
+                    var x = _context.Lessons.Where(r => r.SubjectId == teacher_Lessons[i].SubjectId && r.ClassId == teacher_Lessons[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
                     if (x != null)
                     {
-                    stList.Add(x);
+                        stList.Add(x);
                     }
 
                 }
             }
             for (int i = 0; i < stList.Count; i++)
             {
-            var subjects = _context.Subjects.Where(r=>r.Id== stList[i].SubjectId).SingleOrDefault();
-            var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
+                var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
+                var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
                 stList[i].Classdesc = classes.Descriptions;
                 stList[i].Subjectdesc = subjects.Name;
                 if (stList[i].Status == true)
@@ -318,7 +330,7 @@ namespace LMS_Learning_Management_System.Controllers
             return new JsonResult(new { data = stList });
 
         }
-    [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Delete(int id)
         {
@@ -352,18 +364,19 @@ namespace LMS_Learning_Management_System.Controllers
             //return View();
             //var lMSContext = _context.Lessons.Include(l => l.Class).Include(l => l.Subject);
             //var Lessons = new Lesson();
+
             List<VLessonCardsSubject> _Lessons = new List<VLessonCardsSubject>();
 
-            var Enrollments_Std = _context.Enrollments.Include(l => l.Class).Include(l => l.Subject).Where(r=>r.UserId== User.Identity.GetUserId());
+            var Enrollments_Std = _context.Enrollments.Include(l => l.Class).Include(l => l.Subject).Where(r => r.UserId == User.Identity.GetUserId());
 
             foreach (var item in Enrollments_Std)
             {
-                var lesson = _context.VLessonCardsSubjects.Where(r=>r.ClassId==item.ClassId && r.SubjectId==item.SubjectId && r.Status == true).FirstOrDefault();
+                var lesson = _context.VLessonCardsSubjects.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Status == true).SingleOrDefault();
                 if (lesson != null)
                 {
-                    lesson.Classdesc = _context.Classes.Select(r=>new { r.Descriptions,r.Id,r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
-                    lesson.Subjectdesc = _context.Subjects.Select(r=>new { r.Abbreviation,r.Id,r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
-                _Lessons.Add(lesson);
+                    lesson.Classdesc = _context.Classes.Select(r => new { r.Descriptions, r.Id, r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
+                    lesson.Subjectdesc = _context.Subjects.Select(r => new { r.Abbreviation, r.Id, r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
+                    _Lessons.Add(lesson);
                 }
             }
 
@@ -372,10 +385,10 @@ namespace LMS_Learning_Management_System.Controllers
             {
 
                 VLessonCardsSubject_Collection = _Lessons,
-                TeacherInfo_Collection = _context.VTechersInfos.ToList(),
+                TeacherInfo_Collection = _context.VTechersInfos.ToList().ToList(),
             };
             GetUserRole();
-            return View(_Lessons);
+            return View(model);
         }
 
         [Authorize(Roles = "student,admin")]
@@ -399,5 +412,62 @@ namespace LMS_Learning_Management_System.Controllers
             GetUserRole();
             return View(lesson);
         }
+
+        [HttpPost]
+        public JsonResult GetTeachersBySubject(string subjectId, string classId)
+        {
+            if (ModelState.IsValid)
+            {
+                var cc = _context.VTechersInfos.Where(r => r.SubjectId == int.Parse(subjectId) && r.ClassId == int.Parse(classId)).ToList();
+
+                return new JsonResult(cc.ToList());
+            }
+            else
+            {
+                return Json(null, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+
+            }
+
+        }
+
+
+        [HttpPost]
+        public JsonResult AssignTeacher(string teacherId, int Card_No, int Subject_id, int Class_id)
+        {
+
+            if (ModelState.IsValid)
+            {
+                GetTime();
+
+                var Card_Details = _context.CardSubjects.Where(r => r.CardNo == Card_No && r.SubjectId == Subject_id && r.ClassId == Class_id).FirstOrDefault();
+
+                if (Card_Details != null && teacherId != null)
+                {
+                    // Update the properties directly on the tracked entity
+                    Card_Details.TeacherId = teacherId;
+
+                    // Exclude specific properties from modification
+                    _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.PaymentAmount).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.PaymentDate).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.IsPayment).IsModified = false;
+                    _context.SaveChangesAsync();
+                }
+
+                var model = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+                GetUserRole();
+                var successMessage = "تمت العملية بنجاح";
+                return new JsonResult(new { Success = true, Message = successMessage });
+            }
+
+            var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+            GetUserRole();
+            // في حالة الفشل، قم بالتعامل مع الاستثناءات أو الأخطاء هنا
+            var errorMessage = "حدث خطأ أثناء تنفيذ العملية";
+            return new JsonResult(new { Success = false, Message = errorMessage });
+        }
     }
+
 }

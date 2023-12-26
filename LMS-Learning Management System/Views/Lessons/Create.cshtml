@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" required autocomplete="off"/>
+                <input asp-for="Name" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="UrlVideo" class="control-label"></label>
-                <input asp-for="UrlVideo" class="form-control" required autocomplete="off"/>
+                <input asp-for="UrlVideo" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="UrlVideo" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -41,8 +41,16 @@
                     <option value="">--اختر--</option>
                 </select>
                 <span asp-validation-for="SubjectId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" id="teaceridv" style="display:none">
+                <label asp-for="TeacherID" class="control-label"></label>
+                <select asp-for="TeacherID" class="form-control">
+                </select>
+                <span asp-validation-for="TeacherID" class="text-danger"></span>
 
             </div>
+
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <select asp-for="Status" class="form-control">
@@ -53,15 +61,15 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>*@
+            <label asp-for="CreatedUser" class="control-label"></label>
+            <input asp-for="CreatedUser" class="form-control" />
+            <span asp-validation-for="CreatedUser" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedDate" class="control-label"></label>
+            <input asp-for="CreatedDate" class="form-control" />
+            <span asp-validation-for="CreatedDate" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <input type="submit" value="اضافة" class="btn btn-primary" />
             </div>
@@ -76,3 +84,47 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script src="~/js/jquery3.3.1.js"></script>
+<script>
+    // الانتظار حتى يتم تحميل الصفحة
+    $(document).ready(function () {
+        // التقاط تغييرات في dropdown1 (المواد)
+        $('#SubjectId').change(function () {
+            // جلب القيمة المحددة في dropdown1 (المواد)
+            var selectedSubjectId = $(this).val();
+            var selectedClassId = $('#ClassId').val();
+
+            // استخدام Ajax لجلب المعلمين بناءً على المادة المحددة
+            $.ajax({
+                url: "/Lessons/GetTeachersBySubject",
+                type: "POST",
+                data: { "subjectId": selectedSubjectId, "classId": selectedClassId },
+                success: function (response) {
+                    $('#teaceridv').css('display', 'Block');
+                    // حذف الخيارات القديمة في dropdown2
+                    $('#TeacherID').empty();
+
+                    // إضافة الخيارات الجديدة بناءً على المعلمين المحددين
+                    $.each(response, function (index, teacher) {
+                       
+                        $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
+                    });
+
+                },
+                error: function (request, status, error) {
+                    alert("لا يوجد معلمين للمادة والمستوى المطلوبين")
+                }
+            });
+
+
+
+
+
+        });
+
+
+        $('#TeacherID').change(function () {
+           
+        });
+    });
+</script>

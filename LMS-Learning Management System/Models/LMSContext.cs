@@ -49,7 +49,8 @@ namespace LMS_Learning_Management_System.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
-          
+
+
             modelBuilder.Entity<VTechersInfo>(entity =>
             {
                 entity.HasNoKey();
@@ -58,12 +59,17 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.Class).IsRequired();
 
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
                 entity.Property(e => e.Id)
                     .IsRequired()
                     .HasMaxLength(450);
 
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
+
 
             modelBuilder.Entity<VLessonCardsSubject>(entity =>
             {
@@ -301,6 +307,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.ToTable("Enrollment");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
 
                 entity.Property(e => e.ClassId).HasColumnName("Class_ID");
 
@@ -349,6 +356,8 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
 
                 entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
+
+                entity.Property(e => e.TeacherID).HasColumnName("Teacher_ID");
 
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Lessons)

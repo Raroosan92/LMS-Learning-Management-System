@@ -101,8 +101,7 @@
                     type: "POST",
                     url: '@Url.Action("Delete", "Subjects")/' + id,
                     success: function (data) {
-                        if (data.success)
-                        {
+                        if (data.success) {
                             $.notify(data.message, {
                                 globalPosition: "top center",
                                 className: "success"
@@ -110,7 +109,16 @@
                             setTimeout(function () {
                                 window.location.reload();
                             }, 2000);
+
+                            alert(data.message);
                         }
+                        else {
+                            alert(data.message);
+
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.responseText); // استخدم data.responseText بدلاً من this.message
                     }
 
                 });

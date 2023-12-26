@@ -12,5 +12,7 @@ namespace LMS_Learning_Management_System.Models
         public string FullName { get; set; }
         public string Subject { get; set; }
         public string Class { get; set; }
+        public int ClassId { get; set; }
+        public int SubjectId { get; set; }
     }
 }

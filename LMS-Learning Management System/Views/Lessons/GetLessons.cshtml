@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LMS_Learning_Management_System.Models.VLessonCardsSubject>
+﻿@model LMS_Learning_Management_System.Models.VLessonCardsSubject
 
 @{
     ViewData["Title"] = "عرض الدروس";
@@ -187,7 +187,7 @@
             </div>
         </div>
         <div class="row">
-            @{ if (Model.Count() > 0)
+            @{ if (Model.VLessonCardsSubject_Collection.Count() > 0)
                 {
 
                     <section class="portfolio-area">
@@ -198,7 +198,7 @@
                                     <div class="portfolio-menu">
                                         <ul>
                                             <li class="mixitup-control-active" data-filter="*">All</li>
-                                            @foreach (VLessonCardsSubject lesson in Model)
+                                            @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
                                             {
                                                 <li data-filter=".F_@lesson.SubjectId">@lesson.Subjectdesc</li>
                                             }
@@ -208,7 +208,7 @@
                             </div>
 
                             <div class="row portfolio-list">
-                                @foreach (VLessonCardsSubject lesson in Model)
+                                @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
                                 {
                                     if (lesson.TeacherId != null)
                                     {
@@ -243,7 +243,7 @@
                                     else
                                     {
 
-                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal')">
+                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@lesson.SubjectId,@lesson.ClassId,@lesson.CardNo)">
                                             <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
                                                 <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
 
@@ -262,7 +262,30 @@
                                                                     اختر المعلم
                                                                 </h4>
                                                             </div>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style=" background: transparent; color: white; border: transparent; font-size: 27px; }">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <!-- DropDownList -->
+                                                                            <label for="selectedItem">اختر العنصر:</label>
 
+                                                                            @Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r=>r.ClassId== @lesson.ClassId && r.SubjectId== @lesson.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })
+
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                                                            <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                         </div>
                                                     </div>
@@ -272,30 +295,13 @@
 
                                         </a>
 
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        
-                                                        <!-- إضافة نموذج اختيار المعلم هنا -->
-                                                        <!-- يمكنك استخدام قائمة منسدلة أو أي وسيلة أخرى لاختيار المعلم -->
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
-                                                        <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     }
                                 }
+
+
+
+
+                              
                             </div>
                         </div>
                     </section>
@@ -322,10 +328,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.1/mixitup.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script>
-
-    function openTeacherModal(modalId) {
+    var Subject_id;
+    var Class_id;
+    var Card_No;
+    function openTeacherModal(modalId, SubjectId, ClassId, CardNo) {
         // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
         $("#" + modalId).modal("show");
+       Subject_id = SubjectId;
+       Class_id = ClassId;
+       Card_No = CardNo;
     }
     $(document).ready(function () {
         var mixer = mixitup('.portfolio-list');
@@ -335,12 +346,19 @@
 
         // على سبيل المثال:
         $("#saveTeacherSelection").on("click", function () {
-            var selectedTeacher = $("#teacherDropdown").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
 
+            var selectedTeacher = $("#selectedItem").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
+            if (selectedTeacher == "") {
+                alert("يرجى اختيار معلم.");
+                return;
+            }
             // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
-            $.post("/YourController/SaveTeacherSelection", { teacherId: selectedTeacher }, function (data) {
+            $.post("/Lessons/AssignTeacher", { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id },
+                function (data) {
                 // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                    alert(data.message);
+                    // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                    window.location.reload();
             });
 
             // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك

@@ -165,19 +165,18 @@
             var cardno = selectedRows.map(function () {
                 return $(this).closest("tr").find("td:first-child").text(); // تحديد العنصر الذي يمثل الهوية
             }).get();
-            alert(cardno)
             var amount = selectedRows.map(function () {
                 return $(this).closest("tr").find("td:eq(3)").text(); // تحديد العنصر amount
             }).get();
-            alert(amount)
             var CardSer = selectedRows.map(function () {
                 return $(this).closest("tr").find("td:eq(14)").text(); // تحديد العنصر الذي يمثل الهوية
             }).get();
-            alert(CardSer)
             // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال طلب AJAX باستخدام $.post
             $.post("/TeacherCardsSales/Pay", { cardno: cardno, CardSer: CardSer, amount: amount }, function (data) {
                 // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                //alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+
+                window.location.reload();
             });
 
             // إذا كنت تستخدم ASP.NET MVC، يمكنك إرسال البيانات باستخدام $.ajax مباشرة وتكوين الطلب حسب احتياجاتك

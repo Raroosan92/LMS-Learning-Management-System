@@ -16,7 +16,7 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" required autocomplete="off"/>
+                <input asp-for="Name" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="UrlVideo" class="control-label"></label>
-                <input asp-for="UrlVideo" class="form-control" required autocomplete="off"/>
+                <input asp-for="UrlVideo" class="form-control" required autocomplete="off" />
                 <span asp-validation-for="UrlVideo" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -46,6 +46,14 @@
                 <span asp-validation-for="SubjectId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TeacherID" class="control-label"></label>
+                <select asp-for="TeacherID" class="form-control" asp-items="ViewBag.TeacherID">
+                    <option value="">--اختر--</option>
+                </select>
+                <span asp-validation-for="TeacherID" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <select asp-for="Status" class="form-control">
                     <option value="">--اختر--</option>
@@ -55,15 +63,15 @@
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>*@
+            <label asp-for="CreatedUser" class="control-label"></label>
+            <input asp-for="CreatedUser" class="form-control" />
+            <span asp-validation-for="CreatedUser" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedDate" class="control-label"></label>
+            <input asp-for="CreatedDate" class="form-control" />
+            <span asp-validation-for="CreatedDate" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <input type="submit" value="تعديل" class="btn btn-primary" />
             </div>

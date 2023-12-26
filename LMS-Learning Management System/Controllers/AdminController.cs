@@ -46,6 +46,7 @@ namespace LMS_Learning_Management_System.Controllers
             ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
             ViewData["RoleId"] = new SelectList(_context.AspNetRoles, "Id", "Name");
+            TempData["AlertMessage"] = "";
             return View();
         }
         public List<SelectListItem> _Classes { get; set; }

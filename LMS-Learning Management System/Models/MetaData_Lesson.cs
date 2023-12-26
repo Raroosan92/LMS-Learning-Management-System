@@ -46,5 +46,9 @@ namespace LMS_Learning_Management_System.Models
         public virtual Class Class { get; set; }
         [Display(Name = "المادة")]
         public virtual Subject Subject { get; set; }
+        
+        [Display(Name = "معلم المادة")]
+        [Required]
+        public string TeacherID { get; set; }
     }
 }

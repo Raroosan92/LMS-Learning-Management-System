@@ -15,7 +15,7 @@ namespace LMS_Learning_Management_System.Controllers
     [Authorize(Roles = "admin")]
     public class SubjectsController : Controller
     {
-        private readonly LMSContext _context; 
+        private readonly LMSContext _context;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
 
@@ -179,7 +179,7 @@ namespace LMS_Learning_Management_System.Controllers
             }
             else
             {
-                var teacher_subjects = _context.TeacherEnrollments.Select(r=>new { r.SubjectId,r.UserId}).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
+                var teacher_subjects = _context.TeacherEnrollments.Select(r => new { r.SubjectId, r.UserId }).Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
                 for (int i = 0; i < teacher_subjects.Count; i++)
                 {
                     var x = _context.Subjects.Where(r => r.Id == teacher_subjects[i].SubjectId).OrderByDescending(r => r.Id).FirstOrDefault();
@@ -209,12 +209,23 @@ namespace LMS_Learning_Management_System.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            using (LMSContext db = new LMSContext())
+            try
             {
-                Subject std = db.Subjects.Where(x => x.Id == id).FirstOrDefault<Subject>();
-                db.Subjects.Remove(std);
-                db.SaveChanges();
-                return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+
+                using (LMSContext db = new LMSContext())
+                {
+                    Subject std = db.Subjects.Where(x => x.Id == id).FirstOrDefault<Subject>();
+                    db.Subjects.Remove(std);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+                }
+
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = false, message = "لا يمكن الحذف المادة يوجد طلاب مسجلين في نفس المادة" });
+
             }
         }
         public void GetTime()

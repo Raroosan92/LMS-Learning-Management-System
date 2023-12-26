@@ -35,5 +35,10 @@ namespace LMS_Learning_Management_System.Models
         public virtual Subject Subject { get; set; }
         [Display(Name = "الطالب")]
         public virtual AspNetUser User { get; set; }
+
+        [Display(Name = "المعلم")]
+
+        public string TeacherId { get; set; }
+
     }
 }
