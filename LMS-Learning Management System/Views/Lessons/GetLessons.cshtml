@@ -190,110 +190,110 @@
             @{ if (Model.VLessonCardsSubject_Collection.Count() > 0)
                 {
 
-                    <section class="portfolio-area">
-                        <div class="container">
+                <section class="portfolio-area">
+                    <div class="container">
 
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="portfolio-menu">
-                                        <ul>
-                                            <li class="mixitup-control-active" data-filter="*">All</li>
-                                            @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="portfolio-menu">
+                                    <ul>
+                                        <li class="mixitup-control-active" data-filter="*">All</li>
+                                        @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
                                             {
-                                                <li data-filter=".F_@lesson.SubjectId">@lesson.Subjectdesc</li>
+                                        <li data-filter=".F_@lesson.SubjectId">@lesson.Subjectdesc</li>
                                             }
-                                        </ul>
-                                    </div>
+                                    </ul>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="row portfolio-list">
-                                @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
+                        <div class="row portfolio-list">
+                            @foreach (VLessonCardsSubject lesson in Model.VLessonCardsSubject_Collection)
                                 {
                                     if (lesson.TeacherId != null)
                                     {
 
-                                        <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
-                                            <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
+                            <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
+                                <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
 
-                                                <div class="card text-dark card-has-bg click-col">
+                                    <div class="card text-dark card-has-bg click-col">
 
-                                                    @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
-                                                    <div class="card-img-overlay d-flex flex-column">
+                                        @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
+                                        <div class="card-img-overlay d-flex flex-column">
 
-                                                        <a class="text-dark" href="ShowLesson/@lesson.Id">
-                                                            <div class="card-body">
-                                                                <small class="card-meta mb-2">@lesson.Classdesc</small>
-                                                                <br />
-                                                                <small class="card-meta mb-2">@lesson.Subjectdesc</small>
-                                                                <br />
-                                                                <br />
-                                                                <h4 class="card-title mt-0 ">
-                                                                    @lesson.Name
-                                                                </h4>
-                                                            </div>
-                                                        </a>
-
-
-                                                    </div>
+                                            <a class="text-dark" href="ShowLesson/@lesson.Id">
+                                                <div class="card-body">
+                                                    <small class="card-meta mb-2">@lesson.Classdesc</small>
+                                                    <br />
+                                                    <small class="card-meta mb-2">@lesson.Subjectdesc</small>
+                                                    <br />
+                                                    <br />
+                                                    <h4 class="card-title mt-0 ">
+                                                        @lesson.Name
+                                                    </h4>
                                                 </div>
-                                            </div>
+                                            </a>
+
+
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
                                     }
                                     else
                                     {
 
-                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@lesson.SubjectId,@lesson.ClassId,@lesson.CardNo)">
-                                            <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
-                                                <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
+                                <div class="col-sm-4 mix single-portfolio-item  F_@lesson.SubjectId">
+                                    <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
 
-                                                    <div class="card text-dark card-has-bg click-col">
+                                        <div class="card text-dark card-has-bg click-col">
 
-                                                        @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
-                                                        <div class="card-img-overlay d-flex flex-column">
+                                            @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
+                                            <div class="card-img-overlay d-flex flex-column">
 
-                                                            <div class="card-body">
-                                                                <small class="card-meta mb-2">@lesson.Classdesc</small>
-                                                                <br />
-                                                                <small class="card-meta mb-2">@lesson.Subjectdesc</small>
-                                                                <br />
-                                                                <br />
-                                                                <h4 class="card-title mt-0 ">
-                                                                    اختر المعلم
-                                                                </h4>
+                                                <div class="card-body">
+                                                    <small class="card-meta mb-2">@lesson.Classdesc</small>
+                                                    <br />
+                                                    <small class="card-meta mb-2">@lesson.Subjectdesc</small>
+                                                    <br />
+                                                    <br />
+                                                    <h4 class="card-title mt-0 ">
+                                                        اختر المعلم
+                                                    </h4>
+                                                </div>
+                            <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@lesson.SubjectId,@lesson.ClassId,@lesson.CardNo)">
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style=" background: transparent; color: white; border: transparent; font-size: 27px; }">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
                                                             </div>
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style=" background: transparent; color: white; border: transparent; font-size: 27px; }">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <!-- DropDownList -->
-                                                                            <label for="selectedItem">اختر العنصر:</label>
+                                                            <div class="modal-body">
+                                                                <!-- DropDownList -->
+                                                                <label for="selectedItem">اختر المعلم:</label>
 
-                                                                            @Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r=>r.ClassId== @lesson.ClassId && r.SubjectId== @lesson.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })
+                                                                @Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r => r.ClassId == @lesson.ClassId && r.SubjectId == @lesson.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })
 
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
-                                                                            <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                             </div>
-
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                                                <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                            </a>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                                        </a>
 
                                     }
                                 }
@@ -301,16 +301,106 @@
 
 
 
-                              
-                            </div>
+
                         </div>
-                    </section>
+                    </div>
+                </section>
 
 
                 }
+                 if (Model.VEnrollmentStdDetailt_Collection.Count() > 0)
+                {
+                <section class="portfolio-area">
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="portfolio-menu">
+                                    <ul>
+                                        <li class="mixitup-control-active" data-filter="*">All</li>
+                                        @foreach (VEnrollmentStdDetail lesson in Model.VEnrollmentStdDetailt_Collection)
+                                            {
+                                        <li data-filter=".F_@lesson.SubjectId">@lesson.Name</li>
+                                            }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row portfolio-list">
+                            @foreach (var lesson2 in Model.VEnrollmentStdDetailt_Collection)
+                                {
+                            <div class="col-sm-4 mix single-portfolio-item  F_@lesson2.SubjectId">
+                                <div class="col-sm-12 col-md-12 col-lg-12 mb-12">
+
+                                    <div class="card text-dark card-has-bg click-col">
+
+                                        @*<div class="card text-dark card-has-bg click-col" style="background-image: url(../Images/depositphotos_39428483-stock-photo-lesson.jpg) !important; background-position: 0px 0px; background-size: 100% !important; background: no-repeat;">*@
+                                        <div class="card-img-overlay d-flex flex-column">
+
+                                            <div class="card-body">
+                                                <small class="card-meta mb-2">@lesson2.Descriptions</small>
+                                                <br />
+                                                <small class="card-meta mb-2">@lesson2.Name</small>
+                                                <br />
+                                                <br />
+
+
+                                                <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@lesson2.SubjectId,@lesson2.ClassId,@lesson2.CardNo)">
+                                                    <h4 class="card-title mt-0 ">
+                                                        اختر المعلم
+                                                    </h4>
+                                                </a>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style=" background: transparent; color: white; border: transparent; font-size: 27px; }">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- DropDownList -->
+                                                            <label for="selectedItem">اختر المعلم:</label>
+                                                            <div class="form-group">
+                                                                <select id="TeacherID" class="form-control"></select>
+
+                                                            </div>
+
+                                                            @*@Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r => r.ClassId == lesson2.ClassId && r.SubjectId == lesson2.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })*@
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                                            <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                                }
+
+
+
+
+
+                        </div>
+                    </div>
+                </section>
+                }
                 else
                 {
-                    <h4>لا يوجد دروس مسجلة حاليا</h4>
+                <h4>لا يوجد دروس مسجلة حاليا</h4>
                 }
             }
 
@@ -324,45 +414,3 @@
     </div>
 </section>
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.1/mixitup.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-<script>
-    var Subject_id;
-    var Class_id;
-    var Card_No;
-    function openTeacherModal(modalId, SubjectId, ClassId, CardNo) {
-        // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
-        $("#" + modalId).modal("show");
-       Subject_id = SubjectId;
-       Class_id = ClassId;
-       Card_No = CardNo;
-    }
-    $(document).ready(function () {
-        var mixer = mixitup('.portfolio-list');
-
-        // كود jQuery للقيام بشيء ما عندما يتم اختيار المعلم
-        // يمكنك استخدام AJAX لإرسال القيمة إلى الخادم هنا
-
-        // على سبيل المثال:
-        $("#saveTeacherSelection").on("click", function () {
-
-            var selectedTeacher = $("#selectedItem").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
-            if (selectedTeacher == "") {
-                alert("يرجى اختيار معلم.");
-                return;
-            }
-            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
-            $.post("/Lessons/AssignTeacher", { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id },
-                function (data) {
-                // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                    alert(data.message);
-                    // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
-                    window.location.reload();
-            });
-
-            // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك
-        });
-    });
-
-</script>

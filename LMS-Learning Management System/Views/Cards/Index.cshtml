@@ -62,12 +62,9 @@
                     { "data": "cardPrice" },
                     { "data": "status2" },
                     { "data": "userName" },
-                    //{ "data": "classdesc" },
-                    //{ "data": "subjectdesc" },
-                    //{ "data": "userdesc" },
                     {
                         "data": "id", "render": function (data) {
-                            return "<a asp-action='Edit' onclick=PopupFormCource('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
+                            return "<a asp-action='Edit' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
                         },
                         "orderable": true,
                         "searchable": true,
@@ -88,6 +85,25 @@
         });
 
 
+        function PopupFormCource2(url) {
+            var formDiv = $('<div/>');
+            $.get(url)
+                .done(function (response) {
+                    formDiv.html(response);
+
+                    Popup = formDiv.dialog({
+                        autoOpen: true,
+                        resizable: false,
+                        title: 'المستويات',
+                        height: 500,
+                        width: 700,
+                        close: function () {
+                            Popup.dialog('destroy').remove();
+                        }
+                    });
+
+                });
+        }
 
         function PopupFormCource(url) {
             var formDiv = $('<div/>');

@@ -36,6 +36,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<TeacherSalesCard> VTeacherSalesCards { get; set; }
         public virtual DbSet<VLessonCardsSubject> VLessonCardsSubjects { get; set; }
         public virtual DbSet<VTechersInfo> VTechersInfos { get; set; }
+        public virtual DbSet<VEnrollmentStdDetail> VEnrollmentStdDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -50,7 +51,35 @@ namespace LMS_Learning_Management_System.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<VEnrollmentStdDetail>(entity =>
+            {
+                entity.HasNoKey();
 
+                entity.ToView("V_EnrollmentSTD_Details");
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Created_Date");
+
+                entity.Property(e => e.Descriptions).IsRequired();
+
+                entity.Property(e => e.EnrollmentClassId).HasColumnName("Enrollment_Class_ID");
+
+                entity.Property(e => e.EnrollmentSubjectId).HasColumnName("Enrollment_Subject_ID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_id");
+
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450)
+                    .HasColumnName("User_Id");
+            });
             modelBuilder.Entity<VTechersInfo>(entity =>
             {
                 entity.HasNoKey();

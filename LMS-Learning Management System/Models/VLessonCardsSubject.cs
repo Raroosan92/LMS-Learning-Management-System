@@ -32,6 +32,11 @@ namespace LMS_Learning_Management_System.Models
 
         public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
         public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
+        public IEnumerable<VEnrollmentStdDetail> VEnrollmentStdDetailt_Collection { get; set; }
 
+        public static implicit operator VLessonCardsSubject(List<VLessonCardsSubject> v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

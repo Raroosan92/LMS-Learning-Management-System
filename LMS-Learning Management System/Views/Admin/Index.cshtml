@@ -8,18 +8,18 @@
 
 <table class="table table-sm table-bordered">
 	<tr>
-		<th>المعرف</th>
-		<th>الاسم</th>
-		<th>الايميل</th>
+		<th>اسم المستخدم</th>
+		<th>الاسم الكامل</th>
+		<th>نوع المستخدم</th>
 		<th>تعديل</th>
 		<th>حذف</th>
 	</tr>
 	@foreach (AppUser user in Model)
 	{
 		<tr>
-			<td>@user.Id</td>
 			<td>@user.UserName</td>
-			<td>@user.Email</td>
+			<td>@user.FullName</td>
+			<td>@user.UserTypeDesc</td>
 			<td>
 				<a class="btn btn-sm btn-primary" asp-action="Update" asp-route-id="@user.Id">
 					تعديل

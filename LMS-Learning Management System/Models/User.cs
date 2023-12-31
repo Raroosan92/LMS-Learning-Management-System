@@ -31,7 +31,7 @@ namespace LMS_Learning_Management_System.Models
         [Display(Name = "تاريخ االميلاد")]
         [Required]
         public DateTime BirthDate { get; set; }
-        [Display(Name = "الدولة")]
+        [Display(Name = "المحافظة")]
         [Required]
         public string Country { get; set; }
         [Display(Name = "الاسم الكامل")]

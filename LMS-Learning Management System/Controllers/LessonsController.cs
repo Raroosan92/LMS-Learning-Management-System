@@ -95,7 +95,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
                 ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
-                
+
 
             }
             else
@@ -123,7 +123,7 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
                 ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
-                
+
 
             }
             return View();
@@ -148,7 +148,7 @@ namespace LMS_Learning_Management_System.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
-            
+
 
             GetUserRole();
             return View(lesson);
@@ -175,7 +175,8 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
                 ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
-                
+                ViewData["TeacherID"] = new SelectList(_context.VTechersInfos.Where(r => r.ClassId == lesson.ClassId && r.SubjectId == lesson.SubjectId), "Id", "FullName");
+
 
 
             }
@@ -204,7 +205,7 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 ViewData["SubjectId"] = new SelectList(Subject_List.Where(r => r.Status == true), "Id", "Abbreviation");
                 ViewData["ClassId"] = new SelectList(Class_List.Where(r => r.Status == true), "Id", "Descriptions");
-                
+
 
             }
 
@@ -217,7 +218,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status")] Lesson lesson)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID")] Lesson lesson)
         {
             if (id != lesson.Id)
             {
@@ -249,7 +250,8 @@ namespace LMS_Learning_Management_System.Controllers
             }
             ViewData["ClassId"] = new SelectList(_context.Lessons.Where(r => r.Status == true), "Id", "Descriptions", lesson.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", lesson.SubjectId);
-            
+            ViewData["TeacherID"] = new SelectList(_context.VTechersInfos.Where(r => r.ClassId == lesson.ClassId && r.SubjectId == lesson.SubjectId), "Id", "FullName");
+
 
             return View(lesson);
         }
@@ -357,39 +359,83 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return _context.Lessons.Any(e => e.Id == id);
         }
-        [Authorize(Roles = "student,admin")]
 
-        public IActionResult GetLessons()
+
+
+
+        [HttpPost]
+        public JsonResult GetTeachersBySubject(string subjectId, string classId)
         {
-            //return View();
-            //var lMSContext = _context.Lessons.Include(l => l.Class).Include(l => l.Subject);
-            //var Lessons = new Lesson();
-
-            List<VLessonCardsSubject> _Lessons = new List<VLessonCardsSubject>();
-
-            var Enrollments_Std = _context.Enrollments.Include(l => l.Class).Include(l => l.Subject).Where(r => r.UserId == User.Identity.GetUserId());
-
-            foreach (var item in Enrollments_Std)
+            if (ModelState.IsValid)
             {
-                var lesson = _context.VLessonCardsSubjects.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Status == true).SingleOrDefault();
-                if (lesson != null)
-                {
-                    lesson.Classdesc = _context.Classes.Select(r => new { r.Descriptions, r.Id, r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
-                    lesson.Subjectdesc = _context.Subjects.Select(r => new { r.Abbreviation, r.Id, r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
-                    _Lessons.Add(lesson);
-                }
+                var cc = _context.VTechersInfos.Where(r => r.SubjectId == int.Parse(subjectId) && r.ClassId == int.Parse(classId)).ToList();
+
+                return new JsonResult(cc.ToList());
+            }
+            else
+            {
+                return Json(null, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+
             }
 
-
-            var model = new VLessonCardsSubject()
-            {
-
-                VLessonCardsSubject_Collection = _Lessons,
-                TeacherInfo_Collection = _context.VTechersInfos.ToList().ToList(),
-            };
-            GetUserRole();
-            return View(model);
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> AssignTeacher(string teacherId, int Card_No, int Subject_id, int Class_id)
+        {
+
+            if (ModelState.IsValid)
+            {
+                GetTime();
+
+                var Card_Details = _context.CardSubjects.Where(r => r.CardNo == Card_No && r.SubjectId == Subject_id && r.ClassId == Class_id).FirstOrDefault();
+
+                if (Card_Details != null && teacherId != null)
+                {
+                    // Update the properties directly on the tracked entity
+                    Card_Details.TeacherId = teacherId;
+
+                    // Exclude specific properties from modification
+                    _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.PaymentAmount).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.PaymentDate).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.IsPayment).IsModified = false;
+                    await _context.SaveChangesAsync();
+                }
+
+
+                //***********************edit enrollments*************************
+                var enrollmentSTD_Details = _context.Enrollments.Where(r => r.SubjectId == Subject_id && r.ClassId == Class_id && r.UserId == User.Identity.GetUserId()).FirstOrDefault();
+
+                if (enrollmentSTD_Details != null && teacherId != null)
+                {
+                    // Update the properties directly on the tracked entity
+                    enrollmentSTD_Details.TeacherId = teacherId;
+
+                    // Exclude specific properties from modification
+                    _context.Entry(enrollmentSTD_Details).Property(x => x.SubjectId).IsModified = false;
+                    _context.Entry(enrollmentSTD_Details).Property(x => x.ClassId).IsModified = false;
+                    _context.Entry(enrollmentSTD_Details).Property(x => x.CreatedDate).IsModified = false;
+                    _context.Entry(enrollmentSTD_Details).Property(x => x.UserId).IsModified = false;
+                   await  _context.SaveChangesAsync();
+                }
+                //***********************edit enrollments*************************
+                 
+                GetUserRole();
+                var successMessage = "تمت العملية بنجاح";
+                return new JsonResult(new { Success = true, Message = successMessage });
+            }
+
+            var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+            GetUserRole();
+            // في حالة الفشل، قم بالتعامل مع الاستثناءات أو الأخطاء هنا
+            var errorMessage = "حدث خطأ أثناء تنفيذ العملية";
+            return new JsonResult(new { Success = false, Message = errorMessage });
+        }
+
 
         [Authorize(Roles = "student,admin")]
 
@@ -413,61 +459,167 @@ namespace LMS_Learning_Management_System.Controllers
             return View(lesson);
         }
 
+        
+        
+        [Authorize(Roles = "student,admin")]
+
+        ////[HttpPost]
+        //public IActionResult ShowLessons(int? ClassId, int? SubjectId, string TeacherId)
+        //{
+        //    GetUserRole();
+
+        //    if (ClassId == null || SubjectId == null || TeacherId == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var lessons = _context.VLessonCardsSubjects
+        //        .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId)
+        //        .OrderBy(r => r.Id)
+        //        .ToList();
+
+        //    var lessonViewModel = new VLessonCardsSubject()
+        //    {
+        //        VLessonCardsSubject_Collection = lessons,
+        //        TeacherInfo_Collection = _context.VTechersInfos.ToList()
+        //    };
+        //    //ViewBag.LessonViewModel = lessonViewModel;
+        //    TempData["LessonViewModel"] = lessonViewModel;
+
+        //    if (lessonViewModel == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        //    {
+        //        return View("_PartialShowLessons", lessonViewModel);
+        //        //return Json(new { success = true, message = "جاري التحويل", data = lessonViewModel });
+        //    }
+        //    else
+        //    {
+        //        return View("_PartialShowLessons", lessonViewModel);
+
+
+        //    }
+
+        //    //if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        //    //{
+        //    //    // This is an AJAX request, return a partial view
+        //    //    return Json(new { lessonViewModel = lessonViewModel, redirectUrl = "/Lessons/_PartialShowLessons/" });
+        //    //    //return Json(new { lessonViewModel = lessonViewModel, redirectUrl = "/Lessons/ShowLessons/"+ClassId+"/"+SubjectId+"/"+TeacherId+"" });
+
+        //    //}
+        //    // This is a regular request, return the full view
+        //    //return View(lessonViewModel);
+        //}
+
         [HttpPost]
-        public JsonResult GetTeachersBySubject(string subjectId, string classId)
+        public IActionResult _PartialShowLessons(int? ClassId, int? SubjectId, string TeacherId)
         {
-            if (ModelState.IsValid)
-            {
-                var cc = _context.VTechersInfos.Where(r => r.SubjectId == int.Parse(subjectId) && r.ClassId == int.Parse(classId)).ToList();
-
-                return new JsonResult(cc.ToList());
-            }
-            else
-            {
-                return Json(null, System.Web.Mvc.JsonRequestBehavior.AllowGet);
-
-            }
-
-        }
-
-
-        [HttpPost]
-        public JsonResult AssignTeacher(string teacherId, int Card_No, int Subject_id, int Class_id)
-        {
-
-            if (ModelState.IsValid)
-            {
-                GetTime();
-
-                var Card_Details = _context.CardSubjects.Where(r => r.CardNo == Card_No && r.SubjectId == Subject_id && r.ClassId == Class_id).FirstOrDefault();
-
-                if (Card_Details != null && teacherId != null)
-                {
-                    // Update the properties directly on the tracked entity
-                    Card_Details.TeacherId = teacherId;
-
-                    // Exclude specific properties from modification
-                    _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.PaymentAmount).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.PaymentDate).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.IsPayment).IsModified = false;
-                    _context.SaveChangesAsync();
-                }
-
-                var model = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
-                GetUserRole();
-                var successMessage = "تمت العملية بنجاح";
-                return new JsonResult(new { Success = true, Message = successMessage });
-            }
-
-            var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
             GetUserRole();
-            // في حالة الفشل، قم بالتعامل مع الاستثناءات أو الأخطاء هنا
-            var errorMessage = "حدث خطأ أثناء تنفيذ العملية";
-            return new JsonResult(new { Success = false, Message = errorMessage });
-        }
-    }
 
+            if (ClassId == null || SubjectId == null || TeacherId == null)
+            {
+                return NotFound();
+            }
+
+            var lessons = _context.VLessonCardsSubjects
+                .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId)
+                .OrderBy(r => r.Id)
+                .ToList();
+
+            var lessonViewModel = new VLessonCardsSubject()
+            {
+                VLessonCardsSubject_Collection = lessons,
+                TeacherInfo_Collection = _context.VTechersInfos.ToList()
+            };
+
+            if (lessonViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(lessonViewModel);
+        }
+
+
+
+        //public async Task<IActionResult> ShowLessons(int? ClassId, int? SubjectId, string TeacherId)
+        //{
+        //    if (ClassId == null || SubjectId == null || TeacherId == null )
+        //    {
+        //        return NotFound();
+        //    }
+        //    var lessons =  _context.VLessonCardsSubjects.Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId).ToList();
+
+        //    var lesson = new VLessonCardsSubject()
+        //    {
+        //        VLessonCardsSubject_Collection = lessons.OrderBy(r => r.Id).ToList(),
+        //        TeacherInfo_Collection = _context.VTechersInfos.ToList().ToList(),
+        //    };
+        //    if (lesson == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    GetUserRole();
+        //    return View(lesson);
+        //}
+
+
+
+        [Authorize(Roles = "student,admin")]
+
+        public IActionResult GetSubjects()
+        {
+            List<VEnrollmentStdDetail> _SubjectsSelectedTeacher = new List<VEnrollmentStdDetail>();
+            List<VEnrollmentStdDetail> _SubjectsNotSelectedTeacher = new List<VEnrollmentStdDetail>();
+          
+            var Enrollments_Std = _context.VEnrollmentStdDetails.Where(r => r.UserId == User.Identity.GetUserId()).ToList();
+           
+            foreach (var item in Enrollments_Std)
+            {
+                if (item.TeacherId != null)
+                {
+                    var lesson = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Subjects_Status == true && r.Classes_Status == true && r.TeacherId == item.TeacherId).SingleOrDefault();
+                    if (lesson != null)
+                    {
+                        //lesson.Classdesc = _context.Classes.Select(r => new { r.Descriptions, r.Id, r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
+                        //lesson.Subjectdesc = _context.Subjects.Select(r => new { r.Abbreviation, r.Id, r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
+                        _SubjectsSelectedTeacher.Add(lesson);
+                    }
+                }
+                if (item.TeacherId == null)
+                {
+                    var lesson2 = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && item.TeacherId == null).FirstOrDefault();
+                    if (lesson2 != null)
+                    {
+                        _SubjectsNotSelectedTeacher.Add(lesson2);
+                    }
+                }
+            }
+            List<VEnrollmentStdDetail> mergedList = new List<VEnrollmentStdDetail>();
+
+            mergedList = _SubjectsSelectedTeacher.Concat(_SubjectsNotSelectedTeacher).ToList();
+           
+            var model = new VEnrollmentStdDetail()
+            {
+                VEnrollmentStdDetailt_Collection = mergedList.OrderByDescending(r => r.Name),
+                TeacherInfo_Collection = _context.VTechersInfos.ToList().ToList(),
+            };
+
+
+            GetUserRole();
+            return View(model);
+
+
+        }
+
+
+
+    }
 }
+
+
+
+

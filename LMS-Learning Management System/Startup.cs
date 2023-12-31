@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,24 +67,24 @@ namespace LMS_Learning_Management_System
                 };
             });
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = "Cookies";
-            //    options.DefaultSignInScheme = "Cookies";
-            //    options.DefaultSignOutScheme = "Cookies";
-            //})
-            //    .AddCookie(options =>
-            //    {
-            //        options.Cookie.Name = ".AspNetCore.Identity.Application22";
-            //        options.ExpireTimeSpan = TimeSpan.Zero; // Set your desired session timeout
-            //options.SlidingExpiration = true;
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Cookies";
+                options.DefaultSignInScheme = "Cookies";
+                options.DefaultSignOutScheme = "Cookies";
+            })
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = ".AspNetCore.Identity.Application22";
+                    options.ExpireTimeSpan = TimeSpan.FromDays(99999); // Set your desired session timeout
+                    options.SlidingExpiration = true;
 
-            //        options.Events.OnSigningOut = context =>
-            //        {
-            //            context.Response.StatusCode = 401; // Unauthorized status code
-            //    return Task.CompletedTask;
-            //        };
-            //    });
+                    options.Events.OnSigningOut = context =>
+                    {
+                        context.Response.StatusCode = 401; // Unauthorized status code
+                        return Task.CompletedTask;
+                    };
+                });
 
             //services.AddSession(options =>
             //{
@@ -182,6 +183,10 @@ namespace LMS_Learning_Management_System
             {
                 opts.SignIn.RequireConfirmedEmail = true;
             });*/
+            services.Configure<MvcNewtonsoftJsonOptions>(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
 
 
@@ -243,10 +248,13 @@ namespace LMS_Learning_Management_System
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
                 //endpoints.MapControllerRoute(
-                //    name: "ForReports",
-                //    pattern: "{controller=Reports}/{action=Spend_Income_EL_Orders_Markets_RPT}/{no?}/{Checked_Markets?}");
+                //   name: "ForGetAllLessons",
+                //   pattern: "{controller=Lessons}/{action=ShowLessons}");
+
+                endpoints.MapControllerRoute(
+                    name: "ForGetAllLessons",
+                    pattern: "{controller=Lessons}/{action=ShowLessons}/{ClassId?}/{SubjectId?}/{TeacherId?}");
 
             });
 

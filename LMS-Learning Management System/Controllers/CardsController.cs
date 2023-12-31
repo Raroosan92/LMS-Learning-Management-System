@@ -195,13 +195,25 @@ namespace LMS_Learning_Management_System.Controllers
                 return NotFound();
             }
 
+            //List<CardSubject> query = (from d in _context.CardSubjects
+            //                           join h in _context.Cards on d.CardNo equals h.Id
+            //                           select d).ToList();
+
+            //var model = new Mixed_Cards_CardDetails()
+            //{
+            //    HD_Collection = await _context.Cards.Where(r=>r.Id==id).ToListAsync(),
+            //    DTL_Collection = query.AsEnumerable(),
+            //    Subject_Collection = _context.Subjects.ToList(),
+            //    Class_Collection = _context.Classes.ToList()
+            //};
+
             var card = await _context.Cards.FindAsync(id);
             if (card == null)
             {
                 return NotFound();
             }
-            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+           //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+           //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
             return View(card);
         }
@@ -211,7 +223,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName")] Card card)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName,NumberOfSubjects")] Card card)
         {
             if (id != card.Id)
             {
