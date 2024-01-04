@@ -140,7 +140,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClassId,SubjectId,UserId,CreatedDate")] Enrollment enrollment)
+        public async Task<IActionResult> Create([Bind("Id,ClassId,SubjectId,UserId,CreatedDate,Semester")] Enrollment enrollment)
         {
             if (ModelState.IsValid)
             {
@@ -450,7 +450,8 @@ namespace LMS_Learning_Management_System.Controllers
                                 {
                                     CardNo = Card_Details.Id,
                                     SubjectId = int.Parse(_SubjecsLst[b]),
-                                    ClassId = int.Parse(_ClassesLst[a])
+                                    ClassId = int.Parse(_ClassesLst[a]),
+                                    Semester = mixed_Enrollments_CardDetails.Semester
                                 };
                                 _context.CardSubjects.Add(CardSubjects);
                                 await _context.SaveChangesAsync();
@@ -543,7 +544,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                 }
 
-                return RedirectToAction("GetLessons", "Lessons");
+                return RedirectToAction("GetSubjects", "Lessons");
             }
             GetUserRole();
             return View();

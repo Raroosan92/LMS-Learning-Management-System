@@ -29,7 +29,8 @@ namespace LMS_Learning_Management_System.Models
         public string Classdesc { get; set; }
         [NotMapped]
         public string Subjectdesc { get; set; }
-
+     
+        public int Semester { get; set; }
         public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
         public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
         public IEnumerable<VEnrollmentStdDetail> VEnrollmentStdDetailt_Collection { get; set; }

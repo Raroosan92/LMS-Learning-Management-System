@@ -87,11 +87,20 @@
                                     </div>
                                     <div class="form-group">
                                         <label asp-for="ClassId" class="control-label"></label>
-                                        <select id="lstClasses" name="lstClasses"  asp-items="ViewBag.ClassId" class="form-control" required>
+                                        <select id="lstClasses" name="lstClasses" asp-items="ViewBag.ClassId" class="form-control" required>
                                             <option value="">-- أختر --</option>
                                         </select>
 
                                         @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Semester" class="control-label"></label>
+                                        <select asp-for="Semester" class="form-control">
+                                            <option value="">--اختر--</option>
+                                            <option value="1">الفصل الأول</option>
+                                            <option value="2">الفصل الثاني</option>
+                                        </select>
+                                        <span asp-validation-for="Semester" class="text-danger"></span>
                                     </div>
                                     <input type="submit" value="تسجيل" class="btn btn-outline-danger" />
                                 </div>
@@ -138,6 +147,7 @@
     function CheckList() {
         var Subject = $("#lstSubjecs").val();
         var Class = $("#lstClasses").val();
+        var Semester = $("#Semester").val();
 
         if (Subject == "" || Subject == '-- أختر --') {
             alert("يرجى اختيار المواد ")
@@ -147,6 +157,11 @@
 
         else if (Class == "" || Class == '-- أختر --') {
             alert("يرجى اختيار الصف ")
+            event.preventDefault();
+            return false;
+        }
+        else if (Semester == "" || Semester == '-- أختر --') {
+            alert("يرجى اختيار الفصل الدراسي ")
             event.preventDefault();
             return false;
         }

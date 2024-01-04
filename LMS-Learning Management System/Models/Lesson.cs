@@ -33,5 +33,9 @@ namespace LMS_Learning_Management_System.Models
         public virtual Subject Subject { get; set; }
         [NotMapped]
         public string  Subjectdesc { get; set; }
+    
+        public int Semester { get; set; }
+        [NotMapped]
+        public string SemesterDesc { get; set; }
     }
 }

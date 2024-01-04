@@ -11,7 +11,7 @@
         height: 270px;
         width: 190px;
         position: relative;
-        margin: 0 0 0 2%;   
+        margin: 0 0 0 2%;
     }
 
         .panel:hover .card {
@@ -162,46 +162,88 @@
     .fa-plane {
         font-size: 16px;
     }
+    .D1 {
+        display: flex
+    }
+
+@@media (min-width: 768px) and (max-width: 1000px) {
+    .D1 {
+        display: flex
+    }
+
+   
+}
+
+@@media (min-width: 1001px) and (max-width: 1199px) {
+    .D1 {
+        display: flex
+    }
+
+    
+}
+
+@@media (min-width: 100px) and (max-width: 767px) {
+    .D1 {
+        display: inline-grid;
+        place-items: center;
+    }
+
+    .panel {
+        height: 270px;
+        width: 190px;
+        position: relative;
+        margin: 0 0 7% 0;
+    }
+}
 </style>
 
 <div class="row">
-        <div class="col-12">
-    <div class="container" style="display:flex">
-            @foreach (var item in Model.VLessonCardsSubject_Collection)
-            {
-                <div class="panel">
+    <div class="col-12">
+        @if (Model.VLessonCardsSubject_Collection.Count() > 0)
+        {
+            <div class="container D1">
+                @foreach (var item in Model.VLessonCardsSubject_Collection)
+                {
+                    <div class="panel">
 
-                    <div class="ring">
-                        <div class="card card1"></div>
-                        <div class="border">
-                            <p class="title">@item.Description</p>
-                            <div class="slide">
-                                <h6 class="para">@item.Name</h6>
-                                @foreach (var item2 in Model.TeacherInfo_Collection.Select(r=> new { r.FullName,r.Id}).Where(r => r.Id == item.TeacherId).Distinct())
-                                {
+                        <div class="ring">
+                            <div class="card card1"></div>
+                            <div class="border">
+                                <p class="title">@item.Description</p>
+                                <div class="slide">
+                                    <h6 class="para">@item.Name</h6>
+                                    @foreach (var item2 in Model.TeacherInfo_Collection.Select(r => new { r.FullName, r.Id }).Where(r => r.Id == item.TeacherId).Distinct())
+                                    {
+                                        <div class="line">
+                                            <h6 class="para">@item2.FullName</h6>
+
+                                        </div>
+                                    }
                                     <div class="line">
-                                        <h6 class="para">@item2.FullName</h6>
+                                        <h6 class="para">يرجى الانتقال الى تطبيق الهاتف لمشاهدة الدروس</h6>
 
                                     </div>
-                                }
-                                <div class="line">
-                                    <h6 class="para">يرجى الانتقال الى تطبيق الهاتف لمشاهدة الدروس</h6>
+                                    <div class="line">
+                                        <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>
+                                        @*<h6 class="para">@item2.FullName</h6>*@
+                                    </div>
 
                                 </div>
-                                <div class="line">
-                                    <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>
-                                    @*<h6 class="para">@item2.FullName</h6>*@
-                                </div>
-
                             </div>
                         </div>
+
+
                     </div>
+                }
+            </div>
+        }
 
-
-                </div>
-            }
-
-        </div>
+        else
+        {
+            <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
+                <h4>لا يوجد دروس مسجلة حاليا</h4>
+            </div>
+        }
     </div>
 </div>
 

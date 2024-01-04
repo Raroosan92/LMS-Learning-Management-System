@@ -20,7 +20,8 @@ namespace LMS_Learning_Management_System.Models
         public int CardNo { get; set; }
         public bool Subjects_Status { get; set; }
         public bool Classes_Status { get; set; }
-
+ 
+        public int Semester { get; set; }
 
 
 

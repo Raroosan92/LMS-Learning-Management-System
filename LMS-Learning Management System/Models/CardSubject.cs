@@ -11,6 +11,7 @@ namespace LMS_Learning_Management_System.Models
         public int CardNo { get; set; }
         public int SubjectId { get; set; }
         public int ClassId { get; set; }
+        public int Semester { get; set; }
         public string TeacherId { get; set; }
         public double? PaymentAmount { get; set; }
         public bool? IsPayment { get; set; }

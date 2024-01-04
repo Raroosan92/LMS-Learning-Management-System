@@ -50,5 +50,8 @@ namespace LMS_Learning_Management_System.Models
         [Display(Name = "معلم المادة")]
         [Required]
         public string TeacherID { get; set; }
+        [Required]
+        [Display(Name = "الفصل")]
+        public int Semester { get; set; }
     }
 }

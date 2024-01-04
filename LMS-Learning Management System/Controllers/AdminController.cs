@@ -212,7 +212,16 @@ namespace LMS_Learning_Management_System.Controllers
 
                         }
                         TempData["AlertMessage"] = "تم انشاء الحساب بنجاح";
+                        if (User.IsInRole("admin"))
+                        {
+                            return View();
+
+                        }
+                        else
+                        {
                         return RedirectToAction("login","Account");
+
+                        }
 
                     }
                     else

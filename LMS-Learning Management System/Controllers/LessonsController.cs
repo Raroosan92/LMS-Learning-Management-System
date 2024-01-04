@@ -135,7 +135,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID")] Lesson lesson)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID,Semester")] Lesson lesson)
         {
             if (ModelState.IsValid)
             {
@@ -218,7 +218,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID")] Lesson lesson)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID,Semester")] Lesson lesson)
         {
             if (id != lesson.Id)
             {
@@ -328,6 +328,16 @@ namespace LMS_Learning_Management_System.Controllers
                     stList[i].Status2 = "غير فعال";
 
                 }
+                if (stList[i].Semester == 1)
+                {
+                    stList[i].SemesterDesc = "الفصل الأول";
+
+                }
+                else
+                {
+                    stList[i].SemesterDesc = "الفصل الثاني";
+
+                }
             }
             return new JsonResult(new { data = stList });
 
@@ -400,6 +410,7 @@ namespace LMS_Learning_Management_System.Controllers
                     _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
                     _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
                     _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
+                    _context.Entry(Card_Details).Property(x => x.Semester).IsModified = false;
                     _context.Entry(Card_Details).Property(x => x.PaymentAmount).IsModified = false;
                     _context.Entry(Card_Details).Property(x => x.PaymentDate).IsModified = false;
                     _context.Entry(Card_Details).Property(x => x.IsPayment).IsModified = false;
@@ -419,6 +430,7 @@ namespace LMS_Learning_Management_System.Controllers
                     _context.Entry(enrollmentSTD_Details).Property(x => x.SubjectId).IsModified = false;
                     _context.Entry(enrollmentSTD_Details).Property(x => x.ClassId).IsModified = false;
                     _context.Entry(enrollmentSTD_Details).Property(x => x.CreatedDate).IsModified = false;
+                    _context.Entry(enrollmentSTD_Details).Property(x => x.Semester).IsModified = false;
                     _context.Entry(enrollmentSTD_Details).Property(x => x.UserId).IsModified = false;
                    await  _context.SaveChangesAsync();
                 }

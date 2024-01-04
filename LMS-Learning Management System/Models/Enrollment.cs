@@ -13,6 +13,7 @@ namespace LMS_Learning_Management_System.Models
         public int Id { get; set; }
         public int ClassId { get; set; }
         public int SubjectId { get; set; }
+        public int Semester { get; set; }
         public string TeacherId { get; set; }
         public string UserId { get; set; }
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:MM:ss tt}")]

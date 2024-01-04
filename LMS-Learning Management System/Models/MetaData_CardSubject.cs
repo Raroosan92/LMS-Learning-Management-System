@@ -22,6 +22,9 @@ namespace LMS_Learning_Management_System.Models
         public int SubjectId { get; set; }
         [Display(Name = "المستوى")]
         public int ClassId { get; set; }
+        [Required]
+        [Display(Name = "الفصل")]
+        public int Semester { get; set; }
 
         [Display(Name = "المستوى")]
         public virtual Class Class { get; set; }

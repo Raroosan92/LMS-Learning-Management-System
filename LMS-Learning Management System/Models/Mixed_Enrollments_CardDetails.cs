@@ -67,7 +67,9 @@ namespace LMS_Learning_Management_System.Models
         public virtual Class Class_CD { get; set; }
         [Display(Name = "الموضوع")]
         public virtual Subject Subject_CD { get; set; }
-
+        [Required]
+        [Display(Name = "الفصل")]
+        public int Semester { get; set; }
 
 
 

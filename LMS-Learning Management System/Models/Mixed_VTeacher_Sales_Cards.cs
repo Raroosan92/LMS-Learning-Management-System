@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-
-#nullable disable
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Models
 {
-    public partial class TeacherSalesCard
+    public class Mixed_VTeacher_Sales_Cards
     {
+
         public int CardNo { get; set; }
         public string CardPrice { get; set; }
         public int? NumberOfSubjects { get; set; }
@@ -27,7 +28,7 @@ namespace LMS_Learning_Management_System.Models
         public DateTime? PaymentDate { get; set; }
         public int CardSer { get; set; }
         public string TeacherUserID { get; set; }
-   
+
         public int Semester { get; set; }
         [NotMapped]
         public string SemesterDesc { get; set; }
@@ -37,13 +38,14 @@ namespace LMS_Learning_Management_System.Models
         public DateTime? startDate { get; set; }
         [NotMapped]
         public DateTime? endDate { get; set; }
-     
+
         [NotMapped]
         public int? teacherName { get; set; }
-        
-        
-        [NotMapped]
-        public int? subject { get; set; }
 
+
+        [NotMapped]
+        public int? subject1 { get; set; }
+
+        public IEnumerable<TeacherSalesCard> Teacher_Sales_Cards_Collection { get; set; }
     }
 }

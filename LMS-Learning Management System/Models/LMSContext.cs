@@ -74,6 +74,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.CardNo).HasColumnName("Card_No");
 
                 entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+                entity.Property(e => e.Semester).HasColumnName("Semester");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
@@ -131,6 +132,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
 
                 entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
+                entity.Property(e => e.Semester).HasColumnName("Semester");
             });
 
             modelBuilder.Entity<ActiveSession>(entity =>
@@ -287,6 +289,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.ClassId).HasColumnName("Class_ID");
 
                 entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+                entity.Property(e => e.Semester).HasColumnName("Semester");
 
                 entity.HasOne(d => d.CardNoNavigation)
                     .WithMany(p => p.CardSubjects)
@@ -387,6 +390,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
 
                 entity.Property(e => e.TeacherID).HasColumnName("Teacher_ID");
+                entity.Property(e => e.Semester).HasColumnName("Semester");
 
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Lessons)
@@ -458,6 +462,7 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.Subject).IsRequired();
 
+                entity.Property(e => e.CenterCardPrice).HasColumnName("Center_Card_Price");
                 entity.Property(e => e.TeacherCardPrice).HasColumnName("Teacher_Card_Price");
 
                 entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
@@ -467,6 +472,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.TeacherUserID).HasColumnName("Teacher_UserID");
                
                 entity.Property(e => e.CardSer).HasColumnName("CardSer");
+                entity.Property(e => e.Semester).HasColumnName("Semester");
 
                 entity.Property(e => e.UserName).HasMaxLength(256);
 
