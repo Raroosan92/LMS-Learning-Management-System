@@ -5,12 +5,26 @@
 }
 
 <h1>المحتويات</h1>
+<style>
+    /* Define your custom styles for the notification */
+    .notification-custom {
+        background-color: #3498db; /* Blue background color */
+        color: #ffffff; /* White text color */
+        border: 2px solid #2980b9; /* Border color */
+    }
 
+        /* Define your custom styles for the notification close button */
+        .notification-custom .notify-close {
+            color: #ffffff; /* White color for close button */
+        }
+
+    /* Override the default styles for other notification types as needed */
+</style>
 <p>
     <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
 </p>
 
-<table id="classes" class="table table-striped table-bordered table-inverse table-responsive ">
+<table id="classes" class="table table-striped table-bordered table-inverse table-responsive " style="font-size: 17px;">
     <thead>
         <tr>
             <th>
@@ -61,10 +75,10 @@
                     { "data": "numberOfSubjects" },
                     { "data": "cardPrice" },
                     { "data": "status2" },
-                    { "data": "userName" },
+                    { "data": "userdesc" },
                     {
                         "data": "id", "render": function (data) {
-                            return "<a asp-action='Edit' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
+                            return "<a asp-action='Edit' style='font-size: 15px;' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' style='font-size: 15px;' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' style='font-size: 15px;' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
                         },
                         "orderable": true,
                         "searchable": true,
@@ -138,11 +152,11 @@
                         {
                             $.notify(data.message, {
                                 globalPosition: "top center",
-                                className: "success"
+                                className: "notification-custom"
                             })
                             setTimeout(function () {
                                 window.location.reload();
-                            }, 2000);
+                            }, 3000);
                         }
                     }
 

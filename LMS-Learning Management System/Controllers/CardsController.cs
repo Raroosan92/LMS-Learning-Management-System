@@ -65,7 +65,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-            var card = GetCards_And_Details();
+            var card = GetCards_And_Details(id);
             if (card == null)
             {
                 return NotFound();
@@ -89,9 +89,9 @@ namespace LMS_Learning_Management_System.Controllers
         {
             //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r=>r.Status==true), "Id", "Abbreviation");
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r=>r.UserType== "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
-            GetUserRole(); 
+            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
+            GetUserRole();
             return View();
             //return View();
         }
@@ -111,9 +111,20 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
+                try
+                {
+                    _context.Add(card);
+                    await _context.SaveChangesAsync();
+                    TempData["SweetAlert"] = "success";
 
-                _context.Add(card);
-                await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    // في حالة الفشل
+                    TempData["SweetAlert"] = "error";
+                    return View();
+
+                }
 
                 //var CardSubjects = new CardSubject();
 
@@ -183,7 +194,7 @@ namespace LMS_Learning_Management_System.Controllers
             //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
             //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
-            GetUserRole(); 
+            GetUserRole();
             return View(card);
         }
 
@@ -212,8 +223,8 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 return NotFound();
             }
-           //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-           //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
             return View(card);
         }
@@ -302,7 +313,7 @@ namespace LMS_Learning_Management_System.Controllers
                     //stList[i].Subjectdesc = subjects.Name;
                     try
                     {
-                    stList[i].Userdesc = users.UserName;
+                        stList[i].Userdesc = users.FullName;
 
                     }
                     catch (Exception xx)
@@ -333,23 +344,94 @@ namespace LMS_Learning_Management_System.Controllers
 
         }
         [HttpPost]
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             using (LMSContext db = new LMSContext())
             {
-                //CardSubject cardsdtl = db.CardSubjects.Where(x => x.CardNo == id).FirstOrDefault<CardSubject>();
-                //db.CardSubjects.Remove(cardsdtl);
-                //db.SaveChanges();
+                try
+                {
+                    bool deleted = true;
+                    //CardSubject cardsdtl = db.CardSubjects.Where(x => x.CardNo == id).FirstOrDefault<CardSubject>();
+                    //db.CardSubjects.Remove(cardsdtl);
+                    //db.SaveChanges();
+                    Card cards2 = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
 
+                    var cardsSubjects = await db.CardSubjects.Where(x => x.CardNo == cards2.Id).ToListAsync();
 
+                    try
+                    {
 
-                Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
-                db.Cards.Remove(cards);
-                db.SaveChanges();
+                    foreach (var item in cardsSubjects)
+                    {
+                        Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester).FirstOrDefault<Enrollment>();
+                        if (Enrollments != null)
+                        {
 
+                            db.Enrollments.Remove(Enrollments);
+                            await db.SaveChangesAsync();
+                            deleted = true;
+                        }
+                        else
+                        {
+                            deleted = true;
+                        }
 
-                return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+                    }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        deleted = false;
+                    }
+
+                    try
+                    {
+
+                   
+                    foreach (var item2 in cardsSubjects)
+                    {
+                        CardSubject cardsSubjects1 =  db.CardSubjects.Where(x => x.CardNo == item2.CardNo &&  x.SubjectId == item2.SubjectId && x.ClassId == item2.ClassId && x.Semester == item2.Semester).FirstOrDefault<CardSubject>();
+
+                        if (cardsSubjects1 != null)
+                        {
+
+                            db.CardSubjects.Remove(cardsSubjects1);
+                            await db.SaveChangesAsync();
+                                deleted = true;
+                            }
+
+                    }
+                    }
+                    catch (Exception)
+                    {
+
+                        deleted = false;
+                    }
+                    if (deleted)
+                    {
+
+                    Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
+
+                    db.Cards.Remove(cards);
+                    db.SaveChanges();
+
+                    return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+                    }
+                    else
+                    {
+                        return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = true, message = "خطأ في عملية الحذف" });
+
+                }
             }
+
+
         }
         public void GetTime()
         {
@@ -370,20 +452,21 @@ namespace LMS_Learning_Management_System.Controllers
 
 
 
-        public Mixed_Cards_CardDetails GetCards_And_Details()
+        public Mixed_Cards_CardDetails GetCards_And_Details(int? id)
         {
 
 
             List<CardSubject> query = (from d in _context.CardSubjects
                                        join h in _context.Cards on d.CardNo equals h.Id
+                                       where h.Id == id
                                        select d).ToList();
 
             var model = new Mixed_Cards_CardDetails()
             {
                 HD_Collection = _context.Cards.ToList(),
                 DTL_Collection = query.AsEnumerable(),
-                Subject_Collection=_context.Subjects.ToList(),
-                Class_Collection=_context.Classes.ToList()
+                Subject_Collection = _context.Subjects.ToList(),
+                Class_Collection = _context.Classes.ToList()
             };
             return (model);
 

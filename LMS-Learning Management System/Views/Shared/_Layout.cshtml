@@ -7,21 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/css/base/jquery-ui.css" rel="stylesheet" />
-    @*<style>
-        #canvas-wrapper.dark-mode {
-            background: #e9e9e9;
-            color: black;
-        }
-        table.dark-mode {
-            background: #e9e9e9;
-            color: black;
-            --bs-table-bg: #e9e9e9;
-            --bs-table-color: black;
-            --bs-table-striped-color: black;
-            --bs-table-active-color: black;
-            --bs-table-hover-color: black;
-        }
-    </style>*@
+    
 </head>
 <body id="canvas-wrapper">
     <partial name="_NavBar" />
@@ -51,75 +37,83 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css" rel="stylesheet" />
 
+
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+
     <script src="~/js/jquery.dataTables.min.js"></script>
     <script src="~/js/dataTables.bootstrap.min.js"></script>
     <script src="~/js/jquery-ui-1.12.1.js"></script>
 
     @*<script>
-        $(function () {
-            $(".switch").click(function () {
-                $("#canvas-wrapper").toggleClass("dark-mode");
-                $("table").toggleClass("dark-mode");
+            $(function () {
+                $(".switch").click(function () {
+                    $("#canvas-wrapper").toggleClass("dark-mode");
+                    $("table").toggleClass("dark-mode");
+                });
             });
-        });
-    </script>*@
+        </script>*@
 
     @*<script>
 
-    // منع عمليات النسخ واللصق
-    document.addEventListener('copy', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('cut', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('paste', function (e) {
-        e.preventDefault();
-    });
-
-    // منع زر الفأرة الأيمن
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    });
-
-
-    // عند فتح صفحة الويب
-    window.onload = function () {
-        document.addEventListener('contextmenu', function (e) {
-            // منع زر الفأرة الأيمن
+        // منع عمليات النسخ واللصق
+        document.addEventListener('copy', function (e) {
             e.preventDefault();
         });
 
-        document.addEventListener('keydown', function (e) {
-            // منع Ctrl + Shift + I (فتح أدوات المطور)
-            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
-                e.preventDefault();
-            }
+        document.addEventListener('cut', function (e) {
+            e.preventDefault();
         });
-    };
+
+        document.addEventListener('paste', function (e) {
+            e.preventDefault();
+        });
+
+        // منع زر الفأرة الأيمن
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+
+        // عند فتح صفحة الويب
+        window.onload = function () {
+            document.addEventListener('contextmenu', function (e) {
+                // منع زر الفأرة الأيمن
+                e.preventDefault();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                // منع Ctrl + Shift + I (فتح أدوات المطور)
+                if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+                    e.preventDefault();
+                }
+            });
+        };
 
 
 
-    // منع فتح أدوات المطور
-    document.onkeydown = function (e) {
-        if (event.keyCode == 123) {
-            return false;
+        // منع فتح أدوات المطور
+        document.onkeydown = function (e) {
+            if (event.keyCode == 123) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
         }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-            return false;
-        }
-    }
-    </script>*@
+        </script>*@
 </body>
 </html>

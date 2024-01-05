@@ -37,7 +37,7 @@ namespace LMS_Learning_Management_System.Controllers
 
         public IActionResult Index()
         {
-            return View(userManager.Users);
+            return View(userManager.Users.Where(R=>R.Id!= "8a40818b-4d93-46d7-86e0-10ae13b21932"));
         }
         [AllowAnonymous]
 
@@ -135,17 +135,33 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                             RoleModification model = new RoleModification();
-                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email }).Where(m => m.Email == user.Email).SingleOrDefault();
+                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email,o.UserTypeDesc }).Where(m => m.Email == user.Email).SingleOrDefault();
 
                             AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
                             if (user2 != null)
                             {
-                                result = await userManager.AddToRoleAsync(user2, "teacher");
-                                if (!result.Succeeded)
-                                    Errors(result);
+                                if (userid1.UserTypeDesc== "teacher")
+                                {
 
+                                result = await userManager.AddToRoleAsync(user2, "teacher");
+                                    if (!result.Succeeded)
+                                        Errors(result);
+                                }
+                                else if (userid1.UserTypeDesc == "student")
+                                {
+                                    result = await userManager.AddToRoleAsync(user2, "student");
+                                    if (!result.Succeeded)
+                                        Errors(result);
+                                }
+                                else
+                                {
+                                    result = await userManager.AddToRoleAsync(user2, "admin");
+                                    if (!result.Succeeded)
+                                        Errors(result);
+                                }
                             }
 
+                            
 
                             _Classes = (from Classes1 in _context.Classes
                                         select new SelectListItem
@@ -261,7 +277,7 @@ namespace LMS_Learning_Management_System.Controllers
         [Authorize(Roles = "admin")]
 
         [HttpPost]
-        public async Task<IActionResult> Update(string id, string email, string password)
+        public async Task<IActionResult> Update(string id, string email, string FullName,string PhoneNumber, string password)
         {
             AppUser user = await userManager.FindByIdAsync(id);
             if (user != null)
@@ -270,6 +286,22 @@ namespace LMS_Learning_Management_System.Controllers
                     user.Email = email;
                 else
                     ModelState.AddModelError("", "Email cannot be empty");
+                
+                if (!string.IsNullOrEmpty(FullName))
+                    user.FullName = FullName;
+                else
+                    ModelState.AddModelError("", "FullName cannot be empty");
+
+                if (!string.IsNullOrEmpty(PhoneNumber))
+                    user.PhoneNumber = PhoneNumber;
+                else
+                    ModelState.AddModelError("", "PhoneNumber cannot be empty");
+
+                if (!string.IsNullOrEmpty(email))
+                    user.Email = email;
+                else
+                    ModelState.AddModelError("", "Email cannot be empty");
+
 
                 if (!string.IsNullOrEmpty(password))
                     user.PasswordHash = passwordHasher.HashPassword(user, password);

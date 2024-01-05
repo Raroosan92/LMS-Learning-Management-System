@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,6 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS_Learning_Management_System.Models
 {
+
+        [Index(nameof(CardNo), IsUnique = true)]
     public partial class Card
     {
         public Card()
@@ -13,6 +16,7 @@ namespace LMS_Learning_Management_System.Models
             CardSubjects = new HashSet<CardSubject>();
         }
         public int Id { get; set; }
+
         public int CardNo { get; set; }
         public string CardPassword { get; set; }
         public string CardPrice { get; set; }

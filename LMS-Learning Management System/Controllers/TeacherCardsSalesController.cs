@@ -337,7 +337,7 @@ namespace LMS_Learning_Management_System.Controllers
 
         [Authorize(Roles = "admin")]
 
-        public async Task<IActionResult> Pay(int cardno, int CardSer, double amount)
+        public async Task<IActionResult> Pay(int cardno, int CardSer, decimal amount)
         {
             if (ModelState.IsValid)
             {

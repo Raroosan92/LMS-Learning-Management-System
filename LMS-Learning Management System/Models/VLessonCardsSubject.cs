@@ -18,7 +18,7 @@ namespace LMS_Learning_Management_System.Models
         public string CreatedUser { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int CardNo { get; set; }
-        public double? PaymentAmount { get; set; }
+        public decimal? PaymentAmount { get; set; }
         public bool? IsPayment { get; set; }
         public DateTime? PaymentDate { get; set; }
         public string TeacherId { get; set; }

@@ -50,7 +50,7 @@ display: inline-block;
   top:0;
   left: 0;
   right: 0;
-  background: #222222;
+  background: #e6ede6;
 }
 .multiselect-dropdown-list-wrapper .multiselect-dropdown-search{
   margin-bottom:5px;

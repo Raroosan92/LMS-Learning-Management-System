@@ -363,7 +363,7 @@ namespace LMS_Learning_Management_System.Controllers
             ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
             ViewData["UserId"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "7c72ca3d-4714-4340-b0d0-99cc56ef6623"), "Id", "UserName");
-
+            TempData.Remove("AlertMessage1");
             GetUserRole();
             return View();
         }
@@ -380,6 +380,7 @@ namespace LMS_Learning_Management_System.Controllers
         public async Task<IActionResult> EnrollSTD1(Mixed_Enrollments_CardDetails mixed_Enrollments_CardDetails)
         {
             var Check_EnrollmentExists = true;
+            var semester = mixed_Enrollments_CardDetails.Semester;
             Enrollment enrollment2 = new Enrollment();
 
             if (ModelState.IsValid)
@@ -443,6 +444,7 @@ namespace LMS_Learning_Management_System.Controllers
                         for (int b = 0; b < _SubjecsLst.Count; b++)
                         {
                             Check_EnrollmentExists = _context.Enrollments.Any(r => r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
+                            
                             if (Check_EnrollmentExists == false)
                             {
 
@@ -451,7 +453,7 @@ namespace LMS_Learning_Management_System.Controllers
                                     CardNo = Card_Details.Id,
                                     SubjectId = int.Parse(_SubjecsLst[b]),
                                     ClassId = int.Parse(_ClassesLst[a]),
-                                    Semester = mixed_Enrollments_CardDetails.Semester
+                                    Semester = semester
                                 };
                                 _context.CardSubjects.Add(CardSubjects);
                                 await _context.SaveChangesAsync();
@@ -480,7 +482,8 @@ namespace LMS_Learning_Management_System.Controllers
                                 ClassId = item.ClassId,
                                 SubjectId = item.SubjectId,
                                 UserId = User.Identity.GetUserId(),
-                                CreatedDate = DateTime.Parse(time)
+                                CreatedDate = DateTime.Parse(time),
+                                Semester = semester
                             };
                             _context.Add(enrollment2);
                             await _context.SaveChangesAsync();

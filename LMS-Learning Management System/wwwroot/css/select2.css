@@ -46,8 +46,8 @@
         -webkit-appearance: none; }
 
 .select2-dropdown {
-    background-color: #222222;
-    border: 1px solid #fff;
+    background-color: #d9d9d9;
+    border: 1px solid #252525;
     border-radius: 4px;
     box-sizing: border-box;
     display: block;

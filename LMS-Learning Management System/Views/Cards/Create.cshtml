@@ -38,7 +38,7 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="CardStatus"/> @Html.DisplayNameFor(model => model.CardStatus)
+                    <input class="form-check-input" asp-for="CardStatus" /> @Html.DisplayNameFor(model => model.CardStatus)
                 </label>
             </div>
             <!--<div class="form-group">
@@ -55,14 +55,12 @@
             <div class="form-group">
                 <label asp-for="SubjectId" class="control-label"></label>
                 <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" required></select>-->
-
-                @*<select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId" required></select>*@
+            @*<select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId" required></select>*@
             <!--</div>
             <div class="form-group">
                 <label asp-for="ClassId" class="control-label"></label>
                 <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" required></select>-->
-
-                @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
+            @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
             <!--</div>-->
             <div class="form-group">
                 <input type="submit" value="اضافة" class="btn btn-light" />
@@ -106,7 +104,21 @@
     //    $('#UserName').val($("#UserId :selected").text());
     //});
 
+     var alertType = '@TempData["SweetAlert"]';
 
+        if (alertType === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'تم بنجاح',
+                text: 'تم تنفيذ العملية بنجاح.',
+            });
+        } else if (alertType === 'error') {
+            Swal.fire({
+                icon: 'error',
+                title: 'حدث خطأ',
+                text: 'للأسف، حدث خطأ البطاقة مكررة.',
+            });
+        }
 
     function CheckList() {
         var Subject = $("#lstSubjecs").val();

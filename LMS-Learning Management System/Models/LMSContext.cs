@@ -248,9 +248,14 @@ namespace LMS_Learning_Management_System.Models
                     .WithMany(p => p.AspNetUserTokens)
                     .HasForeignKey(d => d.UserId);
             });
+       //     modelBuilder.Entity<Card>()
+       //.HasMany(c => c.CardSubjects)
+       //.WithOne(cs => cs.CardNoNavigation)
+       //.OnDelete(DeleteBehavior.Cascade); // Configure cascade delete
 
             modelBuilder.Entity<Card>(entity =>
             {
+
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.NumberOfSubjects).HasColumnName("Number_Of_Subjects");
@@ -434,7 +439,7 @@ namespace LMS_Learning_Management_System.Models
                     .HasColumnName("User_ID");
             });
 
-            
+
 
             modelBuilder.Entity<TeacherSalesCard>(entity =>
             {
@@ -470,7 +475,7 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.TeacherName).HasColumnName("Teacher_Name");
 
                 entity.Property(e => e.TeacherUserID).HasColumnName("Teacher_UserID");
-               
+
                 entity.Property(e => e.CardSer).HasColumnName("CardSer");
                 entity.Property(e => e.Semester).HasColumnName("Semester");
 

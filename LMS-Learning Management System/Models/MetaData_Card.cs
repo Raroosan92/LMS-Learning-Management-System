@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace LMS_Learning_Management_System.Models
     {
 
     }
+    [Index(nameof(CardNo), IsUnique = true)]
 
     public class MetaData_Card
     {

@@ -66,7 +66,7 @@ namespace LMS_Learning_Management_System.Models
         public string TeacherId { get; set; }
         [Display(Name = "القيمة")]
 
-        public double? PaymentAmount { get; set; }
+        public decimal? PaymentAmount { get; set; }
         [Display(Name = "مدفوع؟")]
 
         public bool? IsPayment { get; set; }

@@ -47,6 +47,13 @@
     }
 </style>
 
+@if (TempData.ContainsKey("AlertMessage1"))
+{
+    <div class="alert alert-danger">
+        @TempData["AlertMessage1"]
+    </div>
+}
+
 <section class="wrapper">
     <div class="container">
         <div class="row">
@@ -149,6 +156,18 @@
         var Class = $("#lstClasses").val();
         var Semester = $("#Semester").val();
 
+        //*********************************************
+        var NumberOfSubjects = $('#NumberOfSubjects').val();
+
+        var selectedCount = $("#lstSubjecs option:selected").length;
+        if (selectedCount < NumberOfSubjects) {
+            alert("عدد المواد المختاره اقل من عدد مواد البطاقة  " + NumberOfSubjects + "");
+            event.preventDefault();
+
+        }
+        //*********************************************
+
+
         if (Subject == "" || Subject == '-- أختر --') {
             alert("يرجى اختيار المواد ")
             event.preventDefault();
@@ -233,7 +252,7 @@
 
                                 }
                             }
-                           
+
 
                         })
                     }
