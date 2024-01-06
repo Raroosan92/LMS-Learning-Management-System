@@ -443,7 +443,7 @@ namespace LMS_Learning_Management_System.Controllers
                     {
                         for (int b = 0; b < _SubjecsLst.Count; b++)
                         {
-                            Check_EnrollmentExists = _context.Enrollments.Any(r => r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
+                            Check_EnrollmentExists = _context.Enrollments.Any(r => r.Semester==semester && r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
                             
                             if (Check_EnrollmentExists == false)
                             {

@@ -174,18 +174,28 @@
                             <div class="card">
                                 <div class="cover item-a">
                                     <h1>@item.Name</h1>
-                                    <span class="price"></span>
-                                    @*<div class="card-back">
-                                            <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
-                                        </div>*@
+                                    @{var ss = 0;}
+                                    @if (@item.Semester == 1)
+                                    {
+                                        <span class="price">الفصل الاول</span>
+                                        ss = 1;
+                                    }
+                                    else
+                                    {
+                                        <span class="price">الفصل الثاني</span>
+                                        ss = 2;
+                                    }                                    @*<div class="card-back">
+            <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
+        </div>*@
 
                                     <div class="card-back">
-                                        <form id="@item.TeacherId" action="/Lessons/_PartialShowLessons" method="post">
+                                        <form id="@item.TeacherId+@ss" action="/Lessons/_PartialShowLessons" method="post">
                                             <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
                                             <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
                                             <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
+                                            <input type="hidden" id="semester" name="semester" value="@ss" />
                                         </form>
-                                        <a href="#" onclick="openLessonsForm('@item.TeacherId')">عرض الدروس</a>
+                                        <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>
 
                                         @*<a href="_PartialShowLessons/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
                                     </div>
@@ -199,10 +209,19 @@
                             <div class="card">
                                 <div class="cover item-b">
                                     <h1>@item.Name</h1>
-                                    <span class="price">**</span>
+                                    @if (@item.Semester == 1)
+                                    {
+                                        <span class="price">الفصل الاول</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="price">الفصل الثاني</span>
+
+                                    }
                                     <div class="card-back">
 
-                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@item.SubjectId,@item.ClassId,@item.CardNo)">
+                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@item.SubjectId,@item.ClassId,@item.CardNo,@item.Semester)">
                                             اختر المعلم
                                         </a>
                                     </div>
@@ -266,22 +285,25 @@
     var Subject_id;
     var Class_id;
     var Card_No;
-    function openTeacherModal(modalId, SubjectId, ClassId, CardNo) {
+    var semester;
+    function openTeacherModal(modalId, SubjectId, ClassId, CardNo, Semester) {
         Subject_id = "";
         Class_id = "";
         Card_No = "";
+        semester = "";
         // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
         $("#" + modalId).modal("show");
         Subject_id = SubjectId;
         Class_id = ClassId;
         Card_No = CardNo;
+        semester = Semester;
         // جلب القيمة المحددة في dropdown1 (المواد)
         var selectedSubjectId = SubjectId;
         var selectedClassId = ClassId;
         $.ajax({
             url: "/Lessons/GetTeachersBySubject",
             type: "POST",
-            data: { "subjectId": selectedSubjectId, "classId": selectedClassId },
+            data: { "subjectId": selectedSubjectId, "classId": selectedClassId, "Semester": semester },
             success: function (response) {
                 // قم بحذف الخيارات الحالية في الـ DropDownList
                 $('#TeacherID').empty();
@@ -291,7 +313,14 @@
 
                 // إضافة الخيارات الجديدة بناءً على البيانات التي تم جلبها من الخادم
                 $.each(response, function (index, teacher) {
-                    $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
+                    if (teacher.id.length > 0) {
+
+                        $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
+                    }
+                    else {
+                        alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
+
+                    }
                 });
             },
             error: function (request, status, error) {
@@ -317,7 +346,7 @@
                 return;
             }
             // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
-            $.post("/Lessons/AssignTeacher", { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id },
+            $.post("/Lessons/AssignTeacher", { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
                 function (data) {
                     // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
                     alert(data.message);

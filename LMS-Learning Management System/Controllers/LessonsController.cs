@@ -374,7 +374,7 @@ namespace LMS_Learning_Management_System.Controllers
 
 
         [HttpPost]
-        public JsonResult GetTeachersBySubject(string subjectId, string classId)
+        public JsonResult GetTeachersBySubject(string subjectId, string classId, string Semester)
         {
             if (ModelState.IsValid)
             {
@@ -392,14 +392,14 @@ namespace LMS_Learning_Management_System.Controllers
 
 
         [HttpPost]
-        public async Task<JsonResult> AssignTeacher(string teacherId, int Card_No, int Subject_id, int Class_id)
+        public async Task<JsonResult> AssignTeacher(string teacherId, int Card_No, int Subject_id, int Class_id, int Semester)
         {
 
             if (ModelState.IsValid)
             {
                 GetTime();
 
-                var Card_Details = _context.CardSubjects.Where(r => r.CardNo == Card_No && r.SubjectId == Subject_id && r.ClassId == Class_id).FirstOrDefault();
+                var Card_Details = _context.CardSubjects.Where(r => r.CardNo == Card_No && r.SubjectId == Subject_id && r.ClassId == Class_id && r.Semester==Semester).FirstOrDefault();
 
                 if (Card_Details != null && teacherId != null)
                 {
@@ -419,7 +419,7 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                 //***********************edit enrollments*************************
-                var enrollmentSTD_Details = _context.Enrollments.Where(r => r.SubjectId == Subject_id && r.ClassId == Class_id && r.UserId == User.Identity.GetUserId()).FirstOrDefault();
+                var enrollmentSTD_Details = _context.Enrollments.Where(r => r.SubjectId == Subject_id && r.ClassId == Class_id && r.UserId == User.Identity.GetUserId()&&r.Semester== Semester).FirstOrDefault();
 
                 if (enrollmentSTD_Details != null && teacherId != null)
                 {
@@ -526,7 +526,7 @@ namespace LMS_Learning_Management_System.Controllers
         //}
 
         [HttpPost]
-        public IActionResult _PartialShowLessons(int? ClassId, int? SubjectId, string TeacherId)
+        public IActionResult _PartialShowLessons(int? ClassId, int? SubjectId, string TeacherId, int semester)
         {
             GetUserRole();
 
@@ -536,7 +536,7 @@ namespace LMS_Learning_Management_System.Controllers
             }
 
             var lessons = _context.VLessonCardsSubjects
-                .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId)
+                .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId && r.Semester== semester)
                 .OrderBy(r => r.Id)
                 .ToList();
 
@@ -593,7 +593,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 if (item.TeacherId != null)
                 {
-                    var lesson = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Subjects_Status == true && r.Classes_Status == true && r.TeacherId == item.TeacherId).SingleOrDefault();
+                    var lesson = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Subjects_Status == true && r.Classes_Status == true && r.TeacherId == item.TeacherId && r.Semester==item.Semester).SingleOrDefault();
                     if (lesson != null)
                     {
                         //lesson.Classdesc = _context.Classes.Select(r => new { r.Descriptions, r.Id, r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
@@ -603,7 +603,7 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 if (item.TeacherId == null)
                 {
-                    var lesson2 = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && item.TeacherId == null).FirstOrDefault();
+                    var lesson2 = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && item.TeacherId == null && r.Semester == item.Semester).FirstOrDefault();
                     if (lesson2 != null)
                     {
                         _SubjectsNotSelectedTeacher.Add(lesson2);
