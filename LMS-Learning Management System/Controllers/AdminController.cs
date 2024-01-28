@@ -161,70 +161,81 @@ namespace LMS_Learning_Management_System.Controllers
                                 }
                             }
 
-                            
 
-                            _Classes = (from Classes1 in _context.Classes
-                                        select new SelectListItem
-                                        {
-                                            Text = Classes1.Descriptions,
-                                            Value = Classes1.Id.ToString()
-                                        }).ToList();
-
-
-
-                            _Subjecs = (from Subjects1 in _context.Subjects
-                                        select new SelectListItem
-                                        {
-                                            Text = Subjects1.Name,
-                                            Value = Subjects1.Id.ToString()
-                                        }).ToList();
-
-
-                            _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                            _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
-
-                            string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                            string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
-
-
-
-                            foreach (string id in ClassId)
+                            if (result.Succeeded)
                             {
-                                if (!string.IsNullOrEmpty(id))
+                                try
                                 {
-                                    string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                                    _ClassesLst.Add(id);
-                                }
-                            }
 
-                            foreach (string id2 in SubjecsId)
-                            {
-                                if (!string.IsNullOrEmpty(id2))
-                                {
-                                    string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                                    _SubjecsLst.Add(id2);
-                                }
-                            }
-                            var TeacherEnrollment = new TeacherEnrollment();
+                               
+                                _Classes = (from Classes1 in _context.Classes
+                                            select new SelectListItem
+                                            {
+                                                Text = Classes1.Descriptions,
+                                                Value = Classes1.Id.ToString()
+                                            }).ToList();
 
 
-                            for (int a = 0; a < _ClassesLst.Count; a++)
-                            {
-                                for (int b = 0; b < _SubjecsLst.Count; b++)
+
+                                _Subjecs = (from Subjects1 in _context.Subjects
+                                            select new SelectListItem
+                                            {
+                                                Text = Subjects1.Name,
+                                                Value = Subjects1.Id.ToString()
+                                            }).ToList();
+
+
+                                _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                                _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                                string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                                string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                                foreach (string id in ClassId)
                                 {
-                                    TeacherEnrollment = new TeacherEnrollment
+                                    if (!string.IsNullOrEmpty(id))
                                     {
-                                        UserId = userid1.Id,
-                                        SubjectId = int.Parse(_SubjecsLst[b]),
-                                        ClassId = int.Parse(_ClassesLst[a])
-                                    };
-                                    _context.TeacherEnrollments.Add(TeacherEnrollment);
-                                    await _context.SaveChangesAsync();
+                                        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                                        _ClassesLst.Add(id);
+                                    }
                                 }
+
+                                foreach (string id2 in SubjecsId)
+                                {
+                                    if (!string.IsNullOrEmpty(id2))
+                                    {
+                                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                                        _SubjecsLst.Add(id2);
+                                    }
+                                }
+                                var TeacherEnrollment = new TeacherEnrollment();
+
+
+                                for (int a = 0; a < _ClassesLst.Count; a++)
+                                {
+                                    for (int b = 0; b < _SubjecsLst.Count; b++)
+                                    {
+                                        TeacherEnrollment = new TeacherEnrollment
+                                        {
+                                            UserId = userid1.Id,
+                                            SubjectId = int.Parse(_SubjecsLst[b]),
+                                            ClassId = int.Parse(_ClassesLst[a])
+                                        };
+                                        _context.TeacherEnrollments.Add(TeacherEnrollment);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    
+                                }
+
                             }
-
-
-
 
                         }
                         TempData["AlertMessage"] = "تم انشاء الحساب بنجاح";

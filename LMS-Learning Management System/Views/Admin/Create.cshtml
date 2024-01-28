@@ -104,14 +104,14 @@
             </div>
             <div class="form-group" id="SubjectId_D" style="display:none">
                 <label asp-for="SubjectId" class="control-label"></label>
-                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control">
+                <select id="lstSubjecs" name="lstSubjecs" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.SubjectId" class="form-control" onchange="handleSelectChange(this)">
                     <option>-- أختر --</option>
                 </select>
 
             </div>
             <div class="form-group" id="Class_D" style="display:none">
                 <label asp-for="ClassId" class="control-label"></label>
-                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control">
+                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" onchange="handleSelectChange(this)">
                     <option>-- أختر --</option>
                 </select>
 
@@ -146,6 +146,16 @@
 
 <script>$('#Country').select2();</script>
 <script>
+
+    function handleSelectChange(selectElement) {
+        // إزالة التحديد الأولي إذا تم اختيار "اختر الجميع"
+        var selectAllOption = selectElement.options[0];
+        if (selectAllOption.selected) {
+            selectAllOption.selected = false;
+        }
+    }
+
+
     $("[id$=RoleId]").on('change', function () {
 
         var SelectedRoleId = $("#RoleId :selected").text();

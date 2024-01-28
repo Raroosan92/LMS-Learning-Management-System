@@ -19,92 +19,102 @@
                         @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
                             @Html.AntiForgeryToken()
-                        <ul class="navbar-nav mb-2 mb-lg-0 liItems me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Home" asp-action="Index">
-                                    الرئيسية
-                                    <span class="visually-hidden">(current)</span>
-                                </a>
-                            </li>
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                            {
-                                <li class="nav-item dropdown">
-                                    <div class="dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                                            الصفوف المواد والدروس
+                            <ul class="navbar-nav mb-2 mb-lg-0 liItems me-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link active" asp-controller="Home" asp-action="Index">
+                                        الرئيسية
+                                        <span class="visually-hidden">(current)</span>
+                                    </a>
+                                </li>
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                {
+                                    <li class="nav-item dropdown">
+                                        <div class="dropdown">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                                                الصفوف المواد والدروس
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <li><a class="nav-link" asp-controller="Classes" asp-action="index">الصفوف</a></li>
+                                                <li><a class="nav-link" asp-controller="Subjects" asp-action="index">المواد</a></li>
+                                                <li><a class="nav-link" asp-controller="Lessons" asp-action="index">الدروس</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+
+
+
+                                }
+
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("teacher"))
+                                {
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Lessons" asp-action="index">
+                                            الدروس
                                         </a>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                            <li><a class="nav-link" asp-controller="Classes" asp-action="index">الصفوف</a></li>
-                                            <li><a class="nav-link" asp-controller="Subjects" asp-action="index">المواد</a></li>
-                                            <li><a class="nav-link" asp-controller="Lessons" asp-action="index">الدروس</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
+                                    </li>
 
-
-
-                            }
-
-
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("student"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Enrollments" asp-action="EnrollSTD">
-                                        التسجيل في المواد
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Lessons" asp-action="GetSubjects">
-                                        دروس الطالب
-                                    </a>
-                                </li>
-                            }
-
-
-
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Cards" asp-action="index">
-                                        البطاقات
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="TeacherCardsSales" asp-action="index">
-                                        الحسابات
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <div class="dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                                            الاعدادات
+                                }
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("student"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Enrollments" asp-action="EnrollSTD">
+                                            التسجيل في المواد
                                         </a>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">عرض المستخدمين</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Create">انشاء مستخدم</a></li>
-                                            @*<li><a class="dropdown-item" asp-controller="Admin" asp-action="update">تعديل مستخدم</a></li>*@
-                                            @*<li><a class="dropdown-item" asp-controller="Role" asp-action="Index">عرض الصلاحيات</a></li>*@
-                                            @*<li class="divider"></li>
-                        <li><a class="dropdown-item" asp-controller="Role" asp-action="Create">انشاء صلاحية</a></li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Role" asp-action="Project">Policy Authorization</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Claims" asp-action="TomFiles">Tom Files</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Claims" asp-action="PrivateAccess">Private Accesss</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/">Login</a>
-                        </li>*@
-                                        </ul>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Lessons" asp-action="GetSubjects">
+                                            دروس الطالب
+                                        </a>
+                                    </li>
+                                }
+
+
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Cards" asp-action="index">
+                                            البطاقات
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="TeacherCardsSales" asp-action="index">
+                                            الحسابات
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <div class="dropdown">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                                                الاعدادات
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">عرض المستخدمين</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Create">انشاء مستخدم</a></li>
+                                                @*<li><a class="dropdown-item" asp-controller="Admin" asp-action="update">تعديل مستخدم</a></li>*@
+                                                @*<li><a class="dropdown-item" asp-controller="Role" asp-action="Index">عرض الصلاحيات</a></li>*@
+                                                @*<li class="divider"></li>
+                                                    <li><a class="dropdown-item" asp-controller="Role" asp-action="Create">انشاء صلاحية</a></li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Role" asp-action="Project">Policy Authorization</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Claims" asp-action="TomFiles">Tom Files</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Claims" asp-action="PrivateAccess">Private Accesss</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/">Login</a>
+                                                    </li>*@
+                                            </ul>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
                         }
 
                         <ul class="nav navbar-nav text-left" style=" margin: 0 auto 0 0">
@@ -118,15 +128,15 @@
                                 <a class="btn btn-danger" href="/Account/Logout" style="margin: 0 11px 0 8px;">تسجيل خروج</a>
                             </li>
                             @*<li>
-                            <button class="switch"  style="margin: 0 11px 0 8px;">dd</button>
+                                    <button class="switch"  style="margin: 0 11px 0 8px;">dd</button>
 
-                        </li>*@
+                                </li>*@
                         </ul>
 
                         @*<form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>*@
+                                <input class="form-control me-sm-2" type="search" placeholder="Search">
+                                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                            </form>*@
                     </div>
                 }
             </div>
@@ -163,140 +173,140 @@
 
 
     @*<nav class="navbar navbar-expand-sm bg-dark navbar-toggleable-sm bg-white border-bottom box-shadow mb-3" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-controller="Home" asp-action="index">منصة دربك التعليمية</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            @if (User.Identity.IsAuthenticated)
-            {
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-controller="Home" asp-action="index">منصة دربك التعليمية</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @if (User.Identity.IsAuthenticated)
+                {
 
-                <div class="collapse navbar-collapse" id="navbarColor02">
-                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" asp-controller="Home" asp-action="Index">
-                                    الرئيسية
-                                    <span class="visually-hidden">(current)</span>
-                                </a>
-                            </li>
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                            {
+                    <div class="collapse navbar-collapse" id="navbarColor02">
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <ul class="navbar-nav me-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Classes" asp-action="index">
-                                        الصفوف
+                                    <a class="nav-link active" asp-controller="Home" asp-action="Index">
+                                        الرئيسية
+                                        <span class="visually-hidden">(current)</span>
                                     </a>
                                 </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Subjects" asp-action="index">
-                                        المواد
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Enrollments" asp-action="index">
-                                        التسجيل في المواد
-                                    </a>
-                                </li>
-
-                            }
-
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("teacher"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Lessons" asp-action="index">
-                                        الدروس
-                                    </a>
-                                </li>
-
-                            }
-
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("student"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Enrollments" asp-action="EnrollSTD">
-                                        التسجيل في المواد
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Lessons" asp-action="GetSubjects">
-                                        دروس الطالب
-                                    </a>
-                                </li>
-                            }
-
-
-
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Cards" asp-action="index">
-                                        البطاقات
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="TeacherCardsSales" asp-action="index">
-                                        الحسابات
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <div class="dropdown">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                                            الاعدادات
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Classes" asp-action="index">
+                                            الصفوف
                                         </a>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">عرض المستخدمين</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Create">انشاء مستخدم</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="update">تعديل مستخدم</a></li>
-                                            <li><a class="dropdown-item" asp-controller="Role" asp-action="Index">عرض الصلاحيات</a></li>
-                                            @*<li class="divider"></li>
-                                                <li><a class="dropdown-item" asp-controller="Role" asp-action="Create">انشاء صلاحية</a></li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="Role" asp-action="Project">Policy Authorization</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="Claims" asp-action="TomFiles">Tom Files</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="Claims" asp-action="PrivateAccess">Private Accesss</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/">Login</a>
-                                                </li>*=@
-    </ul>
-    </div>
-    </li>
-    }
-    </ul>
-    }
+                                    </li>
 
-    <ul class="nav navbar-nav text-left" style=" margin: 0 auto 0 0">
-        <li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Subjects" asp-action="index">
+                                            المواد
+                                        </a>
+                                    </li>
 
-            @Html.ActionLink("مرحبا  " + TempData["FullName"] + "!", "", "", routeValues: null, htmlAttributes: new { title = "Manage", style = "color: white;" })
-            @*=@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*=@
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Enrollments" asp-action="index">
+                                            التسجيل في المواد
+                                        </a>
+                                    </li>
+
+                                }
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("teacher"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Lessons" asp-action="index">
+                                            الدروس
+                                        </a>
+                                    </li>
+
+                                }
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("student"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Enrollments" asp-action="EnrollSTD">
+                                            التسجيل في المواد
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Lessons" asp-action="GetSubjects">
+                                            دروس الطالب
+                                        </a>
+                                    </li>
+                                }
+
+
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="Cards" asp-action="index">
+                                            البطاقات
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" asp-controller="TeacherCardsSales" asp-action="index">
+                                            الحسابات
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <div class="dropdown">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                                                الاعدادات
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">عرض المستخدمين</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="Create">انشاء مستخدم</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="update">تعديل مستخدم</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Role" asp-action="Index">عرض الصلاحيات</a></li>
+                                                @*<li class="divider"></li>
+                                                    <li><a class="dropdown-item" asp-controller="Role" asp-action="Create">انشاء صلاحية</a></li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Role" asp-action="Project">Policy Authorization</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Claims" asp-action="TomFiles">Tom Files</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Claims" asp-action="PrivateAccess">Private Accesss</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="/">Login</a>
+                                                    </li>*=@
+        </ul>
+        </div>
         </li>
+        }
+        </ul>
+        }
 
-        <li>
-            <a class="btn btn-danger" href="/Account/Logout" style="margin: 0 11px 0 8px;">تسجيل خروج</a>
-        </li>
-        @*<li>
-                <button class="switch"  style="margin: 0 11px 0 8px;">dd</button>
+        <ul class="nav navbar-nav text-left" style=" margin: 0 auto 0 0">
+            <li>
 
-            </li>*=@
-    </ul>
+                @Html.ActionLink("مرحبا  " + TempData["FullName"] + "!", "", "", routeValues: null, htmlAttributes: new { title = "Manage", style = "color: white;" })
+                @*=@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*=@
+            </li>
 
-    @*<form class="d-flex">
-            <input class="form-control me-sm-2" type="search" placeholder="Search">
-            <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form>*=@
-    </div>
-    }
-    </div>
-    </nav>*@
+            <li>
+                <a class="btn btn-danger" href="/Account/Logout" style="margin: 0 11px 0 8px;">تسجيل خروج</a>
+            </li>
+            @*<li>
+                    <button class="switch"  style="margin: 0 11px 0 8px;">dd</button>
+
+                </li>*=@
+        </ul>
+
+        @*<form class="d-flex">
+                <input class="form-control me-sm-2" type="search" placeholder="Search">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>*=@
+        </div>
+        }
+        </div>
+        </nav>*@
 </header>
