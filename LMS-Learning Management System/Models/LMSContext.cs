@@ -396,6 +396,8 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.TeacherID).HasColumnName("Teacher_ID");
                 entity.Property(e => e.Semester).HasColumnName("Semester");
+                entity.Property(e => e.Status).HasColumnName("Status");
+
 
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.Lessons)

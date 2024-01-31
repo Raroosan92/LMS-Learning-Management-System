@@ -47,7 +47,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Semester" class="control-label"></label>
-                <select asp-for="Status" class="form-control">
+                <select asp-for="Semester" class="form-control">
                     <option value="">--اختر--</option>
                     <option value="1">الفصل الأول</option>
                     <option value="2">الفصل الثاني</option>
@@ -64,11 +64,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
+              
                 <select asp-for="Status" class="form-control">
                     <option value="">--اختر--</option>
                     <option value="true">فعال</option>
                     <option value="false">غير فعال</option>
                 </select>
+
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             @*<div class="form-group">

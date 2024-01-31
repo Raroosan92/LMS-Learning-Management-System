@@ -235,7 +235,7 @@ namespace LMS_Learning_Management_System.Controllers
                     _context.Entry(lesson).Property(x => x.CreatedUser).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!LessonExists(lesson.Id))
                     {
@@ -553,6 +553,35 @@ namespace LMS_Learning_Management_System.Controllers
 
             return View(lessonViewModel);
         }
+        
+        [HttpPost]
+        public IActionResult _PartialShowLessons_D(int? ClassId, int? SubjectId, string TeacherId, int semester)
+        {
+            GetUserRole();
+
+            if (ClassId == null || SubjectId == null || TeacherId == null)
+            {
+                return NotFound();
+            }
+
+            var lessons = _context.VLessonCardsSubjects
+                .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId && r.Semester== semester)
+                .OrderBy(r => r.Id)
+                .ToList();
+
+            var lessonViewModel = new VLessonCardsSubject()
+            {
+                VLessonCardsSubject_Collection = lessons,
+                TeacherInfo_Collection = _context.VTechersInfos.ToList()
+            };
+
+            if (lessonViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(lessonViewModel);
+        }
 
 
 
@@ -629,6 +658,52 @@ namespace LMS_Learning_Management_System.Controllers
 
 
 
+        [Authorize(Roles = "student,admin")]
+
+        public IActionResult GetSubjects_D()
+        {
+            List<VEnrollmentStdDetail> _SubjectsSelectedTeacher = new List<VEnrollmentStdDetail>();
+            List<VEnrollmentStdDetail> _SubjectsNotSelectedTeacher = new List<VEnrollmentStdDetail>();
+
+            var Enrollments_Std = _context.VEnrollmentStdDetails.Where(r => r.UserId == User.Identity.GetUserId()).ToList();
+
+            foreach (var item in Enrollments_Std)
+            {
+                if (item.TeacherId != null)
+                {
+                    var lesson = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && r.Subjects_Status == true && r.Classes_Status == true && r.TeacherId == item.TeacherId && r.Semester == item.Semester).SingleOrDefault();
+                    if (lesson != null)
+                    {
+                        //lesson.Classdesc = _context.Classes.Select(r => new { r.Descriptions, r.Id, r.Status }).Where(r => r.Id == lesson.ClassId).FirstOrDefault().Descriptions;
+                        //lesson.Subjectdesc = _context.Subjects.Select(r => new { r.Abbreviation, r.Id, r.Status }).Where(r => r.Id == lesson.SubjectId).FirstOrDefault().Abbreviation;
+                        _SubjectsSelectedTeacher.Add(lesson);
+                    }
+                }
+                if (item.TeacherId == null)
+                {
+                    var lesson2 = _context.VEnrollmentStdDetails.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId && item.TeacherId == null && r.Semester == item.Semester).FirstOrDefault();
+                    if (lesson2 != null)
+                    {
+                        _SubjectsNotSelectedTeacher.Add(lesson2);
+                    }
+                }
+            }
+            List<VEnrollmentStdDetail> mergedList = new List<VEnrollmentStdDetail>();
+
+            mergedList = _SubjectsSelectedTeacher.Concat(_SubjectsNotSelectedTeacher).ToList();
+
+            var model = new VEnrollmentStdDetail()
+            {
+                VEnrollmentStdDetailt_Collection = mergedList.OrderByDescending(r => r.Name),
+                TeacherInfo_Collection = _context.VTechersInfos.ToList().ToList(),
+            };
+
+
+            GetUserRole();
+            return View(model);
+
+
+        }
     }
 }
 

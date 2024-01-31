@@ -18,7 +18,7 @@ namespace LMS_Learning_Management_System.Models
         [Required]
         public int SubjectId { get; set; }
         [Required]
-        public bool? Status { get; set; }
+        public bool Status { get; set; }
         [Required]
         public string TeacherID { get; set; }
 

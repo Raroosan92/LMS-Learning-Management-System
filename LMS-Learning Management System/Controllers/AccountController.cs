@@ -72,15 +72,15 @@ namespace LMS_Learning_Management_System.Controllers
                         {
                             GetTime();
 
-                            //activesession.LoginDate = DateTime.Parse(time);
-                            //activesession.UserId = appUser.Id;
-                            //activesession.UserName = appUser.FullName;
-                            //activesession.PhoneNumber = appUser.PhoneNumber;
-                            //activesession.DeviceType = login.devicetype;
-                            //_context.Add(activesession);
+                                activesession.LoginDate = DateTime.Parse(time);
+                                activesession.UserId = appUser.Id;
+                                activesession.UserName = appUser.FullName;
+                                activesession.PhoneNumber = appUser.PhoneNumber;
+                                activesession.DeviceType = login.devicetype;
+                                _context.Add(activesession);
 
-                            //await _context.SaveChangesAsync();
-                            TempData["FullName"] = appUser.FullName;
+                                //await _context.SaveChangesAsync();
+                                TempData["FullName"] = appUser.FullName;
 
                             //// In your controller or middleware
                             //HttpContext.Session.SetString("TestKey", "TestValue");

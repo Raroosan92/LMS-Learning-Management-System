@@ -34,11 +34,11 @@
             <script src="https://player.vimeo.com/api/player.js"></script>
             <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@video" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="y2mate.com - حروف الجر  أغنية حروف الجر  أنشودة حروف الجر للأطفال_1080p"></iframe></div>
             @*<div id="trailer" class="section d-flex justify-content-center embed-responsive embed-responsive-21by9">
-                    <video class="embed-responsive-item" controls autoplay loop muted>
-                        <source src="@video" type="video/mp4">
-                        المتصفح الخاص بك لا يدعم عرض الفيديو يرجة اختيار متصفح اخر
-                    </video>
-                </div>*@
+                <video class="embed-responsive-item" controls autoplay loop muted>
+                    <source src="@video" type="video/mp4">
+                    المتصفح الخاص بك لا يدعم عرض الفيديو يرجة اختيار متصفح اخر
+                </video>
+            </div>*@
             @*******************************************************@
             @*@Html.DisplayFor(model => model.UrlVideo)*@
         </dd>
@@ -69,13 +69,20 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Subject)
         </dt>
-        
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subject.Abbreviation)
+        </dd>
+
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Semester)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Subject.Abbreviation)
+            @Html.DisplayFor(model => model.Semester)
         </dd>
+        
+
     </dl>
 </div>
 <div>

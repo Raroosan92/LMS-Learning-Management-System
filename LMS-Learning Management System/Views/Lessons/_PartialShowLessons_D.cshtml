@@ -1,0 +1,213 @@
+﻿@model LMS_Learning_Management_System.Models.VLessonCardsSubject
+
+@{
+    Layout = null;
+    ViewData["Title"] = "عرض الدروس";
+}
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="container" style="direction:ltr">
+            <div class="form-group">
+                <a asp-action="GetSubjects_D" class="btn btn-dark">رجوع</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<hr />
+<html lang="ar" dir="rtl">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Fix Footer CSS -->
+    <!-- Material Design Icons -->
+    <link type="text/css" href="~/New folder/css/css-material-icons.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-material-icons.rtl.css" rel="stylesheet">
+
+    <!-- Preloader -->
+    <link type="text/css" href="~/New folder/css/css-preloader.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-preloader.rtl.css" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link type="text/css" href="~/New folder/css/css-app.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-app.rtl.css" rel="stylesheet">
+</head>
+<body class="layout-navbar-mini-fixed-bottom">
+
+    <div class="preloader">
+        <div class="sk-double-bounce">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+    @if (Model.VLessonCardsSubject_Collection.Count() > 0)
+    {
+    <div class="mdk-header-layout js-mdk-header-layout">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="border-left-2 page-section pl-32pt">
+
+                        <div class="d-flex ">
+                            @*<div class="page-num">1</div>*@
+                            <h4>الدروس</h4>
+                        </div>
+
+                        @*<p class="text-70 mb-24pt">Good tools make application development quick*er and easier to maintain than* if you did everything by hand. The goal in this guide is to build and run a simple Angular application in TypeScript, using the Angular CLI while adhering to the Style Guide recommendations that benefit every Angular project.</p>*@
+
+                        <div class="card mb-32pt mb-lg-64pt">
+                            <ul class="accordion accordion--boxed js-accordion mb-0" id="toc-1">
+                                <li class="accordion__item open">
+                                    <a class="accordion__toggle" data-toggle="collapse" data-parent="#toc-1" href="#toc-content-1">
+                                        @*<span class="flex">1 of 4 Steps</span>*@
+                                        <span class="accordion__toggle-icon material-icons">@*keyboard_arrow_down*@</span>
+                                    </a>
+                                    <div class="accordion__menu">
+                                        <ul class="list-unstyled collapse show" id="toc-content-1">
+                                            @foreach (var item in Model.VLessonCardsSubject_Collection)
+                                                {
+                                            <li class="accordion__menu-link">
+                                                <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
+                                                <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
+
+                                                @*<span class="text-muted">8m 42s</span>*@
+                                            </li>
+                                                }
+                                            <!--<li class="accordion__menu-link">
+                                                <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                <a class="flex" href="#">الدرس الاول</a>-->
+                                            @*<span class="text-muted">50m 13s</span>*@
+                                            <!--</li>
+                                            <li class="accordion__menu-link">
+                                                <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                <a class="flex" href="#">الدرس الثالث</a>-->
+                                            @*<span class="text-muted">12m 10s</span>*@
+                                            <!--</li>
+                                            <li class="accordion__menu-link">
+                                                <span class="material-icons icon-16pt icon--left text-body">-->
+                                            @*hourglass_empty*@
+                                            <!--play_circle_outline</span>
+                                                <a class="flex" href="#">الدرس الرابع</a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    @*<nav class="course-nav">
+                            <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
+                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
+                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
+                            <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
+                        </nav>*@
+                    <div class="js-player embed-responsive embed-responsive-16by9 mb-32pt">
+                        <div class="player embed-responsive-item">
+                            <div class="player__content">
+                                <div class="player__image" style="--player-image: url(assets/images/illustration/player.svg)"></div>
+                                <a href="tutorio-bootstrap.frontendmatter.html" class="player__play">
+                                    <span class="material-icons">play_arrow</span>
+                                </a>
+                            </div>
+                            <div id="videoContainer">
+                                <iframe class="embed-responsive-item" src="" frameborder="0" allowfullscreen id="videoIframe"></iframe>
+                            </div>
+
+                            <!--<div class="player__embed d-none">-->
+                            @*<iframe class="embed-responsive-item" src="https://player.vimeo.com/video/97243285?title=0&amp;byline=0&amp;portrait=0" allowfullscreen=""></iframe>*@
+                            <!--</div>-->
+                        </div>
+                    </div>
+                    <!-- Description Section -->
+                    <div id="descriptionContainer" style="display: none;">
+                        <div class="d-flex flex-wrap align-items-end mb-16pt">
+                            <h1 class="text-black-70 flex m-0" id="videoTitle"></h1>
+                            @*<p class="h1 text-black-50 font-weight-light m-0" id="videoDuration"></p>*@
+                        </div>
+                        <p class="hero__lead measure-hero-lead text-black mb-24pt" id="videoDescription"></p>
+                    </div>
+
+
+                    <!--<div class="d-flex flex-wrap align-items-end mb-16pt">
+                        <h1 class="text-black-70 flex m-0">Introduction to TypeScript</h1>-->
+                    @*<p class="h1 text-black-50 font-weight-light m-0">50:13</p>*@
+                    <!--</div>
+
+                    <p class="hero__lead measure-hero-lead text-black mb-24pt">JavaScript is now used to power backends, create hybrid mobile applications, architect cloud solutions, design neural networks and even control robots. Enter TypeScript: a superset of JavaScript for scalable, secure, performant and feature-rich applications.</p>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    else
+    {
+    <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
+        <h4>لا يوجد دروس مسجلة حاليا</h4>
+    </div>
+    }
+    <!-- jQuery -->
+    <script src="~/New folder/js/vendor-jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/New folder/js/vendor-popper.min.js"></script>
+    <script src="~/New folder/js/vendor-bootstrap.min.js"></script>
+    <!-- DOM Factory -->
+    <script src="~/New folder/js/vendor-dom-factory.js"></script>
+    <!-- App JS -->
+    <script src="~/New folder/js/js-app.js"></script>
+
+
+
+</body>
+</html>
+
+<script>
+    function toggleVideo(videoUrl, videoTitle, videoDescription) {
+        // Get the video container element
+        var videoContainer = document.getElementById("videoContainer");
+
+        // Get the iframe element
+        var videoIframe = document.getElementById("videoIframe");
+
+        // Get the description container element
+        var descriptionContainer = document.getElementById("descriptionContainer");
+
+        // Get the title, duration, and description elements
+        var videoTitleElement = document.getElementById("videoTitle");
+        //var videoDurationElement = document.getElementById("videoDuration");
+        var videoDescriptionElement = document.getElementById("videoDescription");
+
+        // Set the iframe source URL
+        videoIframe.src = videoUrl;
+
+        // Set the title, duration, and description
+        videoTitleElement.innerText = videoTitle;
+        //videoDurationElement.innerText = videoDuration;
+        videoDescriptionElement.innerText = videoDescription;
+
+        // Toggle the visibility of the video container and description container
+        if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
+            videoContainer.style.display = "block";
+            descriptionContainer.style.display = "block";
+        } else {
+            videoContainer.style.display = "none";
+            descriptionContainer.style.display = "none";
+        }
+    }
+
+</script>
+<script>
+
+    $(document).ready(function () {
+        $('#Nav').css('display', 'none');
+    });
+</script>
+

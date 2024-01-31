@@ -34,7 +34,7 @@ namespace LMS_Learning_Management_System.Models
         public int SubjectId { get; set; }
         [Display(Name = "الحالة")]
 
-        public bool? Status { get; set; }
+        public bool Status { get; set; }
         [Display(Name = "اسم المُنشئ")]
 
         public string CreatedUser { get; set; }
