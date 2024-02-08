@@ -168,29 +168,29 @@
 
         @if (Model.VEnrollmentStdDetailt_Collection.Count() > 0)
         {
-            @foreach (var item in Model.VEnrollmentStdDetailt_Collection)
+        @foreach (var item in Model.VEnrollmentStdDetailt_Collection)
             {
 
                 if (item.TeacherId != null)
                 {
 
-                    <div class="col-md-3 col-sm-3 col-xs-12">
-                        <div class="card">
-                            <div class="cover item-a">
-                                <h1>@item.Name</h1>
-                                @{var ss = 0;}
-                                @if (@item.Semester == 1)
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <div class="card">
+                <div class="cover item-a">
+                    <h1>@item.Name</h1>
+                    @{var ss = 0;}
+                    @if (@item.Semester == 1)
                                 {
-                                    <span class="price">الفصل الاول</span>
+                    <span class="price">الفصل الاول</span>
                                     ss = 1;
                                 }
                                 else
                                 {
-                                    <span class="price">الفصل الثاني</span>
+                    <span class="price">الفصل الثاني</span>
                                     ss = 2;
                                 }                                    @*<div class="card-back">
-                                        <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
-                                    </div>*@
+                            <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
+                        </div>*@
 
                                 <div class="card-back">
                                     <form id="@item.TeacherId+@ss" action="/Lessons/_PartialShowLessons_D" method="post">
@@ -215,12 +215,12 @@
                                 <h1>@item.Name</h1>
                                 @if (@item.Semester == 1)
                                 {
-                                    <span class="price">الفصل الاول</span>
+                                <span class="price">الفصل الاول</span>
 
                                 }
                                 else
                                 {
-                                    <span class="price">الفصل الثاني</span>
+                                <span class="price">الفصل الثاني</span>
 
                                 }
                                 <div class="card-back">
@@ -235,7 +235,7 @@
 
 
 
-                    <!-- Modal -->
+ <!-- Modal -->
                     <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
@@ -266,7 +266,7 @@
         }
         else
         {
-            <h2>لا يوجد دروس مسجلة</h2>
+        <h2>لا يوجد دروس مسجلة</h2>
 
         }
 
@@ -278,6 +278,73 @@
 
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<script>
+    $(function () {
+        $(".switch").click(function () {
+            $("#canvas-wrapper").toggleClass("dark-mode");
+            $("table").toggleClass("dark-mode");
+        });
+    });
+</script>
+
+<script>
+
+    // منع عمليات النسخ واللصق
+    document.addEventListener('copy', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('cut', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
+
+    // منع زر الفأرة الأيمن
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+
+    // عند فتح صفحة الويب
+    window.onload = function () {
+        document.addEventListener('contextmenu', function (e) {
+            // منع زر الفأرة الأيمن
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            // منع Ctrl + Shift + I (فتح أدوات المطور)
+            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+                e.preventDefault();
+            }
+        });
+    };
+
+
+
+    // منع فتح أدوات المطور
+    document.onkeydown = function (e) {
+        if (event.keyCode == 123) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+    }
+</script>
 <script>
     function openLessonsForm(TeacherId) {
         document.getElementById(TeacherId).submit();
@@ -398,24 +465,3 @@
     });
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

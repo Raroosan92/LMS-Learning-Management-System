@@ -134,16 +134,21 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
                 entity.Property(e => e.Semester).HasColumnName("Semester");
             });
-
             modelBuilder.Entity<ActiveSession>(entity =>
             {
                 entity.ToTable("Active_Sessions");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.ComputerName).HasColumnName("Computer_Name");
+
                 entity.Property(e => e.LoginDate)
                     .HasColumnType("datetime")
                     .HasColumnName("Login_Date");
+
+                entity.Property(e => e.MacAddress).HasColumnName("MAC_Address");
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(256);
 
                 entity.Property(e => e.UserId)
                     .HasMaxLength(450)
@@ -152,15 +157,6 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.UserName)
                     .HasMaxLength(256)
                     .HasColumnName("User_Name");
-
-
-                entity.Property(e => e.PhoneNumber)
-                    .HasMaxLength(256)
-                    .HasColumnName("PhoneNumber");
-
-                entity.Property(e => e.DeviceType)
-                    .HasMaxLength(256)
-                    .HasColumnName("DeviceType");
             });
             modelBuilder.Entity<AspNetRole>(entity =>
             {

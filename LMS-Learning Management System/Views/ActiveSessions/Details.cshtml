@@ -1,0 +1,60 @@
+﻿@model LMS_Learning_Management_System.Models.ActiveSession
+
+@{
+    Layout = null;
+    ViewData["Title"] = "التفاصيل";
+}
+
+
+<div>
+    <h4>المحتويات</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-4" style="display:none">
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+        <dd class = "col-sm-8" style="display:none">
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.LoginDate)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.LoginDate)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.DeviceType)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.DeviceType)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.MacAddress)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.MacAddress)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.ComputerName)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.ComputerName)
+        </dd>
+    </dl>
+</div>
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>*@

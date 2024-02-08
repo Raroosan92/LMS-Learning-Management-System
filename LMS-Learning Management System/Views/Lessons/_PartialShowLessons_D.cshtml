@@ -211,3 +211,72 @@
     });
 </script>
 
+
+
+<script>
+    $(function () {
+        $(".switch").click(function () {
+            $("#canvas-wrapper").toggleClass("dark-mode");
+            $("table").toggleClass("dark-mode");
+        });
+    });
+</script>
+
+<script>
+
+    // منع عمليات النسخ واللصق
+    document.addEventListener('copy', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('cut', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
+
+    // منع زر الفأرة الأيمن
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+
+    // عند فتح صفحة الويب
+    window.onload = function () {
+        document.addEventListener('contextmenu', function (e) {
+            // منع زر الفأرة الأيمن
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            // منع Ctrl + Shift + I (فتح أدوات المطور)
+            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+                e.preventDefault();
+            }
+        });
+    };
+
+
+
+    // منع فتح أدوات المطور
+    document.onkeydown = function (e) {
+        if (event.keyCode == 123) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+    }
+</script>
+

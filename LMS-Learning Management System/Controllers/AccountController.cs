@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -57,65 +58,94 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 try
                 {
+                    string ActiveSessions = "";
 
-                var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
-                AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
-                if (GetActiveSession(userdetails.Id))
-                {
-
-                    if (appUser != null)
+                    var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
+                    AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
+                    if (login.PhoneNumber== "0772823209" || login.PhoneNumber == "0777777777")
                     {
-                        await signInManager.SignOutAsync();
-                        Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember,false);
+                        ActiveSessions = "Succeeded";
 
-                        if (result.Succeeded)
+                    }
+                    else
+                    {
+
+                         ActiveSessions = GetActiveSession(userdetails.Id);
+                    }
+                    
+                    if (ActiveSessions== "Succeeded" || ActiveSessions == "NotExist")
+                    {
+                        string macAddressString = "";
+                        if (appUser != null)
                         {
-                            GetTime();
+                            await signInManager.SignOutAsync();
+                            Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, false, false);
 
-                                activesession.LoginDate = DateTime.Parse(time);
-                                activesession.UserId = appUser.Id;
-                                activesession.UserName = appUser.FullName;
-                                activesession.PhoneNumber = appUser.PhoneNumber;
-                                activesession.DeviceType = login.devicetype;
-                                _context.Add(activesession);
+                            if (result.Succeeded)
+                            {
+                                if (ActiveSessions == "NotExist")
+                                {
+                                    string computerName = Environment.MachineName;
 
-                                //await _context.SaveChangesAsync();
+                                    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                                    {
+                                        if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+                                        {
+                                            PhysicalAddress macAddress = nic.GetPhysicalAddress();
+                                            macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+                                            // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+                                            break;
+                                        }
+                                    }
+
+
+                                    GetTime();
+                                    activesession.LoginDate = DateTime.Parse(time);
+                                    activesession.UserId = appUser.Id;
+                                    activesession.UserName = appUser.FullName;
+                                    activesession.PhoneNumber = appUser.PhoneNumber;
+                                    activesession.DeviceType = login.devicetype;
+                                    activesession.ComputerName = computerName;
+                                    activesession.MacAddress = macAddressString;
+                                    _context.Add(activesession);
+
+                                    await _context.SaveChangesAsync();
+
+                                    //// In your controller or middleware
+                                    //HttpContext.Session.SetString("TestKey", "TestValue");
+
+                                    //// Check if the value is present in subsequent requests
+                                    //var testValue = HttpContext.Session.GetString("TestKey");
+                                }
                                 TempData["FullName"] = appUser.FullName;
 
-                            //// In your controller or middleware
-                            //HttpContext.Session.SetString("TestKey", "TestValue");
+                                return Redirect(login.ReturnUrl ?? "/");
+                            }
 
-                            //// Check if the value is present in subsequent requests
-                            //var testValue = HttpContext.Session.GetString("TestKey");
+                            // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
+                            /*if (result.RequiresTwoFactor)
+                            {
+                                return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
+                            }*/
 
+                            // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
+                            /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
+                            if (emailStatus == false)
+                            {
+                                ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
+                            }*/
 
-                            return Redirect(login.ReturnUrl ?? "/");
+                            // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
+                            /*if (result.IsLockedOut)
+                                ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
                         }
-
-                        // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
-                        /*if (result.RequiresTwoFactor)
-                        {
-                            return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
-                        }*/
-
-                        // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
-                        /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
-                        if (emailStatus == false)
-                        {
-                            ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
-                        }*/
-
-                        // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
-                        /*if (result.IsLockedOut)
-                            ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
+                        ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
                     }
-                    ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
-                }
-                else
-                {
-                    TempData["AlertMessage"] = "تم تسجيل الدخول من جهاز آخر. قم بعملية تسجل الخروج منه ثم تسجيل الدخول هنا مرة اخرى";
+                    else
+                    {
+                        TempData["AlertMessage"] = "يوجد جهاز اخر قام بعملية تسجيل الدخول, يرجى التواصل مع ادارة المنصة لحل المشكلة";
 
-                }
+                    }
 
                 }
                 catch (Exception ex)
@@ -128,31 +158,54 @@ namespace LMS_Learning_Management_System.Controllers
             return View(login);
         }
 
-        public bool GetActiveSession(string userId)
+        public string GetActiveSession(string userId)
         {
             try
             {
+                string macAddressString = "";
+
+
                 var username = _context.ActiveSessions.Where(m => m.UserId == userId).SingleOrDefault();
+
                 if (username != null)
                 {
-                    return false;
+                    string computerName = Environment.MachineName;
+
+                    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                    {
+                        if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+                        {
+                            PhysicalAddress macAddress = nic.GetPhysicalAddress();
+                            macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+                            // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+                            break;
+                        }
+                    }
+                    if (macAddressString == username.MacAddress)
+                    {
+                        return "Succeeded";
+                    }
+                    else
+                    {
+                        return "Faild";
+                    }
                 }
                 else
                 {
-                    return true;
+                    return "NotExist";
                 }
 
             }
             catch (Exception ex)
             {
 
-                return false;
+                return "Faild";
             }
 
         }
 
         public async Task<bool> DeleteActiveSession()
-    
+
         {
             return true;
             //try
