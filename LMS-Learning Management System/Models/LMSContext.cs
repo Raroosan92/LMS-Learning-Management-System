@@ -37,6 +37,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<VLessonCardsSubject> VLessonCardsSubjects { get; set; }
         public virtual DbSet<VTechersInfo> VTechersInfos { get; set; }
         public virtual DbSet<VEnrollmentStdDetail> VEnrollmentStdDetails { get; set; }
+        public virtual DbSet<Code> Codes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -51,6 +52,10 @@ namespace LMS_Learning_Management_System.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<Code>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+            });
             modelBuilder.Entity<VEnrollmentStdDetail>(entity =>
             {
                 entity.HasNoKey();

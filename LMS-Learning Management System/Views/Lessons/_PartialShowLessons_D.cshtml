@@ -42,1256 +42,114 @@
     <!-- App CSS -->
     <link type="text/css" href="~/New folder/css/css-app.css" rel="stylesheet">
     <link type="text/css" href="~/New folder/css/css-app.rtl.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/TabsCSS.css" rel="stylesheet" />
 
+    @******************************For files**********************************@
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
-
-
-    @******************************For Tabs**********************************@
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
-
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
     <style>
-        /* ****************General****************** */
-
-
-        ul, nav {
-            list-style: none;
+        body {
+            background-color: #f4f7f6;
+            margin-top: 20px;
         }
 
-        textarea {
-            resize: none;
+        .file_manager .file a:hover .hover,
+        .file_manager .file .file-name small {
+            display: block
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-            opacity: 1;
+        .file_manager .file {
+            padding: 0 !important
         }
 
-            a:hover {
-                text-decoration: none;
-            }
-
-        h1 {
-            text-align: center;
-            margin: 5px auto;
-            margin-top: 10px;
-            font-weight: 600;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .hr-h1 {
-            margin: 0 auto 35px auto;
-            margin-bottom: 28px;
-            border-style: solid;
-            border-width: 5px;
-            border-color: #9C9A40;
-            width: 128px;
-        }
-
-        section {
-            align-items: center;
-            // padding: 70px 100px;
-            padding: 10px;
-            margin: 10px;
-            margin-top: 40px;
-        }
-
-            section p {
-                text-align: center;
-                margin-bottom: 35px;
-                padding: 0 20px;
-                line-height: 2;
-                font-family: 'Lato', sans-serif;
-            }
-
-        .grid {
-            width: 100%;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-
-        /* General slide up */
-        .slideanim {
-            visibility: hidden;
-        }
-
-        .slide {
-            animation-name: slide;
-            -webkit-animation-name: slide;
-            -moz-animation-name: slide;
-            animation-duration: 2s;
-            -webkit-animation-duration: 2s;
-            -moz-animation-duration: 2s;
-            visibility: visible;
-        }
-
-        @@keyframes slide {
-            0% {
-                opacity: 0;
-                transform: translateY(60%);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0%);
-            }
-        }
-
-        @@-webkit-keyframes slide {
-            0% {
-                opacity: 0;
-                -webkit-transform: translateY(60%);
-            }
-
-            100% {
-                opacity: 1;
-                -webkit-transform: translateY(0%);
-            }
-        }
-
-        /* Service slide left */
-        .slideanimleft {
-            visibility: hidden;
-        }
-
-        .slideleft {
-            animation-name: slideleft;
-            -webkit-animation-name: slideleft;
-            -moz-animation-name: slideleft;
-            animation-duration: 1.5s;
-            -webkit-animation-duration: 1.5s;
-            -moz-animation-duration: 1.5s;
-            /* Make the element visible */
-            visibility: visible;
-        }
-
-        @@keyframes slideleft {
-            0% {
-                opacity: 0;
-                transform: translateX(50%);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(0%);
-            }
-        }
-
-        @@-webkit-keyframes slideleft {
-            0% {
-                opacity: 0;
-                -webkit-transform: translateX(50%);
-            }
-
-            100% {
-                opacity: 1;
-                -webkit-transform: translateX(0%);
-            }
-        }
-
-        @@media (max-width: 375px) {
-            section {
-                padding: 20px 10px;
-            }
-
-            .bg-section h1 {
-                font-size: 27px;
-            }
-        }
-        /* ****************************************************
-         *    Head
-         **************************************************** */
-        .header-full {
-            color: white;
-            background: url("../img/hero.jpg") no-repeat;
-            background-size: cover;
-            background-position: bottom;
-            padding-bottom: 150px;
-        }
-
-            .header-full .logo-law {
-                position: absolute;
-                left: 0;
-                height: 100px;
-                width: 150px;
-            }
-
-                .header-full .logo-law:hover {
-                    -webkit-filter: grayscale(50%);
-                    filter: grayscale(50%);
-                }
-
-            .header-full .navbar {
-                height: 120px;
-                width: 100%;
-                background-color: transparent;
-                border: none;
-                border-radius: 0;
-                overflow-x: none;
-            }
-
-            .header-full .navbar-right li {
-                position: absolute;
-                right: 40px;
-                margin-top: 25px;
+            .file_manager .file .icon {
+                text-align: center
             }
 
 
-            .header-full .navbar-right .menu-icon {
-                position: absolute;
-                right: 100px;
-            }
-
-            .header-full .navbar-right > li > a {
-                color: white;
-                font-size: 14px;
-                font-weight: 600;
-                border: 1px white solid;
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                -ms-border-radius: 0;
-                border-radius: 0;
-                padding: 8px 16px;
-                font-family: 'Lato', sans-serif;
-                -webkit-transform: translateX(0);
-                -moz-transform: translateX(0);
-                transform: translateX(0);
-                right: 0px;
-                position: absolute;
-            }
-
-            .header-full .navbar-nav > li > a:before {
-                content: "";
-                position: absolute;
-                z-index: -1;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: #eee;
-                -webkit-transform: scaleX(0);
-                -moz-transform: scaleX(0);
-                transform: scaleX(0);
-                -webkit-transform-origin: 0;
-                -moz-transform-origin: 0;
-                transform-origin: 0;
-                -webkit-transition-property: transform;
-                -moz-transition-property: transform;
-                transition-property: transform;
-                -webkit-transition-timing-function: ease;
-                -moz-transition-timing-function: ease;
-                transition-timing-function: ease;
-                -webkit-transition-duration: 0.4s;
-                -moz-transition-duration: 0.4s;
-                transition-duration: 0.4s;
-            }
-
-            .header-full .navbar-nav > li > a:focus,
-            .header-full .navbar-nav > li > a:hover,
-            .header-full .navbar-nav > li > a:active {
-                color: #41ac86;
-            }
-
-                .header-full .navbar-nav > li > a:focus:before,
-                .header-full .navbar-nav > li > a:hover:before,
-                .header-full .navbar-nav > li > a:active:before {
-                    -webkit-transform: scaleX(1);
-                    -moz-transform: scaleX(1);
-                    -ms-transform: scaleX(1);
-                    -o-transform: scaleX(1);
-                    transform: scaleX(1);
-                }
-
-
-        .menu-icon {
-            display: inline-block;
-            cursor: pointer;
-        }
-
-            .menu-icon:hover {
-                cursor: pointer;
-                color: #41ac86;
-            }
-
-        .icon-bar1, .icon-bar2, .icon-bar3 {
-            width: 35px;
-            height: 5px;
-            margin: 6px 0;
-            transition: 0.5s;
-            border-radius: 0;
-            background-color: #fff;
-        }
-
-        .change .icon-bar1 {
-            -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-            transform: rotate(-45deg) translate(-9px, 6px);
-        }
-
-        .change .icon-bar2 {
-            opacity: 0;
-        }
-
-        .change .icon-bar3 {
-            -webkit-transform: rotate(45deg) translate(-8px, -8px);
-            transform: rotate(45deg) translate(-8px, -8px);
-        }
-
-
-        .overlay {
-            height: 0%;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0, 0.9);
-            overflow-y: hidden;
-            transition: 0.7s;
-            z-index: 5;
-        }
-
-        .overlay-content {
+        .file_manager .file {
             position: relative;
-            top: 25%;
-            width: 100%;
-            text-align: center;
-            margin-top: 10px;
+            border-radius: .55rem;
+            overflow: hidden
         }
 
-        .overlay a {
-            padding: 7px;
-            text-decoration: none;
-            font-size: 38px;
-            color: #757575;
-            display: block;
-            transition: .5s;
-            font-weight: 600;
-        }
-
-            .overlay a:hover, .overlay a:focus {
-                color: #fff;
-            }
-
-
-        .header-full .welcome-header {
-            background-color: #fff;
-            width: 800px;
-            opacity: .9;
-            text-align: center;
-            margin-top: 80px;
-            margin-bottom: 130px;
-            border-right: 10px solid #555;
-            padding: 15px;
-            box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, 0.7);
-        }
-
-            .header-full .welcome-header h1 {
-                color: #9C9A40;
-                font-weight: bold;
-                font-size: 55px;
-                margin-bottom: 36px;
-                font-family: 'Lato', sans-serif;
-            }
-
-            .header-full .welcome-header p {
-                color: #545454;
-                font-size: 20px;
-                max-width: 660px;
-                margin: 0 auto 20px;
-                font-weight: 500;
-                line-height: 1.2;
-                font-family: 'Lato', sans-serif;
-            }
-
-        .header-full .welcome-contact {
-            position: absolute;
-            left: 0px;
-            width: 300px;
-            background-color: #fff;
-            opacity: .8;
-            margin-bottom: 50px;
-            box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.7);
-        }
-
-        .header-full .contact-info {
-            font-weight: 500;
-            font-size: 14px;
-            padding: 20px;
-            line-height: 5px;
-            right: 0px;
-            color: #555;
-        }
-
-
-
-        @@media (max-width: 375px) {
-
-            .header-full {
-                color: white;
+            .file_manager .file .image,
+            .file_manager .file .icon {
+                max-height: 180px;
+                overflow: hidden;
                 background-size: cover;
-                background-position: bottom;
-                padding-bottom: 100px;
+                background-position: top
             }
 
-                .header-full .logo-law {
-                    display: none !important;
-                }
-
-                .header-full .navbar-nav > li > a {
-                    padding: 8px 16px;
-                    margin: 0 5px 20px 5px;
-                    text-align: center;
-                }
-
-                .header-full .welcome-header {
-                    width: 100%;
-                    border-right: none;
-                    margin-top: 10px;
-                    margin-bottom: 40px;
-                }
-
-                    .header-full .welcome-header h1 {
-                        font-size: 25px;
-                        margin-bottom: 20px;
-                    }
-
-                    .header-full .welcome-header p {
-                        font-size: 16px;
-                    }
-
-                .header-full .welcome-contact {
-                    width: 100%;
-                    font-size: 14px;
-                }
-
-                .header-full .contact-info {
-                    font-size: 12px;
-                    padding: 20px;
-                    line-height: 2px;
-                }
-
-            .overlay {
-                overflow-y: 0;
-            }
-
-                .overlay a {
-                    font-size: 25px;
-                }
-
-                .overlay .closebtn {
-                    font-size: 40px;
-                    top: 15px;
-                    right: 35px;
-                }
-        }
-
-
-        /* ************
-         * About
-         **************/
-        #about {
-            background-color: #fff;
-        }
-
-
-            #about img {
-                -webkit-filter: grayscale(0%);
-                filter: grayscale(0%);
-                width: 100%;
-                height: 100%;
-            }
-
-                #about img:hover {
-                    margin-right: 0;
-                    -webkit-filter: grayscale(80%);
-                    filter: grayscale(80%);
-                    -webkit-transition: .5s ease-in-out;
-                    transition: .5s ease-in-out;
-                }
-
-            #about .img-txt-bg:hover {
-                background-color: #005960;
-                opacity: .7;
-            }
-
-            #about .carousel {
-                background-color: #fff;
-                margin-left: 0;
-                height: 478px;
-            }
-
-            #about .about-me h3 {
-                font-size: 25px;
-                font-weight: 600;
-                background-color: #005960;
-                margin: 0 auto;
-                padding: 20px;
-                color: #fff;
-                text-transform: none;
-                font-family: 'Lato', sans-serif;
-                opacity: .7
-            }
-
-            #about .carousel-inner p {
-                font-size: 17px;
-                font-weight: 500;
-                font-family: 'Mukta', sans-serif;
-                line-height: 22px;
-                text-align: left;
-                padding: 25px 40px;
-                color: rgba(25, 25, 25, 0.6);
-                word-spacing: 3px;
-            }
-
-            #about .img-txt-bg:hover p {
-                color: #fff;
-            }
-
-            #about .carousel-indicators li {
-                height: 16px;
-                width: 16px;
-                margin-right: 10px;
-                -webkit-border-radius: 50%;
-                -moz-border-radius: 50%;
-                -ms-border-radius: 50%;
-                border-radius: 50%;
-                background-color: #fff;
+            .file_manager .file .hover {
+                position: absolute;
                 right: 10px;
-                border: 2px solid #005960;
+                top: 10px;
+                display: none;
+                transition: all 0.2s ease-in-out
             }
 
-            #about .img-txt-bg:hover li {
-                background-color: #005960;
-                border-color: #fff;
+            .file_manager .file a:hover .hover {
+                transition: all 0.2s ease-in-out
             }
 
-            #about .carousel-indicators li.active {
-                background-color: #005960;
-                border: 2px solid #005960;
+            .file_manager .file .icon {
+                padding: 15px 10px;
+                display: table;
+                width: 100%
             }
 
-            #about .img-txt-bg:hover li.active {
-                background-color: #fff;
-                border-color: #fff;
-            }
+                .file_manager .file .icon i {
+                    display: table-cell;
+                    font-size: 30px;
+                    vertical-align: middle;
+                    color: #777;
+                    line-height: 100px
+                }
 
-            #about .no-padding {
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-        @@media (max-width: 375px) {
-            #about .carousel-inner p {
-                font-size: 16px;
-                line-height: 20px;
+            .file_manager .file .file-name {
                 padding: 10px;
+                border-top: 1px solid #f7f7f7
             }
 
-            #about .carousel {
-                min-height: 520px;
-            }
-        }
-        /*---------------------------------------------------
-         *  Service
-         *-------------------------------------------------- */
-        #service {
-            background-color: #eee;
-        }
-
-            #service .tab-content {
-                background-color: #fff;
-                min-height: 500px;
-                padding: 25px;
-            }
-
-            #service .brand-pills li a {
-                font-size: 15px;
-                padding: 45px 15px;
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                -ms-border-radius: 0;
-                border-radius: 0;
-                background-color: #005960;
-                color: #fff;
-                text-transform: uppercase;
-                font-weight: 600;
-                margin: 0;
-            }
-
-                #service .brand-pills li a:focus {
-                    font-size: 15px;
-                    padding: 45px 15px;
-                    -webkit-border-radius: 0;
-                    -moz-border-radius: 0;
-                    -ms-border-radius: 0;
-                    border-radius: 0;
-                    background-color: #005960;
-                    color: #fff;
-                    text-transform: uppercase;
-                    font-weight: 600;
-                    margin: 0;
+                .file_manager .file .file-name small .date {
+                    float: right
                 }
 
-            #service .brand-pills li.active a {
-                background-color: #9C9A40;
-            }
-
-                #service .brand-pills li.active a:focus,
-                #service .brand-pills li.active a:hover,
-                #service .brand-pills li.active a:focus:hover {
-                    background-color: #9C9A40;
-                }
-
-            #service .brand-pills > li > a:hover,
-            #service .brand-pills > li > a:focus:hover {
-                background-color: #9C9A40;
-            }
-
-            #service li.brand-nav.active a:after {
-                content: " ";
-                display: block;
-                width: 0;
-                height: 0;
-                border-top: 55px solid transparent;
-                border-bottom: 55px solid transparent;
-                border-left: 25px solid #9C9A40;
-                position: absolute;
-                top: 50%;
-                margin-top: -55px;
-                left: 100%;
-                z-index: 2;
-            }
-
-            #service h3 {
-                font-size: 24px;
-                text-align: center;
-                font-weight: 500;
-                color: #9C9A40;
-            }
-
-            #service p {
-                font-size: 16px;
-                line-height: 25px;
-                text-align: left;
-                font-weight: 500;
-                color: #0f0f0f;
-                color: rgba(15, 15, 15, 0.6);
-                font-family: 'Mukta', sans-serif;
-                word-spacing: 3px;
-            }
-
-
-        @@media (max-width: 375px) {
-
-
-            #service .tab-content {
-                min-height: 680px;
-                padding: 10px;
-            }
-
-            #service h3 {
-                font-size: 20px;
-            }
-
-            #service p {
-                line-height: 20px;
-                padding: 5px;
-            }
-
-            #service .brand-pills li a {
-                font-size: 14px;
-                padding: 20px 15px;
-            }
-
-                #service .brand-pills li a:focus {
-                    font-size: 14px;
-                    padding: 20px 15px;
-                }
-
-            #service li.brand-nav.active a:after {
-                border-top: 30px solid transparent;
-                border-bottom: 30px solid transparent;
-                border-left: 10px solid #9C9A40;
-                margin-top: -30px;
-            }
-        }
-        /***************
-         *  Blog
-         **************** */
-        #blog {
-            background-color: #fff;
-        }
-
-        .thumbnail {
-            border-radius: 0;
-            padding: 0 0 10px 0;
-            border: none;
-            background-color: #bbb;
-        }
-
-            .thumbnail:hover {
-                background-color: #a1a1a1;
-                box-shadow: 4px 4px 2px 0 rgba(0, 0, 0, 0.8)
-            }
-
-        article {
-            min-height: 200px;
-        }
-
-        .blog-h3 {
-            color: #fff;
-            text-align: center;
-            font-weight: 500;
-            font-size: 24px;
-        }
-
-        .text-blog {
-            text-align: left;
-            color: #323232;
-        }
-
-        .badge-more {
-            background-color: #555;
-            color: #fff;
-            border-radius: 0;
-            padding: 3px;
-        }
-
-        .posted {
-            color: #757575;
-            font-style: italic;
-        }
-
-        .post-meta {
-            margin-bottom: 10px;
-        }
-
-        .header-blog {
-            margin-bottom: 0;
-        }
-
-
-        @@media (max-width: 375px) {
-            aside {
-                margin-bottom: 25px;
-            }
-
-            .post {
-                margin: 25px 0;
-            }
-        }
-        /*----------------------
-         *   Testimonials
-         *---------------------- */
-
-        #testimonials {
-            background-color: #eee;
-        }
-
-            #testimonials .projects {
-                margin: auto 80px;
-            }
-
-            #testimonials .grid .result {
-                padding: 5px;
-                min-height: 220px;
-                border-radius: none;
-                background-clip: content-box;
-                background-size: cover;
-                background-position: center;
-                background-color: #555;
-            }
-
-            #testimonials .grid .small {
-                flex-basis: 40%;
-                background-color: #9C9A40;
-                display: block;
-            }
-
-            #testimonials .grid .big {
-                flex-basis: 60%;
-                background-color: #005960;
-                display: block;
-            }
-
-            #testimonials .text {
-                position: relative;
-                border: 1px solid transparent;
-                margin: 20px;
-                height: 80%;
-            }
-
-                #testimonials .text p {
-                    color: #fff;
-                    font-size: 15px;
-                    padding: 10px;
-                    line-height: 25px;
-                    font-weight: 700;
-                    font-family: 'Montserrat', serif;
-                    text-transform: uppercase;
-                }
-
-                #testimonials .text::before,
-                #testimonials .text::after {
-                    content: "";
-                    width: 0;
-                    height: 4px;
-                    position: absolute;
-                    transition: all 0.3s linear;
-                    background: #fff;
-                }
-
-            #testimonials p::before,
-            #testimonials p::after {
-                content: "";
-                width: 4px;
-                height: 0;
-                position: absolute;
-                transition: all 0.3s linear;
-                background: #fff;
-            }
-
-            #testimonials .text:hover::before,
-            #testimonials .text:hover::after {
-                width: 100%;
-            }
-
-            #testimonials .text:hover p::before,
-            #testimonials .text:hover p::after {
-                height: 100%;
-            }
-
-            #testimonials .text::after {
-                left: 0;
-                bottom: 0;
-                transition-duration: 0.5s;
-            }
-
-            #testimonials .text p::after {
-                right: 0;
-                top: 0;
-                transition-duration: 0.5s;
-            }
-
-            #testimonials .text::before {
-                right: 0;
-                top: 0;
-                transition-duration: 0.5s;
-            }
-
-            #testimonials .text p::before {
-                left: 0;
-                bottom: 0;
-                transition-duration: 0.5s;
-            }
-
-
-        @@media (max-width: 375px) {
-
-            #testimonials .projects p {
-                font-size: 14px;
-                padding: 20px;
-                line-height: 20px;
-            }
-        }
-        /*--------------------
-         *  Contact
-         *-------------------- */
-        #contact {
-            background-color: #fff;
-        }
-
-            #contact .cont-box {
-                height: 150px;
-                margin-bottom: 10px;
-            }
-
-            #contact .contact-address {
-                background-color: #00474d;
-            }
-
-            #contact .contact-hours {
-                background-color: #005e66;
-            }
-
-            #contact .contact-contact {
-                background-color: #007580;
-            }
-
-            #contact .cont-box h4 {
-                text-align: center;
-                padding: 15px 0 5px;
-                color: #fff;
-                font-weight: 600;
-            }
-
-            #contact .cont-box p {
-                font-size: 15px;
-                text-align: center;
-                padding: 10px;
-                color: #fff;
-                font-weight: 500;
-            }
-
-            #contact .contacts > [class*="col-"] {
-                padding-right: 0;
-                padding-left: 0;
-            }
-
-            #contact .hr-contact {
-                width: 90%;
-                margin: 5px auto;
-            }
-
-            #contact .form-dropdown {
-                background-color: #007580;
-                margin-top: 12px;
-                padding: 20px 10px;
-                z-index: 10;
-                min-height: 360px;
-            }
-
-            #contact .form-group {
-                padding: 0 auto;
-            }
-
-
-            #contact .btn-form {
-                margin: 20px 130px;
-                justify-content: center;
-                background-color: #007580;
-                border-color: #fff;
-                border-radius: 0;
-                color: #fff;
-                padding: 10px 25px;
-            }
-
-                #contact .btn-form:hover {
-                    background-color: #fff;
-                    color: #007580;
-                }
-
-            #contact .form-app input,
-            #contact .form-app textarea {
-                border-radius: 15px;
-                background-color: #007580;
-                border-color: #fff;
-                color: #fff;
-            }
-
-            #contact .contact-buttons {
-                padding-bottom: 30px;
-            }
-
-            #contact .btn-two {
-                padding: 5px 10px;
-                border-radius: 0;
-                border-color: #fff;
-                border-width: 1px;
-                background-color: #007580;
-                color: #fff;
-            }
-
-                #contact .btn-two:hover {
-                    color: #007580;
-                    background-color: #fff;
-                }
-
-
-
-        @@media (max-width: 375px) {
-            #contact .cont-box {
-                margin: 10px;
-            }
-
-                #contact .cont-box h4 {
-                    padding: 15px 0 0 0;
-                }
-
-                #contact .cont-box p {
-                    padding: 10px;
-                }
-        }
-        /*---------------------
-         *    Footer
-         *--------------------- */
-        #footer {
-            background-color: #191919;
-            background-color: rgba(25, 25, 25, 0.8);
-            color: #fff;
-            padding: 80px 70px;
-        }
-
-            #footer h4 {
-                font-weight: 600;
-                font-size: 20px;
-                margin-bottom: 20px;
-                text-align: center;
-                color: #00cc99;
-            }
-
-            #footer .footer-info {
-                text-align: left;
-            }
-
-            #footer .footer-icons a {
-                display: inline-block;
-                width: 35px;
-                height: 35px;
-                cursor: pointer;
-                background-color: #33383b;
-                -webkit-border-radius: 0;
-                -moz-border-radius: 0;
-                -ms-border-radius: 0;
-                border-radius: 0;
-                font-size: 22px;
-                color: #00b386;
-                text-align: center;
-                line-height: 35px;
-                margin-right: 15px;
-            }
-
-                #footer .footer-icons a:hover {
-                    background-color: #fff;
-                }
-
-            #footer .contacts .fa {
-                color: #00b386;
-            }
-
-            #footer ul {
-                font-size: 14px;
-                padding-bottom: 20px;
-                color: #fff;
-                line-height: 2.2;
-                margin-left: 0;
-                padding-left: 0;
-            }
-
-            #footer li {
-                text-align: left;
-                margin-left: 0;
-                padding-left: 0;
-            }
-
-            #footer .nav-links a:hover {
-                color: #00b386;
-            }
-
-            #footer .hr-footer {
-                display: block;
-                width: 100%;
-                color: #fff;
-                margin: 25px 0;
-            }
-
-        @@media (max-width: 375px) {
-            #footer {
-                padding: 50px 10px;
-            }
-
-                #footer h4 {
-                    font-size: 20px;
-                    margin-bottom: 15px;
-                }
-
-                #footer .nav-links a {
-                    font-size: 14px;
-                    padding-bottom: 20px;
-                    line-height: 20px;
-                }
-
-                #footer .footer-info {
-                    padding-bottom: 30px;
-                }
-        }
-
-        .copyright {
-            background-color: #00aa9c;
-        }
-
-            .copyright p {
-                text-align: center;
-                color: #fff;
-                padding: 5px 0;
-                margin-bottom: 0;
-                font-size: 12px;
-                font-weight: 600;
-            }
-
-        .to-top {
-            color: #fff;
-            font-size: 30px;
-            position: fixed;
-            right: 15px;
-            bottom: 15px;
-            height: 40px;
-            width: 40px;
-            text-decoration: none;
-            -webkit-border-radius: 0;
-            -moz-border-radius: 0;
-            -ms-border-radius: 0;
-            border-radius: 0;
-            text-align: center;
-            background-color: #aaa;
-            opacity: .7;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-            .to-top:hover {
-                background-color: #222;
-                color: #00b386;
-                -webkit-transition: all 1s ease;
-                -moz-transition: all 1s ease;
-                -ms-transition: all 1s ease;
-                -o-transition: all 1s ease;
-                transition: all 1s ease;
-            }
-
-        @@media (max-width: 375px) {
-
-            .to-top {
-                right: 0;
-                bottom: 5px;
-            }
-        }
-
-
-        /*****************************************
-         Breadcrumb
-         *****************************************/
-        .breadcrumb {
-            background-color: #aaa;
-            border-radius: 0;
-            color: #fff;
-        }
-
-            .breadcrumb > li:hover > a {
-                color: #005960;
-            }
-
-        /****************************************
-         Pagination
-        *****************************************/
-
-        .pagination > li > a {
-            background-color: #fff;
-            color: #005960;
-            border-color: #005960;
-            border-radius: 0;
-        }
-
-        .pagination > li:hover > a,
-        .pagination > li:hover:focus > a,
-        .pagination > li.active a,
-        .pagination > li.active:hover a {
-            background-color: #005960;
-            color: #fff;
-            border: 1px solid #005960;
-        }
-
-        /*****************************************
-         Sidebar
-        *****************************************/
-        aside {
-            background-color: #eee;
-            box-shadow: 2px 2px 2px 0 rgba(120, 120, 120, 0.8)
-        }
-
-            aside h3 {
-                color: #fff;
-                background-color: #005960;
-                font-size: 18px;
-                padding: 7px;
-                text-align: center;
-                opacity: .7;
-            }
-
-
-        .sidebar-posts ol {
-            padding-bottom: 10px;
-            margin-left: 10px;
-            padding-left: 10px;
-        }
-
-        .sidebar-posts li {
-            color: #555;
-            font-size: 14px;
-            text-align: left;
-            margin-left: 10px;
-            padding-left: 10px;
-        }
-
-        .sidebar-hr {
-            border-color: #555;
-            width: 90%;
-            padding-left: 0;
-            margin-left: 0;
-            margin-top: 0;
-        }
-
-
-        /************************************
-         Post
-        *************************************/
-
-        .main-content {
-            background-color: #eee;
-            min-height: 700px;
-        }
-
-        .header-h3 h3 {
-            text-align: center;
-            padding-top: 20px;
-            font-size: 30px;
-            color: #005960;
-            font-weight: 600;
-        }
-
-        .header-h3 .post-meta {
-            text-align: right;
-        }
-
-        .main-content .text-blog {
+        .folder {
             padding: 20px;
-            color: rgba(25, 25, 25, .8);
-            font-size: 15px;
+            display: block;
+            color: #777
         }
 
-            .main-content .text-blog::first-letter {
-                font-size: 150%;
-                font-weight: 600;
-                color: #005960;
+        @@media only screen and (max-width: 992px) {
+            .file_manager .nav-tabs {
+                padding-left: 0;
+                padding-right: 0
             }
 
-        @@media (max-width: 375px) {
+                .file_manager .nav-tabs .nav-item {
+                    display: inline-block
+                }
+        }
 
-            .text-blog {
-                line-height: 20px;
-            }
+        .card {
+            background: #fff;
+            transition: .5s;
+            border: 0;
+            margin-bottom: 30px;
+            border-radius: .55rem;
+            position: relative;
+            width: 100%;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+        }
+
+        a:hover {
+            text-decoration: none;
         }
     </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.5/angular.min.js"></script>
-
-
-
-
-    @******************************For Tabs**********************************@
+    @******************************For files**********************************@
 </head>
 <body class="layout-navbar-mini-fixed-bottom">
 
@@ -1303,195 +161,233 @@
     </div>
     @if (Model.VLessonCardsSubject_Collection.Count() > 0)
     {
-    <section class="bg-section" id="service">
-        <div class="container-fluid">
-            <div class="row slideanim slide">
-                <div class="tabpanel" role="tabpanel">
-                    <div class="col-md-3 col-sm-3">
-                        <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
-                            <li role="presentation" class="brand-nav"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab" aria-expanded="false">Property law</a></li>
-                            <li role="presentation" class="brand-nav"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab" aria-expanded="false">Corporate law</a></li>
-                            <li role="presentation" class="brand-nav"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab" aria-expanded="false">Competition law</a></li>
-                            <li role="presentation" class="brand-nav active"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab" aria-expanded="true">Labour law</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-9 col-sm-9">
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane slideanimleft slideleft" id="tab1">
-                                <h3 class="laws">Property law</h3>
-                                <hr class="laws-hr">
-                                <p>
-                                    Property law governs ownership and possession. Real property, sometimes called 'real estate', refers to ownership of land and things attached to it.[178] Personal property, refers to everything else; movable objects, such as computers, cars, jewelry or intangible rights, such as stocks and shares. A right in rem is a right to a specific piece of property, contrasting to a right in personam which allows compensation for a loss, but not a particular thing back.
-                                </p>
-                                <p>
-                                    Land law forms the basis for most kinds of property law, and is the most complex. It concerns mortgages, rental agreements, licences, covenants, easements and the statutory systems for land registration.
-                                </p>
-                            </div>
-                            <div role="tabpanel" class="tab-pane slideanimleft slideleft" id="tab2">
-                                <h3 class="laws">Corporate law</h3>
-                                <hr class="laws-hr">
-                                <p>
-                                    Corporate law (also known as business law or enterprise law or company law or trade law or commercial law) is the body of law that applies to the rights, relations, and conduct of persons and businesses engaged in commerce, merchandising, trade, and sales.
-                                </p>
-                                <p>
-                                    It studies how shareholders, directors, employees, creditors, and other stakeholders such as consumers, the community, and the environment interact with one another. Corporate law is a part of a broader companies law (or law of business associations). It is often considered to be a branch of civil law and deals with issues of both private law and public law.
-                                </p>
-                            </div>
-                            <div role="tabpanel" class="tab-pane slideanimleft slideleft" id="tab3">
-                                <h3 class="laws">Competition law</h3>
-                                <hr class="laws-hr">
-                                <p>
-                                    Competition law is a law that promotes or seeks to maintain market competition by regulating anti-competitive conduct by companies.[1][2] Competition law is implemented through public and private enforcement.
-                                </p>
-                                <p>
-                                    Competition law is known as anti-trust law in the United States, and as anti-monopoly law in China[1] and Russia. In previous years it has been known as trade practices law in the United Kingdom and Australia. In the European Union, it is referred to as both antitrust[4] and competition law.
-                                </p>
-                            </div>
-                            <div role="tabpanel" class="tab-pane slideanimleft slideleft active" id="tab4">
-                                <h3 class="laws">Labour law</h3>
-                                <hr class="laws-hr">
-                                <p>
-                                    Labour law (also known as labor law or employment law) mediates the relationship between workers, employing entities, trade unions and the government. Collective labour law relates to the tripartite relationship between employee, employer and union. Individual labour law concerns employees' rights at work and through the contract for work.
-                                </p>
-                                <p>
-                                    Employment standards are social norms (in some cases also technical standards) for the minimum socially acceptable conditions under which employees or contractors are allowed to work.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-
-
-
-
-    <div class="mdk-header-layout js-mdk-header-layout">
 
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="border-left-2 page-section pl-32pt">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">الدروس</a></li>
+                <li><a data-toggle="tab" href="#menu1">الدوسيات</a></li>
+                <li><a data-toggle="tab" href="#menu2">اوراق العمل</a></li>
+                <li>@*<a data-toggle="tab" href="#menu3">Menu 3</a>*@</li>
+            </ul>
 
-                        <div class="d-flex ">
-                            @*<div class="page-num">1</div>*@
-                            <h4>الدروس</h4>
-                        </div>
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <div class="mdk-header-layout js-mdk-header-layout">
 
-                        @*<p class="text-70 mb-24pt">Good tools make application development quick*er and easier to maintain than* if you did everything by hand. The goal in this guide is to build and run a simple Angular application in TypeScript, using the Angular CLI while adhering to the Style Guide recommendations that benefit every Angular project.</p>*@
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="border-left-2 page-section pl-32pt">
 
-                        <div class="card mb-32pt mb-lg-64pt">
-                            <ul class="accordion accordion--boxed js-accordion mb-0" id="toc-1">
-                                <li class="accordion__item open">
-                                    <a class="accordion__toggle" data-toggle="collapse" data-parent="#toc-1" href="#toc-content-1">
-                                        @*<span class="flex">1 of 4 Steps</span>*@
-                                        <span class="accordion__toggle-icon material-icons">@*keyboard_arrow_down*@</span>
-                                    </a>
-                                    <div class="accordion__menu">
-                                        <ul class="list-unstyled collapse show" id="toc-content-1">
-                                            @foreach (var item in Model.VLessonCardsSubject_Collection)
-                                                {
-                                            <li class="accordion__menu-link">
-                                                <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
-                                                <button type="button" class="btn btn-dark video-link-button" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</button>
-                                                @*<span class="text-muted">8m 42s</span>*@
-                                            </li>
-                                                }
+                                        <div class="d-flex ">
+                                            @*<div class="page-num">1</div>*@
+                                            <h4>الدروس</h4>
+                                        </div>
 
+                                        @*<p class="text-70 mb-24pt">Good tools make application development quick*er and easier to maintain than* if you did everything by hand. The goal in this guide is to build and run a simple Angular application in TypeScript, using the Angular CLI while adhering to the Style Guide recommendations that benefit every Angular project.</p>*@
 
-
-                                            @*@foreach (var item in Model.VLessonCardsSubject_Collection)
-                                                {
-                                                    <li class="accordion__menu-link">
-                                                        <span class="material-icons icon-16pt icon--left text-body">@check_circle@play_circle_outline</span>
-                                                        <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
-
-                                                        @<span class="text-muted">8m 42s</span>@
-                                                    </li>
-                                                }*@
-
-
+                                        <div class="card mb-32pt mb-lg-64pt">
+                                            <ul class="accordion accordion--boxed js-accordion mb-0" id="toc-1">
+                                                <li class="accordion__item open">
+                                                    <a class="accordion__toggle" data-toggle="collapse" data-parent="#toc-1" href="#toc-content-1">
+                                                        @*<span class="flex">1 of 4 Steps</span>*@
+                                                        <span class="accordion__toggle-icon material-icons">@*keyboard_arrow_down*@</span>
+                                                    </a>
+                                                    <div class="accordion__menu">
+                                                        <ul class="list-unstyled collapse show" id="toc-content-1">
+                                                            @foreach (var item in Model.VLessonCardsSubject_Collection)
+                                                            {
+                                                                <li class="accordion__menu-link">
+                                                                    <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
+                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</button>
+                                                                    @*<span class="text-muted">8m 42s</span>*@
+                                                                </li>
+                                                            }
 
 
-                                            <!--<li class="accordion__menu-link">
-                                            <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
-                                            <a class="flex" href="#">الدرس الاول</a>-->
-                                            @*<span class="text-muted">50m 13s</span>*@
-                                            <!--</li>
-                                            <li class="accordion__menu-link">
-                                                <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
-                                                <a class="flex" href="#">الدرس الثالث</a>-->
-                                            @*<span class="text-muted">12m 10s</span>*@
-                                            <!--</li>
-                                            <li class="accordion__menu-link">
-                                                <span class="material-icons icon-16pt icon--left text-body">-->
-                                            @*hourglass_empty*@
-                                            <!--play_circle_outline</span>
-                                                <a class="flex" href="#">الدرس الرابع</a>
-                                            </li>-->
-                                        </ul>
+
+                                                            @*@foreach (var item in Model.VLessonCardsSubject_Collection)
+                                                                {
+                                                                    <li class="accordion__menu-link">
+                                                                        <span class="material-icons icon-16pt icon--left text-body">@check_circle@play_circle_outline</span>
+                                                                        <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
+
+                                                                        @<span class="text-muted">8m 42s</span>@
+                                                                    </li>
+                                                                }*@
+
+
+
+
+                                                            <!--<li class="accordion__menu-link">
+                                                            <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                            <a class="flex" href="#">الدرس الاول</a>-->
+                                                            @*<span class="text-muted">50m 13s</span>*@
+                                                            <!--</li>
+                                                            <li class="accordion__menu-link">
+                                                                <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                                <a class="flex" href="#">الدرس الثالث</a>-->
+                                                            @*<span class="text-muted">12m 10s</span>*@
+                                                            <!--</li>
+                                                            <li class="accordion__menu-link">
+                                                                <span class="material-icons icon-16pt icon--left text-body">-->
+                                                            @*hourglass_empty*@
+                                                            <!--play_circle_outline</span>
+                                                                <a class="flex" href="#">الدرس الرابع</a>
+                                                            </li>-->
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+
                                     </div>
-                                </li>
-                            </ul>
+                                </div>
+                                <div class="col-md-8">
+                                    @*<nav class="course-nav">
+                                            <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
+                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
+                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
+                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
+                                        </nav>*@
+                                    <div class="js-player embed-responsive embed-responsive-16by9 mb-32pt">
+                                        <div class="player embed-responsive-item">
+                                            <div class="player__content">
+                                                <div class="player__image" style="--player-image: url(/Imagess/player.svg)"></div>
+                                                <a href="tutorio-bootstrap.frontendmatter.html" class="player__play">
+                                                    <span class="material-icons">play_arrow</span>
+                                                </a>
+                                            </div>
+                                            <div id="videoContainer">
+                                                <iframe class="embed-responsive-item" src="" frameborder="0" allowfullscreen id="videoIframe"></iframe>
+                                            </div>
+
+                                            <!--<div class="player__embed d-none">-->
+                                            @*<iframe class="embed-responsive-item" src="https://player.vimeo.com/video/97243285?title=0&amp;byline=0&amp;portrait=0" allowfullscreen=""></iframe>*@
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                    <!-- Description Section -->
+                                    <div id="descriptionContainer" style="display: none;">
+                                        <div class="d-flex flex-wrap align-items-end mb-16pt">
+                                            <h1 class="text-black-70 flex m-0" id="videoTitle"></h1>
+                                            @*<p class="h1 text-black-50 font-weight-light m-0" id="videoDuration"></p>*@
+                                        </div>
+                                        <p class="hero__lead measure-hero-lead text-black mb-24pt" id="videoDescription"></p>
+                                    </div>
+
+
+                                    <!--<div class="d-flex flex-wrap align-items-end mb-16pt">
+                                    <h1 class="text-black-70 flex m-0">Introduction to TypeScript</h1>-->
+                                    @*<p class="h1 text-black-50 font-weight-light m-0">50:13</p>*@
+                                    <!--</div>
+
+                                    <p class="hero__lead measure-hero-lead text-black mb-24pt">JavaScript is now used to power backends, create hybrid mobile applications, architect cloud solutions, design neural networks and even control robots. Enter TypeScript: a superset of JavaScript for scalable, secure, performant and feature-rich applications.</p>-->
+                                </div>
+                            </div>
                         </div>
-
-
                     </div>
                 </div>
-                <div class="col-md-8">
-                    @*<nav class="course-nav">
-                            <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
-                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
-                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
-                            <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
-                        </nav>*@
-                    <div class="js-player embed-responsive embed-responsive-16by9 mb-32pt">
-                        <div class="player embed-responsive-item">
-                            <div class="player__content">
-                                <div class="player__image" style="--player-image: url(assets/images/illustration/player.svg)"></div>
-                                <a href="tutorio-bootstrap.frontendmatter.html" class="player__play">
-                                    <span class="material-icons">play_arrow</span>
-                                </a>
-                            </div>
-                            <div id="videoContainer">
-                                <iframe class="embed-responsive-item" src="" frameborder="0" allowfullscreen id="videoIframe"></iframe>
+                <div id="menu1" class="tab-pane fade">
+                    <p>الدوسيات</p>
+
+                    <div id="main-content" class="file_manager">
+                        <div class="container">
+                            <div class="row clearfix">
+
+
+                                @{
+                                    foreach (var Book in Model.VDocLessonCardsSubject_Collection.Where(r => r.Booklets != null))
+                                    {
+                                        string filePath = Book.Booklets.ToString();
+                                        int lastSlashIndex = filePath.LastIndexOf('/');
+                                        string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="card">
+                                                <div class="file">
+                                                    <a href="javascript:void(0);">
+                                                        <div class="icon">
+                                                            <i class="fa fa-file text-info"></i>
+                                                        </div>
+                                                        <div class="file-name">
+                                                            <p class="m-b-5 text-muted">@fileName</p>
+                                                            @*  <small>Size: 42KB <span class="date text-muted">Nov 02, 2017</span></small>*@
+                                                        </div>
+                                                        <a href="@Book.Booklets" download class="btn btn-icon btn-danger">
+                                                            <i class="fa fa-download"></i> تنزيل
+                                                        </a>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+
                             </div>
 
-                            <!--<div class="player__embed d-none">-->
-                            @*<iframe class="embed-responsive-item" src="https://player.vimeo.com/video/97243285?title=0&amp;byline=0&amp;portrait=0" allowfullscreen=""></iframe>*@
-                            <!--</div>-->
                         </div>
                     </div>
-                    <!-- Description Section -->
-                    <div id="descriptionContainer" style="display: none;">
-                        <div class="d-flex flex-wrap align-items-end mb-16pt">
-                            <h1 class="text-black-70 flex m-0" id="videoTitle"></h1>
-                            @*<p class="h1 text-black-50 font-weight-light m-0" id="videoDuration"></p>*@
-                        </div>
-                        <p class="hero__lead measure-hero-lead text-black mb-24pt" id="videoDescription"></p>
-                    </div>
 
-
-                    <!--<div class="d-flex flex-wrap align-items-end mb-16pt">
-                        <h1 class="text-black-70 flex m-0">Introduction to TypeScript</h1>-->
-                    @*<p class="h1 text-black-50 font-weight-light m-0">50:13</p>*@
-                    <!--</div>
-
-                    <p class="hero__lead measure-hero-lead text-black mb-24pt">JavaScript is now used to power backends, create hybrid mobile applications, architect cloud solutions, design neural networks and even control robots. Enter TypeScript: a superset of JavaScript for scalable, secure, performant and feature-rich applications.</p>-->
                 </div>
+                <div id="menu2" class="tab-pane fade">
+                    <p>اوراق العمل</p>
+
+                    <div id="main-content" class="file_manager">
+                        <div class="container">
+                            <div class="row clearfix">
+                                @{
+
+                                    foreach (var Sheet in Model.VDocLessonCardsSubject_Collection.Where(r => r.WorkingSheets != null))
+                                    {
+                                        string filePath = Sheet.WorkingSheets.ToString();
+                                        int lastSlashIndex = filePath.LastIndexOf('/');
+                                        string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="card">
+                                                <div class="file">
+                                                    <a href="javascript:void(0);">
+
+                                                        <div class="icon">
+                                                            <i class="fa fa-file text-info"></i>
+                                                        </div>
+                                                        <div class="file-name">
+                                                            <p class="m-b-5 text-muted">@fileName</p>
+                                                            @*  <small>Size: 42KB <span class="date text-muted">Nov 02, 2017</span></small>*@
+                                                        </div>
+                                                        <a href="@Sheet.WorkingSheets" download class="btn btn-icon btn-danger">
+                                                            <i class="fa fa-download"></i> تنزيل
+                                                        </a>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
-    </div>
+
+
+
     }
     else
     {
-    <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
-        <h4>لا يوجد دروس مسجلة حاليا</h4>
-    </div>
+        <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
+            <h4>لا يوجد دروس مسجلة حاليا</h4>
+        </div>
     }
     <!-- jQuery -->
     <script src="~/New folder/js/vendor-jquery.min.js"></script>
@@ -1504,106 +400,21 @@
     <!-- App JS -->
     <script src="~/New folder/js/js-app.js"></script>
 
-    <script>
-        // Add this script to your HTML, either inline or in a separate file
 
-        // Example function to toggle video (replace with your actual implementation)
-        function toggleVideo(url, name, description) {
-            console.log('Video URL:', url);
-            console.log('Video Name:', name);
-            console.log('Video Description:', description);
-
-            // Add your logic to toggle the video here
-        }
-    </script>
 
 </body>
 </html>
 
 
-
-
-<script>
-
+@******************************For Tabs**********************************@
 
 
 
-    /* Scroll nav section */
-    $(document).ready(function () {
-        $(".overlay-content a").on('click', function (event) {
-
-            $(".overlay").css("height", "0%");
-            $(".menu-icon").toggleClass('change');
-
-            if (this.hash !== "") {
-                event.preventDefault();
-
-                var hash = this.hash;
-
-                $('html, body').animate({
-                    scrollTop: $(hash).offset().top
-                }, 1000, function () {
-
-                    window.location.hash = hash;
-                });
-            } // End if
-        });
 
 
-        /* Menu icon */
-        $(".menu-icon").click(function () {
-            var $this = $(this);
-            $this.toggleClass('change');
-            $(".menu-icon").css("z-index", "10");
-            if ($this.hasClass('change')) {
-                $(".overlay").css("height", "100%");
-            } else {
-                $(".overlay").css("height", "0%");
-            }
-        });
+@******************************For Tabs**********************************@
 
 
-        /* General slide animation up */
-        $(window).scroll(function () {
-            $(".slideanim").each(function () {
-                var pos = $(this).offset().top;
-
-                var winTop = $(window).scrollTop();
-                if (pos < winTop + 700) {
-                    $(this).addClass("slide");
-                }
-            });
-        });
-
-
-        /* Service slide left */
-        $(".brand-nav").ready(function () {
-            $(".slideanimleft").each(function () {
-                $(this).addClass("slideleft");
-            });
-        });
-
-        /* Scroll to Top */
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 500) {
-                $('.to-top').fadeIn(500);
-            } else {
-                $('.to-top').fadeOut(500);
-            }
-        });
-
-        $('.to-top').click(function (event) {
-            event.preventDefault();
-            $('.body,html').animate({
-                scrollTop: 0
-            }, 500);
-        });
-
-
-    })
-
-
-</script>
 
 <script>
     angular.module('formApp', [])
@@ -1621,18 +432,6 @@
             $scope.reset();
         }]);
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1662,14 +461,19 @@
         //videoDurationElement.innerText = videoDuration;
         videoDescriptionElement.innerText = videoDescription;
 
-        // Toggle the visibility of the video container and description container
-        if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
-            videoContainer.style.display = "block";
-            descriptionContainer.style.display = "block";
-        } else {
-            videoContainer.style.display = "none";
-            descriptionContainer.style.display = "none";
-        }
+
+        videoContainer.style.display = "block";
+        descriptionContainer.style.display = "block";
+
+
+        //// Toggle the visibility of the video container and description container
+        //if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
+        //    videoContainer.style.display = "block";
+        //    descriptionContainer.style.display = "block";
+        //} else {
+        //    videoContainer.style.display = "none";
+        //    descriptionContainer.style.display = "none";
+        //}
     }
 
 </script>
@@ -1693,59 +497,59 @@
 
 <script>
 
-    // منع عمليات النسخ واللصق
-    document.addEventListener('copy', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('cut', function (e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('paste', function (e) {
-        e.preventDefault();
-    });
-
-    // منع زر الفأرة الأيمن
-    document.addEventListener('contextmenu', function (e) {
-        e.preventDefault();
-    });
-
-
-    // عند فتح صفحة الويب
-    window.onload = function () {
-        document.addEventListener('contextmenu', function (e) {
-            // منع زر الفأرة الأيمن
+        // منع عمليات النسخ واللصق
+        document.addEventListener('copy', function (e) {
             e.preventDefault();
         });
 
-        document.addEventListener('keydown', function (e) {
-            // منع Ctrl + Shift + I (فتح أدوات المطور)
-            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
-                e.preventDefault();
-            }
+        document.addEventListener('cut', function (e) {
+            e.preventDefault();
         });
-    };
+
+        document.addEventListener('paste', function (e) {
+            e.preventDefault();
+        });
+
+        // منع زر الفأرة الأيمن
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+
+        // عند فتح صفحة الويب
+        window.onload = function () {
+            document.addEventListener('contextmenu', function (e) {
+                // منع زر الفأرة الأيمن
+                e.preventDefault();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                // منع Ctrl + Shift + I (فتح أدوات المطور)
+                if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+                    e.preventDefault();
+                }
+            });
+        };
 
 
 
-    // منع فتح أدوات المطور
-    document.onkeydown = function (e) {
-        if (event.keyCode == 123) {
-            return false;
+        // منع فتح أدوات المطور
+        document.onkeydown = function (e) {
+            if (event.keyCode == 123) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
         }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-            return false;
-        }
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-            return false;
-        }
-    }
-</script>
+    </script>
 

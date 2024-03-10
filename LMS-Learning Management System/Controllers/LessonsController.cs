@@ -163,6 +163,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                 string lesson_name = lesson.Name;
                 string lesson_subject = lesson.Subjectdesc;
+                //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
 
                 //***********************MULTI DOCS***********************
                 // Upload multiple
@@ -176,7 +177,8 @@ namespace LMS_Learning_Management_System.Controllers
                         var fileName = Path.GetFileName(file.FileName);
 
                         // Generate a unique identifier for the new file name
-                        var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
+                        //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
+                        var uniqueFileName = fileName;
 
                         var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents", uniqueFileName);
 
@@ -217,7 +219,8 @@ namespace LMS_Learning_Management_System.Controllers
                         var fileName = Path.GetFileName(file.FileName);
 
                         // Generate a unique identifier for the new file name
-                        var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{b}{fileExtension}";
+                        //var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{b}{fileExtension}";
+                        var uniqueFileName = fileName;
 
                         var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents", uniqueFileName);
 
@@ -357,19 +360,19 @@ namespace LMS_Learning_Management_System.Controllers
 
                     //***********************MULTI DOCS***********************
                     // Upload multiple
-                    var directoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents");
+                    //var directoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents");
 
-                    string searchTerm = "WorkSheet";
-                    var matchingFiles = Directory.GetFiles(directoryPath)
-                                                             .Where(file => Path.GetFileName(file).Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
-                    // Extract and find the maximum number from the file names
-                    int? maxNumber = matchingFiles.Select(file =>
-                    {
-                        Match match = Regex.Match(Path.GetFileName(file), searchTerm + @"_(\d+)", RegexOptions.IgnoreCase);
-                        return match.Success ? (int?)int.Parse(match.Groups[1].Value) : null;
-                    })
-                    .Max();
-                    int fileCount = matchingFiles.Count();
+                    //string searchTerm = "WorkSheet";
+                    //var matchingFiles = Directory.GetFiles(directoryPath)
+                    //                                         .Where(file => Path.GetFileName(file).Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+                    ////// Extract and find the maximum number from the file names
+                    //int? maxNumber = matchingFiles.Select(file =>
+                    //{
+                    //    Match match = Regex.Match(Path.GetFileName(file), searchTerm + @"_(\d+)", RegexOptions.IgnoreCase);
+                    //    return match.Success ? (int?)int.Parse(match.Groups[1].Value) : null;
+                    //})
+                    //.Max();
+                    //int fileCount = matchingFiles.Count();
 
                     foreach (var file in multiplefileupload)
                     {
@@ -379,7 +382,8 @@ namespace LMS_Learning_Management_System.Controllers
                             var fileName = Path.GetFileName(file.FileName);
 
                             // Generate a unique identifier for the new file name
-                            var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{maxNumber + 1}{fileExtension}";
+                            //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{maxNumber + 1}{fileExtension}";
+                            var uniqueFileName = fileName;
 
                             var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents", uniqueFileName);
 
@@ -410,19 +414,19 @@ namespace LMS_Learning_Management_System.Controllers
 
                     //***********************MULTI DOCS***********************
                     // Upload multiple
-                    var directoryPath2 = Path.Combine(_hostingEnvironment.WebRootPath, "Documents");
+                    //var directoryPath2 = Path.Combine(_hostingEnvironment.WebRootPath, "Documents");
 
-                    string searchTerm2 = "Booklet";
-                    var matchingFiles2 = Directory.GetFiles(directoryPath2)
-                                                             .Where(file => Path.GetFileName(file).Contains(searchTerm2, StringComparison.OrdinalIgnoreCase));
-                    // Extract and find the maximum number from the file names
-                    int? maxNumber2 = matchingFiles2.Select(file =>
-                    {
-                        Match match2 = Regex.Match(Path.GetFileName(file), searchTerm2 + @"_(\d+)", RegexOptions.IgnoreCase);
-                        return match2.Success ? (int?)int.Parse(match2.Groups[1].Value) : null;
-                    })
-                    .Max();
-                    int fileCount2 = matchingFiles2.Count();
+                    //string searchTerm2 = "Booklet";
+                    //var matchingFiles2 = Directory.GetFiles(directoryPath2)
+                    //                                         .Where(file => Path.GetFileName(file).Contains(searchTerm2, StringComparison.OrdinalIgnoreCase));
+                    //// Extract and find the maximum number from the file names
+                    //int? maxNumber2 = matchingFiles2.Select(file =>
+                    //{
+                    //    Match match2 = Regex.Match(Path.GetFileName(file), searchTerm2 + @"_(\d+)", RegexOptions.IgnoreCase);
+                    //    return match2.Success ? (int?)int.Parse(match2.Groups[1].Value) : null;
+                    //})
+                    //.Max();
+                    //int fileCount2 = matchingFiles2.Count();
 
                     foreach (var file in multiplefileupload2)
                     {
@@ -433,7 +437,8 @@ namespace LMS_Learning_Management_System.Controllers
                             var fileName = Path.GetFileName(file.FileName);
 
                             // Generate a unique identifier for the new file name
-                            var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{maxNumber2 + 1}{fileExtension}";
+                            //var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{maxNumber2 + 1}{fileExtension}";
+                            var uniqueFileName = fileName;
 
                             var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Documents", uniqueFileName);
 
@@ -824,12 +829,16 @@ namespace LMS_Learning_Management_System.Controllers
                 .Where(r => r.ClassId == ClassId && r.SubjectId == SubjectId && r.TeacherId == TeacherId && r.Semester == semester)
                 .OrderBy(r => r.Id)
                 .ToList();
+            var Doc_lessons = _context.Documents.OrderBy(r => r.Id).ToList();
+
 
             var lessonViewModel = new VLessonCardsSubject()
             {
                 VLessonCardsSubject_Collection = lessons,
                 TeacherInfo_Collection = _context.VTechersInfos.ToList()
+                //VDocLessonCardsSubject_Collection = Doc_lessons
             };
+
 
             if (lessonViewModel == null)
             {
@@ -854,10 +863,14 @@ namespace LMS_Learning_Management_System.Controllers
                 .OrderBy(r => r.Id)
                 .ToList();
 
+            var Doc_lessons = _context.Documents.OrderBy(r => r.Id).ToList();
+
+
             var lessonViewModel = new VLessonCardsSubject()
             {
                 VLessonCardsSubject_Collection = lessons,
-                TeacherInfo_Collection = _context.VTechersInfos.ToList()
+                TeacherInfo_Collection = _context.VTechersInfos.ToList(),
+                VDocLessonCardsSubject_Collection = Doc_lessons
             };
 
             if (lessonViewModel == null)
@@ -942,15 +955,15 @@ namespace LMS_Learning_Management_System.Controllers
         }
 
 
-        //public string GetWPF()
-        //{
-        //    var result = _context.Codes
-        //        .Where(c => c.Id == 1)
-        //        .Select(c => c.Discriptions)
-        //        .FirstOrDefault();
+        public string GetWPF()
+        {
+            var result = _context.Codes
+                .Where(c => c.Id == 1)
+                .Select(c => c.Descriptions)
+                .FirstOrDefault();
 
-        //    return result;
-        //}
+            return result;
+        }
         [Authorize(Roles = "student,admin")]
         [ActionName("9AOs8LhLna9PsTTurRH3a9OK61fHRf")]
 
@@ -958,8 +971,7 @@ namespace LMS_Learning_Management_System.Controllers
         {
 
             string wpfAppIdentifier = HttpContext.Request.Query["X-WPF-App-Identifier"];
-            //string dbwpf = GetWPF();
-            string dbwpf = "dd";
+            string dbwpf = GetWPF();
 
             //var wpfAppIdenctifier = Request.Cookies["X-WPF-App-Identifier"];
             //var wpfAppIdentifier2 = HttpContext.Session.GetString("X-WPF-App-Identifier");

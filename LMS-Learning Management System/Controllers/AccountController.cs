@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Management;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS_Learning_Management_System.Controllers
@@ -88,7 +91,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                     //}
                     string ActiveSessions = "";
-
+                    GetTopPhysicalAddress();
                     var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
                     if (login.PhoneNumber == "0772823209" || login.PhoneNumber == "0777777777")
@@ -116,16 +119,16 @@ namespace LMS_Learning_Management_System.Controllers
                                 {
                                     string computerName = Environment.MachineName;
 
-                                    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                                    {
-                                        if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
-                                        {
-                                            PhysicalAddress macAddress = nic.GetPhysicalAddress();
-                                            macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
-                                            // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
-                                            break;
-                                        }
-                                    }
+                                    //foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                                    //{
+                                    //    if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+                                    //    {
+                                    //        PhysicalAddress macAddress = nic.GetPhysicalAddress();
+                                    //        macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+                                    //        // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+                                    //        break;
+                                    //    }
+                                    //}
 
 
                                     GetTime();
@@ -135,7 +138,8 @@ namespace LMS_Learning_Management_System.Controllers
                                     activesession.PhoneNumber = appUser.PhoneNumber;
                                     activesession.DeviceType = login.devicetype;
                                     activesession.ComputerName = computerName;
-                                    activesession.MacAddress = macAddressString;
+                                    activesession.MacAddress = GetTopPhysicalAddress();
+                                    //activesession.MacAddress = macAddressString;
                                     _context.Add(activesession);
 
                                     await _context.SaveChangesAsync();
@@ -187,6 +191,53 @@ namespace LMS_Learning_Management_System.Controllers
             return View(login);
         }
 
+        public static string GetTopPhysicalAddress()
+        {
+            string macAddressString = "";
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+                {
+                    PhysicalAddress macAddress = nic.GetPhysicalAddress();
+                    macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+                    // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+                    break;
+                }
+            }
+
+            return macAddressString; // No physical address found
+        }
+
+        public static string GetUniqueMachineId()
+        {
+            try
+            {
+                var macAddresses22 = NetworkInterface.GetAllNetworkInterfaces();
+                // Retrieve MAC addresses of all network interfaces
+                var macAddresses = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(nic => nic.NetworkInterfaceType != NetworkInterfaceType.Loopback && nic.OperationalStatus == OperationalStatus.Up)
+                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                    .ToList();
+
+                // Concatenate MAC addresses and compute a hash
+                using (var sha256 = SHA256.Create())
+                {
+                    var concatenatedAddresses = string.Join("", macAddresses.OrderBy(addr => addr));
+                    var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(concatenatedAddresses));
+
+                    // Convert hash to a hexadecimal string
+                    var machineId = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+
+                    return machineId;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions as needed
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
         public string GetActiveSession(string userId)
         {
             try
@@ -200,16 +251,17 @@ namespace LMS_Learning_Management_System.Controllers
                 {
                     string computerName = Environment.MachineName;
 
-                    foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                    {
-                        if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
-                        {
-                            PhysicalAddress macAddress = nic.GetPhysicalAddress();
-                            macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
-                            // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
-                            break;
-                        }
-                    }
+                    //foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+                    //{
+                    //    if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+                    //    {
+                    //        PhysicalAddress macAddress = nic.GetPhysicalAddress();
+                    //        macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+                    //        // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+                    //        break;
+                    //    }
+                    //}
+                    macAddressString = GetTopPhysicalAddress();
                     if (macAddressString == username.MacAddress)
                     {
                         return "Succeeded";

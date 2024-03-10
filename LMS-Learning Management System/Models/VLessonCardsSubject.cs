@@ -23,8 +23,6 @@ namespace LMS_Learning_Management_System.Models
         public DateTime? PaymentDate { get; set; }
         public string TeacherId { get; set; }
         public int? Semester { get; set; }
-        public string WorkingSheets { get; set; }
-        public string Booklets { get; set; }
 
         [NotMapped]
         public string Status2 { get; set; }
@@ -36,5 +34,6 @@ namespace LMS_Learning_Management_System.Models
         public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
         public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
         public IEnumerable<VEnrollmentStdDetail> VEnrollmentStdDetailt_Collection { get; set; }
+        public IEnumerable<Document> VDocLessonCardsSubject_Collection { get; set; }
     }
 }
