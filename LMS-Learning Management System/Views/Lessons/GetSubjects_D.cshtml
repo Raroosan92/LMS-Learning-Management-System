@@ -163,6 +163,7 @@
                     color: #0b0f08 !important;
                 }
 </style>
+
 <section>
     <div class="row">
 
@@ -192,17 +193,38 @@
                             <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
                         </div>*@
 
-                                <div class="card-back">
-                                    <form id="@item.TeacherId+@ss" action="/Lessons/_PartialShowLessons_D" method="post">
-                                        <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
-                                        <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
-                                        <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
-                                        <input type="hidden" id="semester" name="semester" value="@ss" />
-                                    </form>
-                                    <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>
+                <div class="card-back">
+                    @*<form id="@item.TeacherId+@ss" action="/Lessons/k8vdUMEW0uLWyai31xmmWhtv" method="post">
+            <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
+            <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
+            <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
+            <input type="hidden" id="semester" name="semester" value="@ss" />
+        </form>
+        <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>*@
 
-                                    @*<a href="_PartialShowLessons_D/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
-                                </div>
+
+
+                    <form id="@item.TeacherId+@ss" action="/Lessons/k8vdUMEW0uLWyai31xmmWhtv" method="post">
+                        <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
+                        <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
+                        <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
+                        <input type="hidden" id="semester" name="semester" value="@ss" />
+                        <!-- Add a submit button -->
+                        <button type="button" onclick="submitForm('@item.TeacherId+@ss')">عرض الدروس</button>
+                    </form>
+
+                    <script>
+                        function submitForm(formId) {
+                            // Trigger form submission
+                            document.getElementById(formId).submit();
+                        }
+                    </script>
+
+
+
+
+                    @*<a href="_PartialShowLessons_D/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
+                </div>
                             </div>
                         </div>
                     </div>
@@ -278,6 +300,50 @@
 
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+@*<script>
+    alert("dddd")
+    // Check if the custom header is present
+    var isWpfApp = document.cookie.indexOf("X-WPF-App-Identifier=LMS") !== -1;
+    alert(isWpfApp)
+    if (isWpfApp) {
+        // Your regular page logic here
+    } else {
+        // Redirect to another page or show an error
+        window.location.href = '/AccessDenied';
+
+        // Get the user agent string
+        var userAgent = navigator.userAgent;
+
+        // Check for common browsers
+        if (userAgent.includes("Chrome")) {
+            console.log("User is using Chrome");
+            alert("User is using Chrome");
+            window.location.href = '/AccessDenied';
+        } else if (userAgent.includes("Firefox")) {
+            console.log("User is using Firefox");
+            alert("User is using Firefox");
+            window.location.href = '/AccessDenied';
+        } else if (userAgent.includes("Safari")) {
+            console.log("User is using Safari");
+            alert("User is using Safari");
+            window.location.href = '/AccessDenied';
+        } else if (userAgent.includes("Edge")) {
+            console.log("User is using Microsoft Edge");
+            alert("User is using Microsoft Edge");
+            window.location.href = '/AccessDenied';
+        } else if (userAgent.includes("MSIE") || userAgent.includes("Trident/")) {
+            console.log("User is using Internet Explorer");
+            alert("User is using Internet Explorer");
+            window.location.href = '/AccessDenied';
+        } else {
+            console.log("User is using an unknown browser");
+            alert("User is using an unknown browser");
+            window.location.href = '/AccessDenied';
+        }
+
+    }
+</script>*@
+
 
 <script>
     $(function () {

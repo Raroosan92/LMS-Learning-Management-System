@@ -94,7 +94,7 @@
                         { "data": "createdDate" },
                         {
                             "data": "id", "render": function (data) {
-                                return "<a asp-action='Edit' onclick=PopupFormCource('@Url.Action("Edit", "Lessons")/" + data + "') class='btn btn-warning'>تعديل</a> | </div><a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> | <a asp-action='Delete' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> ";
+                                return "<a asp-action='Edit' class='btn btn-warning' href='@Url.Action("Edit", "Lessons")/" + data + "'>تعديل</a> | </div><a asp-action='Details' onclick=PopupFormCource('@Url.Action("Details", "Lessons")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> | <a asp-action='Delete' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> ";
                             },
                             "orderable": true,
                             "searchable": true,

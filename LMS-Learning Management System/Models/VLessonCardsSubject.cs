@@ -22,6 +22,9 @@ namespace LMS_Learning_Management_System.Models
         public bool? IsPayment { get; set; }
         public DateTime? PaymentDate { get; set; }
         public string TeacherId { get; set; }
+        public int? Semester { get; set; }
+        public string WorkingSheets { get; set; }
+        public string Booklets { get; set; }
 
         [NotMapped]
         public string Status2 { get; set; }
@@ -29,15 +32,9 @@ namespace LMS_Learning_Management_System.Models
         public string Classdesc { get; set; }
         [NotMapped]
         public string Subjectdesc { get; set; }
-     
-        public int Semester { get; set; }
+
         public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
         public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
         public IEnumerable<VEnrollmentStdDetail> VEnrollmentStdDetailt_Collection { get; set; }
-
-        public static implicit operator VLessonCardsSubject(List<VLessonCardsSubject> v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,17 +1,26 @@
 ﻿@model LMS_Learning_Management_System.Models.Lesson
-
+@using System.IO
 @{
-    Layout = null;
+    //Layout = null;
     ViewData["Title"] = "تعديل";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
+<style>
+    .Del {
+        WIDTH: 100%;
+        HEIGHT: 32px;
+    }
+</style>
 <h1>تعديل</h1>
 
 <h4>الدروس</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -55,16 +64,16 @@
                 <span asp-validation-for="Semester" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TeacherID" class="control-label"></label>
-                <select asp-for="TeacherID" class="form-control" asp-items="ViewBag.TeacherID">
+                <label asp-for="TeacherId" class="control-label"></label>
+                <select asp-for="TeacherId" class="form-control" asp-items="ViewBag.TeacherID">
                     <option value="">--اختر--</option>
                 </select>
-                <span asp-validation-for="TeacherID" class="text-danger"></span>
+                <span asp-validation-for="TeacherId" class="text-danger"></span>
 
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-              
+
                 <select asp-for="Status" class="form-control">
                     <option value="">--اختر--</option>
                     <option value="true">فعال</option>
@@ -73,16 +82,138 @@
 
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
+
+
+
+
+
+            <div class="form-group">
+                <label class="control-label">اوراق العمل</label>
+
+                <input id="multiplefileupload" type="file" name="multiplefileupload" accept=".doc,.docx,.pdf" multiple>
+
+                @*<input id="multiplefileupload" type="file" name="files" multiple />*@
+
+                <div id="productImagesPreview" class="mt-2" style="display: flex; flex-wrap: wrap;"></div>
+                <span class="text-danger" id="productImagesValidation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">الدوسيات</label>
+
+                <input id="multiplefileupload2" type="file" name="multiplefileupload2" accept=".doc,.docx,.pdf" multiple>
+
+                @*<input id="multiplefileupload" type="file" name="files" multiple />*@
+
+                <div id="productImagesPreview2" class="mt-2" style="display: flex; flex-wrap: wrap;"></div>
+                <span class="text-danger" id="productImagesValidation"></span>
+            </div>
+            <hr />
+            <div class="row">
+                <hr />
+
+
+
+                <span>اوراق العمل</span>
+                <div class="col-md-2">
+                    <div class="document-container position-relative" style="display:flex">
+                        @{ foreach (var document in Model.Documents)
+                            {
+                               
+                                if(document.WorkingSheets != null && document.WorkingSheets.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                             {
+
+                                <embed src="@document.WorkingSheets" type="application/pdf" width="100%" height="200px" />
+
+
+
+                                }
+                                else if ((document.WorkingSheets != null && document.WorkingSheets.EndsWith(".doc", StringComparison.OrdinalIgnoreCase)) ||
+                                         (document.WorkingSheets != null && document.WorkingSheets.EndsWith(".docx", StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    string filePath = document.WorkingSheets.ToString();
+                                    int lastSlashIndex = filePath.LastIndexOf('/');
+                                    string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                <div class="d-flex">
+                                    <a href="@document.WorkingSheets" download="@document.WorkingSheets" class="btn btn-primary">
+                                        <i class="fas fa-download"></i> @fileName
+                                    </a>
+
+                                </div>
+                            }
+                            @if (document.WorkingSheets != null)
+                            {
+
+                                <button type="button" class="remove-button btn btn-danger mt-2 Del" data-image-id="@document.Id">
+                                    X
+                                </button>
+                            }
+                        }
+                        }
+                    </div>
+                </div>
+
+                <br />
+                <br />
+                <span>الدوسيات</span>
+                <div class="col-md-2">
+                    <div class="document-container position-relative" style="display:flex">
+                        @{ foreach (var document in Model.Documents)
+                            {
+                                if (document.Booklets != null && document.Booklets.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                                {
+
+
+
+
+                                    <embed src="@document.Booklets" type="application/pdf" width="100%" height="200px" />
+
+
+                                }
+                                else if ((document.Booklets != null && document.Booklets.EndsWith(".doc", StringComparison.OrdinalIgnoreCase)) ||
+                                         (document.Booklets != null && document.Booklets.EndsWith(".docx", StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    string filePath = document.Booklets.ToString();
+                                    int lastSlashIndex = filePath.LastIndexOf('/');
+                                    string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                    <div class="row">
+                                        <div class="container">
+                                            <div class="d-flex">
+                                                <a href="@document.Booklets" download="@document.Booklets" class="btn btn-primary">
+                                                    <i class="fas fa-download"></i> @fileName
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                }
+                                @if (document.Booklets != null)
+                                {
+                                    <button type="button" class="remove-button btn btn-danger mt-2 Del" data-image-id="@document.Id">
+                                        X
+                                    </button>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+
+            </div>
+
             @*<div class="form-group">
-            <label asp-for="CreatedUser" class="control-label"></label>
-            <input asp-for="CreatedUser" class="form-control" />
-            <span asp-validation-for="CreatedUser" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="CreatedDate" class="control-label"></label>
-            <input asp-for="CreatedDate" class="form-control" />
-            <span asp-validation-for="CreatedDate" class="text-danger"></span>
-        </div>*@
+                    <label asp-for="CreatedUser" class="control-label"></label>
+                    <input asp-for="CreatedUser" class="form-control" />
+                    <span asp-validation-for="CreatedUser" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreatedDate" class="control-label"></label>
+                    <input asp-for="CreatedDate" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <input type="submit" value="تعديل" class="btn btn-primary" />
             </div>
@@ -94,6 +225,90 @@
     <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>
 
+
+
+<script src="~/js/jquery3.3.1.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/themes/fas/theme.min.js"></script>
+
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/viewer.js/0.11.1/crocodoc.viewer.min.js" integrity="sha512-JwGbGEZW1aZWDv0+y8Eh5cpS9D+m/WS3NPob630pS4QZ+Vl0orY91JGU4nfd7SRN1/zZ00XIqy6qSRk/aenHIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
+<script>
+
+    //document.addEventListener('DOMContentLoaded', function () {
+    //    var docViewer = new Viewer(document.querySelector('.doc-viewer'));
+    //});
+
+
+    // ----------multiplefile-upload---------
+    $("#multiplefileupload").fileinput({
+        'theme': 'fa',
+        'uploadUrl': '#',
+        showRemove: false,
+        showUpload: false,
+        showZoom: false,
+        showCaption: false,
+        browseClass: "btn btn-danger",
+        browseLabel: "",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        fileActionSettings: {
+            showUpload: false,
+            showZoom: true,
+            removeIcon: "<i class='fa fa-times'></i>",
+        }
+    });
+    // ----------multiplefile-upload---------
+    $("#multiplefileupload2").fileinput({
+        'theme': 'fa',
+        'uploadUrl': '#',
+        showRemove: false,
+        showUpload: false,
+        showZoom: false,
+        showCaption: false,
+        browseClass: "btn btn-danger",
+        browseLabel: "",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        fileActionSettings: {
+            showUpload: false,
+            showZoom: true,
+            removeIcon: "<i class='fa fa-times'></i>",
+        }
+    });
+
+
+
+    // Assuming you're using jQuery for simplicity
+    $(document).ready(function () {
+        $('.remove-button').on('click', function () {
+            var imageId = $(this).data('image-id');
+            var confirmed = confirm('Are you sure you want to remove this file?');
+
+            if (confirmed) {
+                // Initiate an AJAX request to remove the image from the database
+                $.ajax({
+                    url: '/Lessons/Removefile', // Your backend endpoint for removing an image
+                    type: 'POST',
+                    data: { Id: imageId },
+                    success: function (result) {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    },
+                    error: function (error) {
+                        // Handle error
+                    }
+                });
+            }
+        });
+    });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

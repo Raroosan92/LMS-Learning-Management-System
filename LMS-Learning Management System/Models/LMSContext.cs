@@ -32,7 +32,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<TeacherEnrollment> TeacherEnrollments { get; set; }
         public virtual DbSet<ActiveSession> ActiveSessions { get; set; }
-
+        public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<TeacherSalesCard> VTeacherSalesCards { get; set; }
         public virtual DbSet<VLessonCardsSubject> VLessonCardsSubjects { get; set; }
         public virtual DbSet<VTechersInfo> VTechersInfos { get; set; }
@@ -100,6 +100,36 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.UserName).HasMaxLength(256);
             });
 
+            modelBuilder.Entity<Document>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.LessonId).HasColumnName("Lesson_ID");
+
+                entity.HasOne(d => d.Lesson)
+                    .WithMany(p => p.Documents)
+                    .HasForeignKey(d => d.LessonId)
+                    .HasConstraintName("FK_Documents_Lessons");
+            });
+
+            modelBuilder.Entity<Lesson>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Created_Date");
+
+                entity.Property(e => e.CreatedUser).HasColumnName("Created_User");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
+            });
 
             modelBuilder.Entity<VLessonCardsSubject>(entity =>
             {
@@ -121,7 +151,9 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.IsPayment).HasColumnName("Is_Payment");
 
-                entity.Property(e => e.PaymentAmount).HasColumnName("Payment_Amount");
+                entity.Property(e => e.PaymentAmount)
+                    .HasColumnType("decimal(18, 3)")
+                    .HasColumnName("Payment_Amount");
 
                 entity.Property(e => e.PaymentDate)
                     .HasColumnType("datetime")
@@ -132,7 +164,6 @@ namespace LMS_Learning_Management_System.Models
                 entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
 
                 entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
-                entity.Property(e => e.Semester).HasColumnName("Semester");
             });
             modelBuilder.Entity<ActiveSession>(entity =>
             {
@@ -374,39 +405,7 @@ namespace LMS_Learning_Management_System.Models
                     .HasConstraintName("FK_Enrollment_AspNetUsers");
             });
 
-            modelBuilder.Entity<Lesson>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Created_Date");
-
-                entity.Property(e => e.CreatedUser).HasColumnName("Created_User");
-
-                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
-
-                entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
-
-                entity.Property(e => e.TeacherID).HasColumnName("Teacher_ID");
-                entity.Property(e => e.Semester).HasColumnName("Semester");
-                entity.Property(e => e.Status).HasColumnName("Status");
-
-
-                entity.HasOne(d => d.Class)
-                    .WithMany(p => p.Lessons)
-                    .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Lessons_Classes");
-
-                entity.HasOne(d => d.Subject)
-                    .WithMany(p => p.Lessons)
-                    .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Lessons_Subjects");
-            });
+         
 
             modelBuilder.Entity<Subject>(entity =>
             {

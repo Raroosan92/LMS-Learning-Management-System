@@ -3,14 +3,16 @@
 @{
     ViewData["Title"] = "اضافة";
 }
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/css/bootstrap-multiselect.css" rel="stylesheet" />
 
 <h1>اضافة جديدة</h1>
 
 <h4>الدروس</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-12">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -52,10 +54,10 @@
                 <span asp-validation-for="Semester" class="text-danger"></span>
             </div>
             <div class="form-group" id="teaceridv" style="display:none">
-                <label asp-for="TeacherID" class="control-label"></label>
-                <select asp-for="TeacherID" class="form-control">
+                <label asp-for="TeacherId" class="control-label"></label>
+                <select asp-for="TeacherId" class="form-control">
                 </select>
-                <span asp-validation-for="TeacherID" class="text-danger"></span>
+                <span asp-validation-for="TeacherId" class="text-danger"></span>
 
             </div>
 
@@ -70,16 +72,37 @@
                 </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label class="control-label">اوراق العمل</label>
+
+                <input id="multiplefileupload" type="file" name="multiplefileupload" accept=".doc,.docx,.pdf" multiple>
+
+                @*<input id="multiplefileupload" type="file" name="files" multiple />*@
+
+                <div id="productImagesPreview" class="mt-2" style="display: flex; flex-wrap: wrap;"></div>
+                <span class="text-danger" id="productImagesValidation"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">الدوسيات</label>
+
+                <input id="multiplefileupload2" type="file" name="multiplefileupload2" accept=".doc,.docx,.pdf" multiple>
+
+                @*<input id="multiplefileupload" type="file" name="files" multiple />*@
+
+                <div id="productImagesPreview2" class="mt-2" style="display: flex; flex-wrap: wrap;"></div>
+                <span class="text-danger" id="productImagesValidation"></span>
+            </div>
             @*<div class="form-group">
-            <label asp-for="CreatedUser" class="control-label"></label>
-            <input asp-for="CreatedUser" class="form-control" />
-            <span asp-validation-for="CreatedUser" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="CreatedDate" class="control-label"></label>
-            <input asp-for="CreatedDate" class="form-control" />
-            <span asp-validation-for="CreatedDate" class="text-danger"></span>
-        </div>*@
+                    <label asp-for="CreatedUser" class="control-label"></label>
+                    <input asp-for="CreatedUser" class="form-control" />
+                    <span asp-validation-for="CreatedUser" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CreatedDate" class="control-label"></label>
+                    <input asp-for="CreatedDate" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <input type="submit" value="اضافة" class="btn btn-primary" />
             </div>
@@ -91,10 +114,58 @@
     <a asp-action="Index" class="btn btn-dark">الرجوع الى القائمة</a>
 </div>
 
+
+<script src="~/js/jquery3.3.1.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/js/plugins/sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.8/themes/fas/theme.min.js"></script>
+
+<script>
+    // ----------multiplefile-upload---------
+    $("#multiplefileupload").fileinput({
+        'theme': 'fa',
+        'uploadUrl': '#',
+        showRemove: false,
+        showUpload: false,
+        showZoom: false,
+        showCaption: false,
+        browseClass: "btn btn-danger",
+        browseLabel: "",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        fileActionSettings: {
+            showUpload: false,
+            showZoom: true,
+            removeIcon: "<i class='fa fa-times'></i>",
+        }
+    });
+    // ----------multiplefile-upload---------
+    $("#multiplefileupload2").fileinput({
+        'theme': 'fa',
+        'uploadUrl': '#',
+        showRemove: false,
+        showUpload: false,
+        showZoom: false,
+        showCaption: false,
+        browseClass: "btn btn-danger",
+        browseLabel: "",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        overwriteInitial: false,
+        initialPreviewAsData: true,
+        fileActionSettings: {
+            showUpload: false,
+            showZoom: true,
+            removeIcon: "<i class='fa fa-times'></i>",
+        }
+    });
+</script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-<script src="~/js/jquery3.3.1.js"></script>
 <script>
     // الانتظار حتى يتم تحميل الصفحة
     $(document).ready(function () {
@@ -116,7 +187,7 @@
 
                     // إضافة الخيارات الجديدة بناءً على المعلمين المحددين
                     $.each(response, function (index, teacher) {
-                       
+
                         $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
                     });
 
@@ -133,6 +204,7 @@
         });
 
 
-       
+
     });
 </script>
+

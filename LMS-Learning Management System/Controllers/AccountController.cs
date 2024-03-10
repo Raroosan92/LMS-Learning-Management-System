@@ -32,6 +32,21 @@ namespace LMS_Learning_Management_System.Controllers
         {
             Login login = new Login();
             login.ReturnUrl = returnUrl;
+            //string wpfAppIdentifier2 = HttpContext.Request.Headers["X-WPF-App-Identifier"];
+
+            //// Store the value in the session
+            //if (wpfAppIdentifier2 != null)
+            //{
+            //    HttpContext.Session.SetString("X-WPF-App-Identifier", wpfAppIdentifier2);
+
+            //}
+
+            //string cookieValueFromWpf = HttpContext.Request.Cookies["X-WPF-App-Identifier"];
+            //if (cookieValueFromWpf != null)
+            //{
+            //    Response.Cookies.Append("X-WPF-App-Identifier", cookieValueFromWpf, new CookieOptions { Expires = DateTime.Now.AddHours(3) });
+
+            //}
             return View(login);
         }
         string time;
@@ -58,11 +73,25 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 try
                 {
+                    //string wpfAppIdentifier2 = HttpContext.Request.Headers["X-WPF-App-Identifier"];
+
+                    //// Store the value in the session
+                    //if (wpfAppIdentifier2 != null)
+                    //{
+                    //    HttpContext.Session.SetString("X-WPF-App-Identifier", wpfAppIdentifier2);
+
+                    //}
+                    //string cookieValueFromWpf = HttpContext.Request.Cookies["X-WPF-App-Identifier"];
+                    //if (cookieValueFromWpf!=null)
+                    //{
+                    //    Response.Cookies.Append("X-WPF-App-Identifier", cookieValueFromWpf, new CookieOptions { Expires = DateTime.Now.AddHours(3) });
+
+                    //}
                     string ActiveSessions = "";
 
                     var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
-                    if (login.PhoneNumber== "0772823209" || login.PhoneNumber == "0777777777")
+                    if (login.PhoneNumber == "0772823209" || login.PhoneNumber == "0777777777")
                     {
                         ActiveSessions = "Succeeded";
 
@@ -70,10 +99,10 @@ namespace LMS_Learning_Management_System.Controllers
                     else
                     {
 
-                         ActiveSessions = GetActiveSession(userdetails.Id);
+                        ActiveSessions = GetActiveSession(userdetails.Id);
                     }
-                    
-                    if (ActiveSessions== "Succeeded" || ActiveSessions == "NotExist")
+
+                    if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
                     {
                         string macAddressString = "";
                         if (appUser != null)

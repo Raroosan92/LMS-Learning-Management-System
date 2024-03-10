@@ -102,13 +102,13 @@ namespace LMS_Learning_Management_System
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
-            //services.AddDistributedMemoryCache();
-            //services.AddSession(options =>
-            //{
-            //    options.IdleTimeout = TimeSpan.FromSeconds(10);
-            //    options.Cookie.HttpOnly = true;
-            //    options.Cookie.IsEssential = true;
-            //});
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(90);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
 
             //services.AddDbContext<ModelContext>(options =>
@@ -211,7 +211,7 @@ namespace LMS_Learning_Management_System
         {
             app.UseAuthentication();
 
-            //app.UseSession();
+            app.UseSession();
 
             if (env.IsDevelopment())
             {
@@ -249,8 +249,8 @@ namespace LMS_Learning_Management_System
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 //endpoints.MapControllerRoute(
-                //   name: "ForGetAllLessons",
-                //   pattern: "{controller=Lessons}/{action=ShowLessons}");
+                //   name: "SpicificRoute",
+                //   pattern: "{var}/{var}/{controller=Lessons}/{var}/{action=_PartialShowLessons_D}/{var}/{var}/{var}");
 
                 endpoints.MapControllerRoute(
                     name: "ForGetAllLessons",
