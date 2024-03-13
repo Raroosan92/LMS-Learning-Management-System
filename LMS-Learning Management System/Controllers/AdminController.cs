@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +36,26 @@ namespace LMS_Learning_Management_System.Controllers
         }
         [Authorize(Roles = "admin")]
 
+        [HttpPost]
+        public IActionResult GetData()
+        {
+
+            List<AppUser> stList = new List<AppUser>();
+
+            if (User.IsInRole("admin"))
+            {
+                //stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
+                stList = userManager.Users.Where(R => R.Id != "8a40818b-4d93-46d7-86e0-10ae13b21932").OrderByDescending(r => r.Id).ToList();
+            }
+
+            return new JsonResult(new { data = stList });
+
+        }
+
         public IActionResult Index()
         {
-            return View(userManager.Users.Where(R=>R.Id!= "8a40818b-4d93-46d7-86e0-10ae13b21932"));
+            return View(userManager.Users.Where(R => R.Id != "8a40818b-4d93-46d7-86e0-10ae13b21932"));
+            //return View();
         }
         [AllowAnonymous]
 
@@ -64,12 +82,12 @@ namespace LMS_Learning_Management_System.Controllers
                 string email;
                 try
                 {
-                     email = userManager.Users.Where(c => c.PhoneNumber == user.PhoneNumber).FirstOrDefault().Email;
+                    email = userManager.Users.Where(c => c.PhoneNumber == user.PhoneNumber).FirstOrDefault().Email;
 
                 }
                 catch (Exception)
                 {
-                     email = null;
+                    email = null;
                 }
 
                 if (email != null)
@@ -135,15 +153,15 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                             RoleModification model = new RoleModification();
-                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email,o.UserTypeDesc }).Where(m => m.Email == user.Email).SingleOrDefault();
+                            var userid1 = _contextUsers.Users.Select(o => new { o.Id, o.Email, o.UserTypeDesc }).Where(m => m.Email == user.Email).SingleOrDefault();
 
                             AppUser user2 = await userManager.FindByIdAsync(userid1.Id);
                             if (user2 != null)
                             {
-                                if (userid1.UserTypeDesc== "teacher")
+                                if (userid1.UserTypeDesc == "teacher")
                                 {
 
-                                result = await userManager.AddToRoleAsync(user2, "teacher");
+                                    result = await userManager.AddToRoleAsync(user2, "teacher");
                                     if (!result.Succeeded)
                                         Errors(result);
                                 }
@@ -167,72 +185,72 @@ namespace LMS_Learning_Management_System.Controllers
                                 try
                                 {
 
-                               
-                                _Classes = (from Classes1 in _context.Classes
-                                            select new SelectListItem
-                                            {
-                                                Text = Classes1.Descriptions,
-                                                Value = Classes1.Id.ToString()
-                                            }).ToList();
+
+                                    _Classes = (from Classes1 in _context.Classes
+                                                select new SelectListItem
+                                                {
+                                                    Text = Classes1.Descriptions,
+                                                    Value = Classes1.Id.ToString()
+                                                }).ToList();
 
 
 
-                                _Subjecs = (from Subjects1 in _context.Subjects
-                                            select new SelectListItem
-                                            {
-                                                Text = Subjects1.Name,
-                                                Value = Subjects1.Id.ToString()
-                                            }).ToList();
+                                    _Subjecs = (from Subjects1 in _context.Subjects
+                                                select new SelectListItem
+                                                {
+                                                    Text = Subjects1.Name,
+                                                    Value = Subjects1.Id.ToString()
+                                                }).ToList();
 
 
-                                _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                                _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+                                    _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                                    _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
 
-                                string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                                string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+                                    string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                                    string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
 
 
 
-                                foreach (string id in ClassId)
-                                {
-                                    if (!string.IsNullOrEmpty(id))
+                                    foreach (string id in ClassId)
                                     {
-                                        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                                        _ClassesLst.Add(id);
-                                    }
-                                }
-
-                                foreach (string id2 in SubjecsId)
-                                {
-                                    if (!string.IsNullOrEmpty(id2))
-                                    {
-                                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                                        _SubjecsLst.Add(id2);
-                                    }
-                                }
-                                var TeacherEnrollment = new TeacherEnrollment();
-
-
-                                for (int a = 0; a < _ClassesLst.Count; a++)
-                                {
-                                    for (int b = 0; b < _SubjecsLst.Count; b++)
-                                    {
-                                        TeacherEnrollment = new TeacherEnrollment
+                                        if (!string.IsNullOrEmpty(id))
                                         {
-                                            UserId = userid1.Id,
-                                            SubjectId = int.Parse(_SubjecsLst[b]),
-                                            ClassId = int.Parse(_ClassesLst[a])
-                                        };
-                                        _context.TeacherEnrollments.Add(TeacherEnrollment);
-                                        await _context.SaveChangesAsync();
+                                            string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                                            _ClassesLst.Add(id);
+                                        }
                                     }
-                                }
+
+                                    foreach (string id2 in SubjecsId)
+                                    {
+                                        if (!string.IsNullOrEmpty(id2))
+                                        {
+                                            string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                                            _SubjecsLst.Add(id2);
+                                        }
+                                    }
+                                    var TeacherEnrollment = new TeacherEnrollment();
+
+
+                                    for (int a = 0; a < _ClassesLst.Count; a++)
+                                    {
+                                        for (int b = 0; b < _SubjecsLst.Count; b++)
+                                        {
+                                            TeacherEnrollment = new TeacherEnrollment
+                                            {
+                                                UserId = userid1.Id,
+                                                SubjectId = int.Parse(_SubjecsLst[b]),
+                                                ClassId = int.Parse(_ClassesLst[a])
+                                            };
+                                            _context.TeacherEnrollments.Add(TeacherEnrollment);
+                                            await _context.SaveChangesAsync();
+                                        }
+                                    }
 
                                 }
                                 catch (Exception ex)
                                 {
 
-                                    
+
                                 }
 
                             }
@@ -246,7 +264,7 @@ namespace LMS_Learning_Management_System.Controllers
                         }
                         else
                         {
-                        return RedirectToAction("login","Account");
+                            return RedirectToAction("login", "Account");
 
                         }
 
@@ -274,21 +292,103 @@ namespace LMS_Learning_Management_System.Controllers
             Month = Jor.Month.ToString();
 
         }
-        [Authorize(Roles = "admin")]
 
+
+
+        [Authorize(Roles = "admin")]
 
         public async Task<IActionResult> Update(string id)
         {
+            //var Subjectes_Info = await _context.Subjects.Select(r => new { r.Id, r.Name }).Distinct().ToListAsync();
+            //var Classes_Info = await _context.Classes.Select(r => new {  r.Id, r.Descriptions }).Distinct().ToListAsync();
+
+
+            var query = from c in _context.Classes
+                        join vt in _context.VTechersInfos on c.Id equals vt.ClassId into vtGroup
+                        from vtItem in vtGroup.DefaultIfEmpty()
+                        select new
+                        {
+                            ClassId = c.Id,
+                            ClassName = c.Descriptions,
+                            TeacherName = vtItem != null ? vtItem.FullName : null,
+                            TeacherID = vtItem != null ? vtItem.Id : null,
+                            // Include other columns as needed
+                        };
+
+            var Classes_Info = await query.Distinct().ToListAsync();
+
+
+
+            var query2 = from s in _context.Subjects
+                        join vt in _context.VTechersInfos on s.Id equals vt.SubjectId into vtGroup
+                        from vtItem in vtGroup.DefaultIfEmpty()
+                        select new
+                        {
+                            SubjectId = s.Id,
+                            SubjectName = s.Name,
+                            TeacherName = vtItem != null ? vtItem.FullName : null,
+                            TeacherID = vtItem != null ? vtItem.Id : null,
+                            // Include other columns as needed
+                        };
+
+            var Subjectes_Info = await query2.Distinct().ToListAsync();
+
+
+
+
             AppUser user = await userManager.FindByIdAsync(id);
+
+            // Assuming you have a DbSet<AppUser> in your DbContext
+            //AppUser user = await _context.AppUsers.Include(x => x.)
+            //                                .FirstOrDefaultAsync(x => x.Id == id);
+
+            List<int?> Subjectes = new List<int?>();
+            List<int?> Classes = new List<int?>();
+
+            try
+            {
+
+            Subjectes_Info.Where(r => r.TeacherID == id).Distinct().ToList().ForEach(result => Subjectes.Add(result.SubjectId));
+            Classes_Info.Where(r => r.TeacherID == id).Distinct().ToList().ForEach(result => Classes.Add(result.ClassId));
+
+
+            }
+            catch (Exception ex)
+            {
+
+                
+            }
+            user.SelectedClasses = Classes.ToArray();
+            user.SelectedSubjectes = Subjectes.ToArray();
+
+
+            user.ESelectedSubjectes = Subjectes_Info.Select(r=>new {r.SubjectName,r.SubjectId }).Distinct()
+                .Select(x => new System.Web.Mvc.SelectListItem
+                {
+                    Text =  x.SubjectName.ToString(),
+                    Value = x.SubjectId.ToString()
+                })
+                .ToList();
+
+
+            user.ESelectedClasses = Classes_Info.Select(r => new { r.ClassName, r.ClassId }).Distinct()
+                .Select(x => new System.Web.Mvc.SelectListItem
+                {
+                    Text = x.ClassName.ToString(),
+                    Value = x.ClassId.ToString()
+                })
+                .ToList();
+
+
+
             if (user != null)
                 return View(user);
             else
                 return RedirectToAction("Index");
         }
         [Authorize(Roles = "admin")]
-
         [HttpPost]
-        public async Task<IActionResult> Update(string id, string email, string FullName,string PhoneNumber, string password)
+        public async Task<IActionResult> Update(string id, string email, string FullName, string PhoneNumber, string password, List<string> SelectedClasses, List<string> SelectedSubjectes)
         {
             AppUser user = await userManager.FindByIdAsync(id);
             if (user != null)
@@ -297,7 +397,7 @@ namespace LMS_Learning_Management_System.Controllers
                     user.Email = email;
                 else
                     ModelState.AddModelError("", "Email cannot be empty");
-                
+
                 if (!string.IsNullOrEmpty(FullName))
                     user.FullName = FullName;
                 else
@@ -308,28 +408,136 @@ namespace LMS_Learning_Management_System.Controllers
                 else
                     ModelState.AddModelError("", "PhoneNumber cannot be empty");
 
-                if (!string.IsNullOrEmpty(email))
-                    user.Email = email;
-                else
-                    ModelState.AddModelError("", "Email cannot be empty");
+                //if (!string.IsNullOrEmpty(email))
+                //    user.Email = email;
+                //else
+                //    ModelState.AddModelError("", "Email cannot be empty");
 
+
+                //if (!string.IsNullOrEmpty(password))
+                //    user.PasswordHash = passwordHasher.HashPassword(user, password);
+                //else
+                //    ModelState.AddModelError("", "Password cannot be empty");
 
                 if (!string.IsNullOrEmpty(password))
                     user.PasswordHash = passwordHasher.HashPassword(user, password);
-                else
-                    ModelState.AddModelError("", "Password cannot be empty");
 
-                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
-                {
+
+                //if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
+                //{
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)
+                    {
+
+                        //*************************for Subjects and Classes**************************
+                        //var teacherEnrollments = _context.TeacherEnrollments
+                        //    .Where(te => te.UserId == user.Id)
+                        //    .ToList();
+
+                        //foreach (var enrollment in teacherEnrollments)
+                        //{
+                        //    enrollment.SelectedClasses = SelectedClasses;
+                        //    enrollment.SelectedSubjectes = SelectedSubjectes;
+                        //}
+
+
+                        
+                            try
+                            {
+
+
+                                _Classes = (from Classes1 in _context.Classes
+                                            select new SelectListItem
+                                            {
+                                                Text = Classes1.Descriptions,
+                                                Value = Classes1.Id.ToString()
+                                            }).ToList();
+
+
+
+                                _Subjecs = (from Subjects1 in _context.Subjects
+                                            select new SelectListItem
+                                            {
+                                                Text = Subjects1.Name,
+                                                Value = Subjects1.Id.ToString()
+                                            }).ToList();
+
+
+                                _Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                                _Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                                //string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                                //string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                                foreach (string id2 in SelectedClasses)
+                                {
+                                    if (!string.IsNullOrEmpty(id2))
+                                    {
+                                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                                        _ClassesLst.Add(id2);
+                                    }
+                                }
+
+                                foreach (string id2 in SelectedSubjectes)
+                                {
+                                    if (!string.IsNullOrEmpty(id2))
+                                    {
+                                        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                                        _SubjecsLst.Add(id2);
+                                    }
+                                }
+
+
+
+
+                        var cc = _context.TeacherEnrollments.Where(x => x.UserId == id).ToList();
+
+                        _context.TeacherEnrollments.RemoveRange(cc);
+                        await _context.SaveChangesAsync();
+
+
+                        var TeacherEnrollment = new TeacherEnrollment();
+
+
+                                for (int a = 0; a < _ClassesLst.Count; a++)
+                                {
+                                    for (int b = 0; b < _SubjecsLst.Count; b++)
+                                    {
+                                        TeacherEnrollment = new TeacherEnrollment
+                                        {
+                                            UserId = id,
+                                            SubjectId = int.Parse(_SubjecsLst[b]),
+                                            ClassId = int.Parse(_ClassesLst[a])
+                                        };
+                                        _context.TeacherEnrollments.Add(TeacherEnrollment);
+                                        await _context.SaveChangesAsync();
+                                    }
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+
+
+                            }
+
+                        
+
+                        //*************************for Subjects and Classes**************************
+
                         return RedirectToAction("Index");
-                    else
-                        Errors(result);
-                }
+                    }
+                   
+                //}
             }
             else
+            {
                 ModelState.AddModelError("", "User Not Found");
+            }
+
+            // If there are errors or the user is not found, return to the view with the current user data
             return View(user);
         }
 

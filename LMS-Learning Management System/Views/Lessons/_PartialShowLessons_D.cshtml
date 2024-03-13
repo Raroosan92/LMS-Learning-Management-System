@@ -4,6 +4,12 @@
     ViewData["Title"] = "عرض الدروس";
 }
 
+@******************************For Tabs**********************************@
+
+
+@******************************For Tabs**********************************@
+
+
 
 <div class="row">
     <div class="col-12">
@@ -152,7 +158,6 @@
     @******************************For files**********************************@
 </head>
 <body class="layout-navbar-mini-fixed-bottom">
-
     <div class="preloader">
         <div class="sk-double-bounce">
             <div class="sk-child sk-double-bounce1"></div>
@@ -199,7 +204,8 @@
                                                             {
                                                                 <li class="accordion__menu-link">
                                                                     <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
-                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</button>
+
+                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;" onclick="toggleVideo('@item.UrlVideo','@item.Name', '@item.Description');">@item.Name</button>
                                                                     @*<span class="text-muted">8m 42s</span>*@
                                                                 </li>
                                                             }
@@ -410,8 +416,6 @@
 
 
 
-
-
 @******************************For Tabs**********************************@
 
 
@@ -433,11 +437,8 @@
         }]);
 </script>
 
-
-
-
-
 <script>
+
     function toggleVideo(videoUrl, videoTitle, videoDescription) {
         // Get the video container element
         var videoContainer = document.getElementById("videoContainer");
@@ -450,31 +451,61 @@
 
         // Get the title, duration, and description elements
         var videoTitleElement = document.getElementById("videoTitle");
-        //var videoDurationElement = document.getElementById("videoDuration");
         var videoDescriptionElement = document.getElementById("videoDescription");
 
         // Set the iframe source URL
         videoIframe.src = videoUrl;
 
-        // Set the title, duration, and description
+        // Set the title and description
         videoTitleElement.innerText = videoTitle;
-        //videoDurationElement.innerText = videoDuration;
         videoDescriptionElement.innerText = videoDescription;
 
-
+        // Show the video and description containers
         videoContainer.style.display = "block";
         descriptionContainer.style.display = "block";
-
-
-        //// Toggle the visibility of the video container and description container
-        //if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
-        //    videoContainer.style.display = "block";
-        //    descriptionContainer.style.display = "block";
-        //} else {
-        //    videoContainer.style.display = "none";
-        //    descriptionContainer.style.display = "none";
-        //}
     }
+
+
+
+
+
+    //function toggleVideo(videoUrl, videoTitle, videoDescription) {
+    //    // Get the video container element
+    //    var videoContainer = document.getElementById("videoContainer");
+
+    //    // Get the iframe element
+    //    var videoIframe = document.getElementById("videoIframe");
+
+    //    // Get the description container element
+    //    var descriptionContainer = document.getElementById("descriptionContainer");
+
+    //    // Get the title, duration, and description elements
+    //    var videoTitleElement = document.getElementById("videoTitle");
+    //    //var videoDurationElement = document.getElementById("videoDuration");
+    //    var videoDescriptionElement = document.getElementById("videoDescription");
+
+    //    // Set the iframe source URL
+    //    videoIframe.src = videoUrl;
+
+    //    // Set the title, duration, and description
+    //    videoTitleElement.innerText = videoTitle;
+    //    //videoDurationElement.innerText = videoDuration;
+    //    videoDescriptionElement.innerText = videoDescription;
+
+
+    //    videoContainer.style.display = "block";
+    //    descriptionContainer.style.display = "block";
+
+
+    //    //// Toggle the visibility of the video container and description container
+    //    //if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
+    //    //    videoContainer.style.display = "block";
+    //    //    descriptionContainer.style.display = "block";
+    //    //} else {
+    //    //    videoContainer.style.display = "none";
+    //    //    descriptionContainer.style.display = "none";
+    //    //}
+    //}
 
 </script>
 <script>
@@ -483,73 +514,61 @@
         $('#Nav').css('display', 'none');
     });
 </script>
-
-
-
 <script>
-    $(function () {
-        $(".switch").click(function () {
-            $("#canvas-wrapper").toggleClass("dark-mode");
-            $("table").toggleClass("dark-mode");
-        });
+
+    // منع عمليات النسخ واللصق
+    document.addEventListener('copy', function (e) {
+        e.preventDefault();
     });
-</script>
 
-<script>
+    document.addEventListener('cut', function (e) {
+        e.preventDefault();
+    });
 
-        // منع عمليات النسخ واللصق
-        document.addEventListener('copy', function (e) {
-            e.preventDefault();
-        });
+    document.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
 
-        document.addEventListener('cut', function (e) {
-            e.preventDefault();
-        });
+    // منع زر الفأرة الأيمن
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
 
-        document.addEventListener('paste', function (e) {
-            e.preventDefault();
-        });
 
-        // منع زر الفأرة الأيمن
+    // عند فتح صفحة الويب
+    window.onload = function () {
         document.addEventListener('contextmenu', function (e) {
+            // منع زر الفأرة الأيمن
             e.preventDefault();
         });
 
-
-        // عند فتح صفحة الويب
-        window.onload = function () {
-            document.addEventListener('contextmenu', function (e) {
-                // منع زر الفأرة الأيمن
+        document.addEventListener('keydown', function (e) {
+            // منع Ctrl + Shift + I (فتح أدوات المطور)
+            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
                 e.preventDefault();
-            });
-
-            document.addEventListener('keydown', function (e) {
-                // منع Ctrl + Shift + I (فتح أدوات المطور)
-                if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
-                    e.preventDefault();
-                }
-            });
-        };
+            }
+        });
+    };
 
 
 
-        // منع فتح أدوات المطور
-        document.onkeydown = function (e) {
-            if (event.keyCode == 123) {
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
-                return false;
-            }
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-                return false;
-            }
-            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-                return false;
-            }
+    // منع فتح أدوات المطور
+    document.onkeydown = function (e) {
+        if (event.keyCode == 123) {
+            return false;
         }
-    </script>
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+    }
+</script>
 

@@ -162,43 +162,49 @@
     .fa-plane {
         font-size: 16px;
     }
+
     .D1 {
         display: flex
     }
 
-@@media (min-width: 768px) and (max-width: 1000px) {
-    .D1 {
-        display: flex
+    @@media (min-width: 768px) and (max-width: 1000px) {
+        .D1 {
+            display: flex
+        }
     }
 
-   
-}
-
-@@media (min-width: 1001px) and (max-width: 1199px) {
-    .D1 {
-        display: flex
+    @@media (min-width: 1001px) and (max-width: 1199px) {
+        .D1 {
+            display: flex
+        }
     }
 
-    
-}
+    @@media (min-width: 100px) and (max-width: 767px) {
+        .D1 {
+            display: inline-grid;
+            place-items: center;
+        }
 
-@@media (min-width: 100px) and (max-width: 767px) {
-    .D1 {
-        display: inline-grid;
-        place-items: center;
+        .panel {
+            height: 270px;
+            width: 190px;
+            position: relative;
+            margin: 0 0 7% 0;
+        }
     }
-
-    .panel {
-        height: 270px;
-        width: 190px;
-        position: relative;
-        margin: 0 0 7% 0;
-    }
-}
 </style>
 
 <div class="row">
+   <div></div>
     <div class="col-12">
+        <div class="row">
+            <h2>برنامج منصة دربك</h2>
+            <div>
+
+                <button class="btn btn-primary" onclick="showDownloadAlert()">تحميل التطبيق</button>
+
+            </div>
+        </div>
         @if (Model.VLessonCardsSubject_Collection.Count() > 0)
         {
             <div class="container D1">
@@ -220,16 +226,16 @@
                                         </div>
                                     }
                                     <div class="line">
-                                        <h6 class="para">يرجى الانتقال الى تطبيق الهاتف لمشاهدة الدروس</h6>
-
+                                        <h6 class="para">يرجى الانتقال الى تطبيق المنصة لمشاهدة الدروس</h6>
                                     </div>
-                                    <div class="line">
-                                        <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>
+
+                                    <!--<div class="line">
+                                        <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>-->
                                         @*<h6 class="para">@item2.FullName</h6>*@
-                                    </div>
-
+                                    <!--</div>-->
                                 </div>
                             </div>
+
                         </div>
 
 
@@ -247,4 +253,22 @@
     </div>
 </div>
 
-
+<!-- JavaScript code for SweetAlert -->
+<script>
+    function showDownloadAlert() {
+        Swal.fire({
+            title: 'تحميل التطبيق',
+            text: 'يُرجى تحميل التطبيق لمشاهدة الدروس',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'تحميل الآن',
+            cancelButtonText: 'لاحقًا',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Add the download link or redirect to the app store
+                // You can customize this based on your app download location
+                window.location.href = '/exe/DarbakJo.exe';
+            }
+        });
+    }
+</script>

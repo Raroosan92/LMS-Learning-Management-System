@@ -108,6 +108,7 @@ namespace LMS_Learning_Management_System.Controllers
             {
                 ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions");
                 ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation");
+                ViewData["TeacherID"] = new SelectList(_context.AspNetUsers.Where(r => r.UserType == "73ccc360-c9c7-44d4-83d4-a1282dd4cb40"), "Id", "FullName");
 
 
             }
@@ -148,7 +149,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID,Semester")] Lesson lesson, List<IFormFile> multiplefileupload, List<IFormFile> multiplefileupload2)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherId,Semester")] Lesson lesson, List<IFormFile> multiplefileupload, List<IFormFile> multiplefileupload2)
         {
             if (ModelState.IsValid)
             {
@@ -338,7 +339,7 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherID,Semester")] Lesson lesson, List<IFormFile> multiplefileupload, List<IFormFile> multiplefileupload2)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UrlVideo,ClassId,SubjectId,Status,CreatedUser,CreatedDate,TeacherId,Semester")] Lesson lesson, List<IFormFile> multiplefileupload, List<IFormFile> multiplefileupload2)
         {
             if (id != lesson.Id)
             {
@@ -571,7 +572,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                 }
             }
-            return new JsonResult(new { data = stList });
+            return new JsonResult(new { data = stList.OrderByDescending(r=>r.Id) });
 
         }
         [Authorize(Roles = "admin")]
