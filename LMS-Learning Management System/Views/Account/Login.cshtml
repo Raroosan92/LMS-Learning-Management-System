@@ -321,7 +321,9 @@
                         <div class="form-group">
                             تذكرني؟ <input type="checkbox" asp-for="Remember" />
                         </div>
-                            <input type="hidden" asp-for="devicetype" />
+                        <input type="hidden" asp-for="devicetype" />
+                        <input type="hidden" asp-for="clientIpAddress" id="clientIpAddress2" name="clientIpAddress" />
+
                         <br />
 
 
@@ -340,7 +342,20 @@
 </div>
 
 <script src="~/js/jquery3.3.1.js"></script>
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>*@
 
+<script>
+    /* Add "https://api.ipify.org?format=json" to
+    get the IP Address of user*/
+    $(document).ready(() => {
+        $.getJSON("https://api.ipify.org?format=json",
+            function (data) {
+                // Displayin IP address on screen
+                $('#clientIpAddress2').val(data.ip);
+            })
+    });
+</script>
 <script>
     $(document).ready(function () {
         // JavaScript code to detect the device type and submit it to the server
@@ -349,16 +364,16 @@
 
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
 
-               
+
 
                 return 'Mobile';
 
             } else if (/iPad/i.test(userAgent)) {
-               
+
 
                 return 'iPad';  // You may choose to distinguish between iPad and other tablets
             } else {
-              
+
                 return 'Desktop';
             }
         }
@@ -401,7 +416,7 @@
         wrapper.classList.remove("active");
     });
 
-   
+
 
 </script>
 

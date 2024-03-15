@@ -18,7 +18,9 @@ namespace LMS_Learning_Management_System.Models
         public string FullName { get; set; }
         
         [NotMapped]
-        public string devicetype { get; set; }
+        public string devicetype { get; set; }   
+        [NotMapped]
+        public string clientIpAddress { get; set; }
 
         public bool Remember { get; set; }
 

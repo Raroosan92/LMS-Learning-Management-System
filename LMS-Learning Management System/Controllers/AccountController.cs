@@ -91,10 +91,9 @@ namespace LMS_Learning_Management_System.Controllers
 
                     //}
                     string ActiveSessions = "";
-                    GetTopPhysicalAddress();
                     var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
-                    if (login.PhoneNumber == "0772823209" || login.PhoneNumber == "0777777777")
+                    if (userdetails.FullName.Contains("Admin"))
                     {
                         ActiveSessions = "Succeeded";
 
@@ -102,7 +101,7 @@ namespace LMS_Learning_Management_System.Controllers
                     else
                     {
 
-                        ActiveSessions = GetActiveSession(userdetails.Id);
+                        ActiveSessions = GetActiveSession(userdetails.Id,login.clientIpAddress);
                     }
 
                     if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
@@ -138,7 +137,7 @@ namespace LMS_Learning_Management_System.Controllers
                                     activesession.PhoneNumber = appUser.PhoneNumber;
                                     activesession.DeviceType = login.devicetype;
                                     activesession.ComputerName = computerName;
-                                    activesession.MacAddress = GetTopPhysicalAddress();
+                                    activesession.MacAddress = login.clientIpAddress;
                                     //activesession.MacAddress = macAddressString;
                                     _context.Add(activesession);
 
@@ -191,22 +190,11 @@ namespace LMS_Learning_Management_System.Controllers
             return View(login);
         }
 
-        public static string GetTopPhysicalAddress()
-        {
-            string macAddressString = "";
-            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
-                {
-                    PhysicalAddress macAddress = nic.GetPhysicalAddress();
-                    macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
-                    // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
-                    break;
-                }
-            }
-
-            return macAddressString; // No physical address found
-        }
+        //public static string GetClientIPAddress(HttpContext context)
+        //{
+        //    string ipAddress = context.Connection.LocalIpAddress?.ToString();
+        //    return ipAddress;
+        //}
 
         public static string GetUniqueMachineId()
         {
@@ -238,7 +226,7 @@ namespace LMS_Learning_Management_System.Controllers
                 return null;
             }
         }
-        public string GetActiveSession(string userId)
+        public string GetActiveSession(string userId, string clientIpAddress)
         {
             try
             {
@@ -261,7 +249,8 @@ namespace LMS_Learning_Management_System.Controllers
                     //        break;
                     //    }
                     //}
-                    macAddressString = GetTopPhysicalAddress();
+                    macAddressString = clientIpAddress;
+
                     if (macAddressString == username.MacAddress)
                     {
                         return "Succeeded";
