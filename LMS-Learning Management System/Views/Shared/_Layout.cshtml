@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link href="~/css/base/jquery-ui.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
 
 </head>
 <body id="canvas-wrapper">
@@ -74,13 +75,13 @@
     <script src="~/js/jquery-ui-1.12.1.js"></script>
 
     <script>
-            $(function () {
-                $(".switch").click(function () {
-                    $("#canvas-wrapper").toggleClass("dark-mode");
-                    $("table").toggleClass("dark-mode");
-                });
+        $(function () {
+            $(".switch").click(function () {
+                $("#canvas-wrapper").toggleClass("dark-mode");
+                $("table").toggleClass("dark-mode");
             });
-        </script>
+        });
+    </script>
 
     <script>
 
@@ -138,6 +139,7 @@
                 return false;
             }
         }
-        </script>
+    </script>
+
 </body>
 </html>
