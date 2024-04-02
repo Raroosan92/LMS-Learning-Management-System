@@ -37,7 +37,7 @@
         $(document).ready(function () {
             $("#classes").DataTable({
                 "ajax": {
-                    "url": "/Classes/GetData",
+                    "url": "@Url.Action("GetData", "Classes")",
                     "type": "POST",
                     "data": "{}",
                     "datatype": "json"

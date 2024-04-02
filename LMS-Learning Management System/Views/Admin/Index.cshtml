@@ -40,7 +40,7 @@
 
         $("#classes").DataTable({
             "ajax": {
-                "url": "/Admin/GetData",
+                "url": "@Url.Action("GetData", "Admin")",
                 "type": "POST",
                 "data": "{}",
                 "datatype": "json"

@@ -21,7 +21,7 @@
 
     <input type="hidden" id="role_hidden" value="@role" />
 }
-<table id="Lessons" class="table table-striped table-bordered table-inverse table-responsive ">
+<table id="Lessons" class="table table-striped table-bordered table-inverse table-responsive " style=" width: 1375px; margin: 0 -3% 0 0;">
     <thead>
         <tr>
             <th>
@@ -79,7 +79,7 @@
 
                 $("#Lessons").DataTable({
                     "ajax": {
-                        "url": "/Lessons/GetData",
+                        "url": "@Url.Action("GetData", "Lessons")",
                         "type": "POST",
                         "data": "{}",
                         "datatype": "json"
@@ -112,7 +112,7 @@
             else if (role == "teacher") {
  $("#Lessons").DataTable({
                     "ajax": {
-                        "url": "/Lessons/GetData",
+                        "url": "@Url.Action("GetData", "Lessons")",
                         "type": "POST",
                         "data": "{}",
                         "datatype": "json"

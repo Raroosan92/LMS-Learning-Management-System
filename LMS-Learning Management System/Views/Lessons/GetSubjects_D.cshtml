@@ -94,7 +94,7 @@
             }
 
             .card .cover.item-a {
-                background-image: url("../../Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg");
+                background-image: url("../Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg");
                 background-size: 100% 100%;
                 /*background-image: url("https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80");*/
             }
@@ -296,7 +296,7 @@
 
 
 
-                                            <form id="@item.TeacherId+@ss" action="/Lessons/k8vdUMEW0uLWyai31xmmWhtv" method="post" style=" z-index: 1800;">
+                                            <form id="@item.TeacherId+@ss" action="/Academy/Lessons/k8vdUMEW0uLWyai31xmmWhtv" method="post" style=" z-index: 1800;">
                                                 <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
                                                 <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
                                                 <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
@@ -565,7 +565,7 @@
             var selectedSubjectId = SubjectId;
             var selectedClassId = ClassId;
             $.ajax({
-                url: "/Lessons/GetTeachersBySubject",
+                url: '@Url.Action("GetTeachersBySubject", "Lessons")',
                 type: "POST",
                 data: { "subjectId": selectedSubjectId, "classId": selectedClassId, "Semester": semester },
                 success: function (response) {
@@ -610,8 +610,10 @@
                     alert("يرجى اختيار معلم.");
                     return;
                 }
+                var url = '@Url.Action("AssignTeacher", "Lessons")'; // Get the URL using Url.Action
+
                 // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
-                $.post("/Lessons/AssignTeacher", { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
+                $.post(url, { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
                     function (data) {
                         // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
                         alert(data.message);

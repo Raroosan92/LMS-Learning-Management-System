@@ -216,7 +216,7 @@
         var Password_Card = $('#Password_Card').val();
         if (confirm("هل انت متأكد من معلومات البطاقة")) {
             $.ajax({
-                url: "/Enrollments/Check_Crad",
+                url: '@Url.Action("Check_Crad", "Enrollments")',
                 type: "POST",
                 data: { "Card_No": Card_No, "Password_Card": Password_Card },
                 success: function (response) {

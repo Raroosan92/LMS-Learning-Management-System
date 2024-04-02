@@ -195,7 +195,7 @@ namespace LMS_Learning_Management_System.Controllers
                         }
                         var LessonDoc1 = new Document
                         {
-                            WorkingSheets = "/Documents/" + uniqueFileName,
+                            WorkingSheets = "/Academy/Documents/" + uniqueFileName,
                             LessonId = GetMaxID(),
 
                         };
@@ -237,7 +237,7 @@ namespace LMS_Learning_Management_System.Controllers
                         }
                         var LessonDoc = new Document
                         {
-                            Booklets = "/Documents/" + uniqueFileName,
+                            Booklets = "/Academy/Documents/" + uniqueFileName,
                             LessonId = GetMaxID(),
 
                         };
@@ -400,7 +400,7 @@ namespace LMS_Learning_Management_System.Controllers
                             }
                             var LessonDoc1 = new Document
                             {
-                                WorkingSheets = "/Documents/" + uniqueFileName,
+                                WorkingSheets = "/Academy/Documents/" + uniqueFileName,
                                 LessonId = id,
 
                             };
@@ -455,7 +455,7 @@ namespace LMS_Learning_Management_System.Controllers
                             }
                             var LessonDoc = new Document
                             {
-                                Booklets = "/Documents/" + uniqueFileName,
+                                Booklets = "/Academy/Documents/" + uniqueFileName,
                                 LessonId = id,
 
                             };

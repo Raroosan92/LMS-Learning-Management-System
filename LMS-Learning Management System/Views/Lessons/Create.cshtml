@@ -127,7 +127,7 @@
 
             // استخدام Ajax لجلب المعلمين بناءً على المادة المحددة
             $.ajax({
-                url: "/Lessons/GetTeachersBySubject",
+                url: '@Url.Action("GetTeachersBySubject", "Lessons")',
                 type: "POST",
                 data: { "subjectId": selectedSubjectId, "classId": selectedClassId },
                 success: function (response) {

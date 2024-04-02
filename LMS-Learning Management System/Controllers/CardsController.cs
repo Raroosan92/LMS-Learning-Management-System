@@ -9,6 +9,8 @@ using LMS_Learning_Management_System.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNet.Identity;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace LMS_Learning_Management_System.Controllers
 {
@@ -18,13 +20,15 @@ namespace LMS_Learning_Management_System.Controllers
     {
         private readonly LMSContext _context;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
+        private readonly IConfiguration _configuration;
         public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
         string time;
         string Year;
         string Month;
         DateTime Jor;
-        public CardsController(LMSContext context, Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden)
+        public CardsController(LMSContext context, Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, AppIdentityDbContext iden, IConfiguration configuration)
         {
+            _configuration = configuration;
             _context = context;
             // BaseController aa = new BaseController(userMgr,iden);
             //aa.GetUserRole();
@@ -52,6 +56,7 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Cards
         public async Task<IActionResult> Index()
         {
+            GenerateAndInsertCards();
             GetUserRole();
             return View();
             // var lMSContext = _context.Cards.Include(c => c.User);
@@ -109,93 +114,110 @@ namespace LMS_Learning_Management_System.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CardNo,CardPassword,CardPrice,CardStatus,UserId,UserName,NumberOfSubjects")] Card card)
         {
-            if (ModelState.IsValid)
+            var cardsExist = _context.Cards.Where(r => r.CardNo == card.CardNo).ToList();
+            if (cardsExist.Count == 0)
             {
-                try
+
+                if (ModelState.IsValid)
                 {
-                    _context.Add(card);
-                    await _context.SaveChangesAsync();
-                    TempData["SweetAlert"] = "success";
+                    try
+                    {
+                        _context.Add(card);
+                        await _context.SaveChangesAsync();
+                        TempData["SweetAlert"] = "success";
+                        GetUserRole();
+                        return View();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        // في حالة الفشل
+                        TempData["SweetAlert"] = "error";
+                        GetUserRole();
+                        return View();
+
+                    }
+
+                    //var CardSubjects = new CardSubject();
+
+                    //_Classes = (from Classes1 in _context.Classes
+                    //            select new SelectListItem
+                    //            {
+                    //                Text = Classes1.Descriptions,
+                    //                Value = Classes1.Id.ToString()
+                    //            }).ToList();
+
+
+
+                    //_Subjecs = (from Subjects1 in _context.Subjects
+                    //            select new SelectListItem
+                    //            {
+                    //                Text = Subjects1.Name,
+                    //                Value = Subjects1.Id.ToString()
+                    //            }).ToList();
+
+
+                    //_Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
+                    //_Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
+
+                    //string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
+                    //string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
+
+
+
+                    //foreach (string id in ClassId)
+                    //{
+                    //    if (!string.IsNullOrEmpty(id))
+                    //    {
+                    //        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
+                    //        _ClassesLst.Add(id);
+                    //    }
+                    //}
+
+                    //foreach (string id2 in SubjecsId)
+                    //{
+                    //    if (!string.IsNullOrEmpty(id2))
+                    //    {
+                    //        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
+                    //        _SubjecsLst.Add(id2);
+                    //    }
+                    //}
+
+
+                    //for (int a = 0; a < _ClassesLst.Count; a++)
+                    //{
+                    //    for (int b = 0; b < _SubjecsLst.Count; b++)
+                    //    {
+                    //        CardSubjects = new CardSubject
+                    //        {
+                    //            CardNo = card.Id,
+                    //            SubjectId = int.Parse(_SubjecsLst[b]),
+                    //            ClassId = int.Parse(_ClassesLst[a])
+                    //        };
+                    //        _context.CardSubjects.Add(CardSubjects);
+                    //        await _context.SaveChangesAsync();
+                    //    }
+                    //}
+
 
                 }
-                catch (Exception ex)
+                else
                 {
-                    // في حالة الفشل
-                    TempData["SweetAlert"] = "error";
-                    return View();
-
+                    return RedirectToAction(nameof(Index));
                 }
-
-                //var CardSubjects = new CardSubject();
-
-                //_Classes = (from Classes1 in _context.Classes
-                //            select new SelectListItem
-                //            {
-                //                Text = Classes1.Descriptions,
-                //                Value = Classes1.Id.ToString()
-                //            }).ToList();
+                //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
+                //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
+                //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
 
 
-
-                //_Subjecs = (from Subjects1 in _context.Subjects
-                //            select new SelectListItem
-                //            {
-                //                Text = Subjects1.Name,
-                //                Value = Subjects1.Id.ToString()
-                //            }).ToList();
-
-
-                //_Classes = _Classes.OrderBy(v => v.Value).Distinct().ToList();
-                //_Subjecs = _Subjecs.OrderBy(v => v.Value).Distinct().ToList();
-
-                //string[] ClassId = Request.Form["lstClasses"].ToString().Split(",");
-                //string[] SubjecsId = Request.Form["lstSubjecs"].ToString().Split(",");
-
-
-
-                //foreach (string id in ClassId)
-                //{
-                //    if (!string.IsNullOrEmpty(id))
-                //    {
-                //        string name = _Classes.Where(x => x.Value == id).FirstOrDefault().Text;
-                //        _ClassesLst.Add(id);
-                //    }
-                //}
-
-                //foreach (string id2 in SubjecsId)
-                //{
-                //    if (!string.IsNullOrEmpty(id2))
-                //    {
-                //        string name = _Classes.Where(x => x.Value == id2).FirstOrDefault().Text;
-                //        _SubjecsLst.Add(id2);
-                //    }
-                //}
-
-
-                //for (int a = 0; a < _ClassesLst.Count; a++)
-                //{
-                //    for (int b = 0; b < _SubjecsLst.Count; b++)
-                //    {
-                //        CardSubjects = new CardSubject
-                //        {
-                //            CardNo = card.Id,
-                //            SubjectId = int.Parse(_SubjecsLst[b]),
-                //            ClassId = int.Parse(_ClassesLst[a])
-                //        };
-                //        _context.CardSubjects.Add(CardSubjects);
-                //        await _context.SaveChangesAsync();
-                //    }
-                //}
-
-
-
-                return RedirectToAction(nameof(Index));
             }
-            //ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Descriptions", card.ClassId);
-            //ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Abbreviation", card.SubjectId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", card.UserId);
-            GetUserRole();
-            return View(card);
+            else
+            {
+                GetUserRole();
+                TempData["SweetAlert"] = "error";
+                return View();
+
+            }
         }
 
         // GET: Cards/Edit/5
@@ -361,22 +383,22 @@ namespace LMS_Learning_Management_System.Controllers
                     try
                     {
 
-                    foreach (var item in cardsSubjects)
-                    {
-                        Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester).FirstOrDefault<Enrollment>();
-                        if (Enrollments != null)
+                        foreach (var item in cardsSubjects)
                         {
+                            Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester).FirstOrDefault<Enrollment>();
+                            if (Enrollments != null)
+                            {
 
-                            db.Enrollments.Remove(Enrollments);
-                            await db.SaveChangesAsync();
-                            deleted = true;
-                        }
-                        else
-                        {
-                            deleted = true;
-                        }
+                                db.Enrollments.Remove(Enrollments);
+                                await db.SaveChangesAsync();
+                                deleted = true;
+                            }
+                            else
+                            {
+                                deleted = true;
+                            }
 
-                    }
+                        }
 
                     }
                     catch (Exception)
@@ -388,20 +410,20 @@ namespace LMS_Learning_Management_System.Controllers
                     try
                     {
 
-                   
-                    foreach (var item2 in cardsSubjects)
-                    {
-                        CardSubject cardsSubjects1 =  db.CardSubjects.Where(x => x.CardNo == item2.CardNo &&  x.SubjectId == item2.SubjectId && x.ClassId == item2.ClassId && x.Semester == item2.Semester).FirstOrDefault<CardSubject>();
 
-                        if (cardsSubjects1 != null)
+                        foreach (var item2 in cardsSubjects)
                         {
+                            CardSubject cardsSubjects1 = db.CardSubjects.Where(x => x.CardNo == item2.CardNo && x.SubjectId == item2.SubjectId && x.ClassId == item2.ClassId && x.Semester == item2.Semester).FirstOrDefault<CardSubject>();
 
-                            db.CardSubjects.Remove(cardsSubjects1);
-                            await db.SaveChangesAsync();
+                            if (cardsSubjects1 != null)
+                            {
+
+                                db.CardSubjects.Remove(cardsSubjects1);
+                                await db.SaveChangesAsync();
                                 deleted = true;
                             }
 
-                    }
+                        }
                     }
                     catch (Exception)
                     {
@@ -411,12 +433,12 @@ namespace LMS_Learning_Management_System.Controllers
                     if (deleted)
                     {
 
-                    Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
+                        Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
 
-                    db.Cards.Remove(cards);
-                    db.SaveChanges();
+                        db.Cards.Remove(cards);
+                        db.SaveChanges();
 
-                    return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+                        return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
                     }
                     else
                     {
@@ -471,5 +493,85 @@ namespace LMS_Learning_Management_System.Controllers
             return (model);
 
         }
+
+
+
+
+        public void GenerateAndInsertCards()
+        {
+            // Database connection string
+            string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+            // Generate 12 unique card numbers
+            int[] cardNumbers = GenerateUniqueNumbers(12);
+
+            // Generate 5 unique passwords
+            string[] passwords = GenerateUniquePasswords(5);
+
+            // Insert records into the database
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                for (int i = 0; i < 5000; i++)
+                {
+                    int cardNo = cardNumbers[i % 12];
+                    string cardPassword = passwords[i % 5];
+                    var cardsExist2 = _context.Cards.Where(r => r.CardNo == cardNo).ToList();
+
+                    if (cardsExist2.Count == 0)
+                    {
+                        // SQL command to insert a record
+                        string sql = "INSERT INTO Cards (Card_No, Card_Password, Card_Price, Card_Status, User_ID, User_Name, Number_Of_Subjects) " +
+                                     "VALUES (@CardNo, @CardPassword, '10', 1, NULL, NULL, 1)";
+
+                        using (SqlCommand command = new SqlCommand(sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@CardNo", cardNo);
+                            command.Parameters.AddWithValue("@CardPassword", cardPassword);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+
+                }
+                    connection.Close();
+            }
+
+        }
+
+        private int[] GenerateUniqueNumbers(int count)
+        {
+            // Generate unique numbers logic
+            Random random = new Random();
+            HashSet<int> uniqueNumbers = new HashSet<int>();
+
+            while (uniqueNumbers.Count < count)
+            {
+                int newNumber = random.Next(1000000, 99999999); // Generate a 12-digit number
+                uniqueNumbers.Add(newNumber);
+            }
+
+            return uniqueNumbers.ToArray();
+        }
+
+        private string[] GenerateUniquePasswords(int count)
+        {
+            Random random = new Random();
+            string[] passwords = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                // Generate a random string with both digits and letters
+                passwords[i] = GenerateRandomString(random, 5);
+            }
+            return passwords;
+        }
+
+        private string GenerateRandomString(Random random, int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Include both digits and letters
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
     }
 }

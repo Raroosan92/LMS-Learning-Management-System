@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿    <!DOCTYPE html>
 <html lang="ar" style="direction:rtl">
 <head>
     <meta charset="utf-8" />
@@ -82,6 +82,15 @@
             });
         });
     </script>
+    @{
+    // Define the excluded controller and action names
+    string excludedController = "Lessons";
+    string[] excludedActions = new[] { "Create", "Edit" };
+    }
+
+    @if (ViewContext.RouteData.Values["Controller"].ToString() != excludedController ||
+    !excludedActions.Contains(ViewContext.RouteData.Values["Action"].ToString()))
+{
 
     <script>
 
@@ -140,6 +149,6 @@
             }
         }
     </script>
-
+    }
 </body>
 </html>

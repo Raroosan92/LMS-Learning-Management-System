@@ -307,14 +307,15 @@ namespace LMS_Learning_Management_System.Controllers
         }
         public async Task<IActionResult> Logout()
         {
+            TempData["AlertMessage"] = "";
             if (await DeleteActiveSession())
             {
                 await signInManager.SignOutAsync();
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login");
             }
             else
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login");
 
             }
         }

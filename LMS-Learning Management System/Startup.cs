@@ -40,8 +40,8 @@ namespace LMS_Learning_Management_System
             {
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(99999);
-                options.LoginPath = "/Account/Login";
-                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Academy/Account/Login";
+                options.AccessDeniedPath = "/Academy/Account/AccessDenied";
                 options.SlidingExpiration = true;
                 // Add event handler for OnRedirectToLogin
                 options.Events = new CookieAuthenticationEvents
@@ -49,16 +49,16 @@ namespace LMS_Learning_Management_System
                     OnRedirectToLogout = context =>
                     {
                         // Check if the user is being redirected due to an expired cookie
-                        if (context.Request.Path.StartsWithSegments("/Account/Login")
+                        if (context.Request.Path.StartsWithSegments("/Academy/Account/Login")
                             && context.Response.StatusCode == (int)HttpStatusCode.OK)
                         {
                             // Redirect to a specific page after ExpireTimeSpan has elapsed
-                            context.Response.Redirect("/Account/logout");
+                            context.Response.Redirect("/Academy/Account/logout");
                         }
                         else
                         {
                             // Default behavior (redirect to the login page)
-                            context.Response.Redirect("/Account/logout");
+                            context.Response.Redirect("/Academy/Account/logout");
                             //context.Response.Redirect(context.RedirectUri);
                         }
 
