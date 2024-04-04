@@ -16,6 +16,8 @@ namespace LMS_Learning_Management_System.Models
         public int Semester { get; set; }
         public string TeacherId { get; set; }
         public string UserId { get; set; }
+        public long CardNo { get; set; }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy HH:MM:ss tt}")]
 
         public DateTime CreatedDate { get; set; }

@@ -151,7 +151,8 @@ namespace LMS_Learning_Management_System.Controllers
                                 }
                                 TempData["FullName"] = appUser.FullName;
 
-                                return Redirect(login.ReturnUrl ?? "/");
+                                //return Redirect(login.ReturnUrl ?? "/");
+                                return Redirect(login.ReturnUrl ?? "/Academy");
                             }
 
                             // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/

@@ -553,26 +553,24 @@ namespace LMS_Learning_Management_System.Controllers
             AppUser user = await userManager.FindByIdAsync(id);
             if (user != null)
             {
-                if (await userManager.IsInRoleAsync(user, "admin"))
+                if (!await userManager.IsInRoleAsync(user, "admin"))
                 {
-
                     IdentityResult result = await userManager.DeleteAsync(user);
                     if (result.Succeeded)
-                        return RedirectToAction("Index");
+                        return Json(new { success = true });
                     else
-                        Errors(result);
+                        return Json(new { success = false, message = "فشل حذف المستخدم." });
                 }
                 else
                 {
-                    ModelState.AddModelError("", "لا يمكن حذف مستخدم الادمن");
-
+                    return Json(new { success = false, message = "لا يمكن حذف المستخدمين الادمن." });
                 }
             }
             else
-                ModelState.AddModelError("", "User Not Found");
-            return View("Index", userManager.Users);
+            {
+                return Json(new { success = false, message = "لم يتم العثور على المستخدم." });
+            }
         }
-
 
         public string GetUserRole()
         {

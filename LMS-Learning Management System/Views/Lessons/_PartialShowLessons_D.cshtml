@@ -1,4 +1,5 @@
-﻿@model LMS_Learning_Management_System.Models.VLessonCardsSubject
+﻿@using System.Web
+@model LMS_Learning_Management_System.Models.VLessonCardsSubject
 @{
     Layout = null;
     ViewData["Title"] = "عرض الدروس";
@@ -205,7 +206,8 @@
                                                                 <li class="accordion__menu-link">
                                                                     <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
 
-                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;" onclick="toggleVideo('@item.UrlVideo','@item.Name', '@item.Description');">@item.Name</button>
+                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;" onclick="toggleVideo('@item.UrlVideo','@item.Name', '@HttpUtility.JavaScriptStringEncode(item.Description)');">@item.Name</button>
+
                                                                     @*<span class="text-muted">8m 42s</span>*@
                                                                 </li>
                                                             }
@@ -213,14 +215,14 @@
 
 
                                                             @*@foreach (var item in Model.VLessonCardsSubject_Collection)
-                                                                {
-                                                                    <li class="accordion__menu-link">
-                                                                        <span class="material-icons icon-16pt icon--left text-body">@check_circle@play_circle_outline</span>
-                                                                        <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
+                                                        {
+                                                        <li class="accordion__menu-link">
+                                                        <span class="material-icons icon-16pt icon--left text-body">@check_circle@play_circle_outline</span>
+                                                        <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
 
-                                                                        @<span class="text-muted">8m 42s</span>@
-                                                                    </li>
-                                                                }*@
+                                                        @<span class="text-muted">8m 42s</span>@
+                                                        </li>
+                                                        }*@
 
 
 
@@ -252,11 +254,11 @@
                                 </div>
                                 <div class="col-md-8">
                                     @*<nav class="course-nav">
-                                            <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
-                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
-                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
-                                            <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
-                                        </nav>*@
+                                <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
+                                <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
+                                <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
+                                <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
+                                </nav>*@
                                     <div class="js-player embed-responsive embed-responsive-16by9 mb-32pt">
                                         <div class="player embed-responsive-item">
                                             <div class="player__content">

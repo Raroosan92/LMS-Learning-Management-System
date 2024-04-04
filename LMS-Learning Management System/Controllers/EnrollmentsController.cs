@@ -140,20 +140,20 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClassId,SubjectId,UserId,CreatedDate,Semester")] Enrollment enrollment)
+        public async Task<IActionResult> Create([Bind("Id,ClassId,SubjectId,UserId,CreatedDate,Semester,CardNo")] Enrollment enrollment)
         {
-            if (ModelState.IsValid)
-            {
-                GetTime();
-                enrollment.CreatedDate = DateTime.Parse(time);
-                _context.Add(enrollment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions", enrollment.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", enrollment.SubjectId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
-            GetUserRole();
+            //if (ModelState.IsValid)
+            //{
+            //    GetTime();
+            //    enrollment.CreatedDate = DateTime.Parse(time);
+            //    _context.Add(enrollment);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions", enrollment.ClassId);
+            //ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", enrollment.SubjectId);
+            //ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
+            //GetUserRole();
             return View(enrollment);
         }
 
@@ -217,35 +217,35 @@ namespace LMS_Learning_Management_System.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClassId,SubjectId,UserId")] Enrollment enrollment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ClassId,SubjectId,UserId,CardNo")] Enrollment enrollment)
         {
-            if (id != enrollment.Id)
-            {
-                return NotFound();
-            }
+            //if (id != enrollment.Id)
+            //{
+            //    return NotFound();
+            //}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(enrollment);
-                    _context.Entry(enrollment).State = EntityState.Modified;
-                    _context.Entry(enrollment).Property(x => x.CreatedDate).IsModified = false;
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EnrollmentExists(enrollment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        _context.Update(enrollment);
+            //        _context.Entry(enrollment).State = EntityState.Modified;
+            //        _context.Entry(enrollment).Property(x => x.CreatedDate).IsModified = false;
+            //        await _context.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!EnrollmentExists(enrollment.Id))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["ClassId"] = new SelectList(_context.Classes.Where(r => r.Status == true), "Id", "Descriptions", enrollment.ClassId);
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Id", "Abbreviation", enrollment.SubjectId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "UserName", enrollment.UserId);
@@ -443,8 +443,8 @@ namespace LMS_Learning_Management_System.Controllers
                     {
                         for (int b = 0; b < _SubjecsLst.Count; b++)
                         {
-                            Check_EnrollmentExists = _context.Enrollments.Any(r => r.Semester==semester && r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
-                            
+                            Check_EnrollmentExists = _context.Enrollments.Any(r => r.Semester == semester && r.UserId == User.Identity.GetUserId() && r.SubjectId == int.Parse(_SubjecsLst[b]) && r.ClassId == int.Parse(_ClassesLst[a]));
+
                             if (Check_EnrollmentExists == false)
                             {
 
@@ -483,7 +483,8 @@ namespace LMS_Learning_Management_System.Controllers
                                 SubjectId = item.SubjectId,
                                 UserId = User.Identity.GetUserId(),
                                 CreatedDate = DateTime.Parse(time),
-                                Semester = semester
+                                Semester = semester,
+                                CardNo = Card_Details.Id
                             };
                             _context.Add(enrollment2);
                             await _context.SaveChangesAsync();

@@ -281,10 +281,10 @@ namespace LMS_Learning_Management_System.Models
                     .WithMany(p => p.AspNetUserTokens)
                     .HasForeignKey(d => d.UserId);
             });
-       //     modelBuilder.Entity<Card>()
-       //.HasMany(c => c.CardSubjects)
-       //.WithOne(cs => cs.CardNoNavigation)
-       //.OnDelete(DeleteBehavior.Cascade); // Configure cascade delete
+            //     modelBuilder.Entity<Card>()
+            //.HasMany(c => c.CardSubjects)
+            //.WithOne(cs => cs.CardNoNavigation)
+            //.OnDelete(DeleteBehavior.Cascade); // Configure cascade delete
 
             modelBuilder.Entity<Card>(entity =>
             {
@@ -381,6 +381,8 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.ClassId).HasColumnName("Class_ID");
 
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("Created_Date");
@@ -411,7 +413,7 @@ namespace LMS_Learning_Management_System.Models
                     .HasConstraintName("FK_Enrollment_AspNetUsers");
             });
 
-         
+
 
             modelBuilder.Entity<Subject>(entity =>
             {

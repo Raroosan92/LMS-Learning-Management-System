@@ -78,17 +78,17 @@
         {
 
             @*<div class="form-group">
-                    <label asp-for="UserId" class="control-label"></label>
-                    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
-                        <option value="">-- أختر --</option>
+    <label asp-for="UserId" class="control-label"></label>
+    <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
+    <option value="">-- أختر --</option>
 
-                    </select>
-                </div>
-                <div class="form-group" style="display:none">
-                    <label asp-for="UserName" class="control-label"></label>
-                    <input asp-for="UserName" class="form-control" readonly />
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>*@
+    </select>
+    </div>
+    <div class="form-group" style="display:none">
+    <label asp-for="UserName" class="control-label"></label>
+    <input asp-for="UserName" class="form-control" readonly />
+    <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>*@
 
             <div class="form-group">
                 <label asp-for="RoleId" class="control-label"></label>
@@ -172,65 +172,39 @@
     });
 
 
-    function CheckList() {
+    async function CheckList() {
         var role = $("#Role_H").val();
         var Subject = $("#lstSubjecs").val();
         var Class = $("#lstClasses").val();
         var Role = $("#RoleId").val();
         var phoneNumber = document.getElementById('PhoneNumber').value;
-
-        // Show SweetAlert confirmation
-        Swal.fire({
-            title: 'تأكيد رقم الهاتف',
-            text: 'هل أنت متأكد من رقم الهاتف الخاص بك؟   رقم الهاتف: ' + phoneNumber,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'نعم',
-            cancelButtonText: 'لا',
-        }).then((result) => {
-            // If user confirms, allow form submission
-            if (result.isConfirmed) {
-                var Selected_role = $("#RoleId :selected").text();
-                if (role.toLocaleLowerCase() == "admin" && Selected_role.toLocaleLowerCase() == "teacher") {
-
-                    if (Role == '-- أختر --') {
-                        alert("يرجى اختيار نوع المستخدم (الصلاحية)");
-                        event.preventDefault();
-                        return false;
-                    }
-
-                    else if (Subject == "" || Subject == '-- أختر --') {
-                        alert("يرجى اختيار المواد الخاصة بالمعلم")
-                        event.preventDefault();
-                        return false;
-                    }
-
-                    else if (Class == "" || Class == '-- أختر --') {
-                        alert("يرجى اختيار الصفوف الخاصة بالمعلم")
-                        event.preventDefault();
-                        return false;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-                else {
-
-                    if (Role == '-- أختر --') {
-                        alert("يرجى اختيار نوع المستخدم (الصلاحية)");
-                        event.preventDefault();
-                        return false;
-                    }
-                }
-                // return true;
-            } else {
-                // If user cancels, cancel form submission
+        var Selected_role = $("#RoleId :selected").text();
+        if (role.toLocaleLowerCase() == "admin") {
+            if (Role == '-- أختر --') {
+                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
                 return false;
+            } else if (Subject == "" || Subject == '-- أختر --') {
+                alert("يرجى اختيار المواد الخاصة بالمعلم");
+                return false;
+            } else if (Class == "" || Class == '-- أختر --') {
+                alert("يرجى اختيار الصفوف الخاصة بالمعلم");
+                return false;
+            } else {
+                alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
+                return true;
             }
-        });
+        } else {
+            if (Role == '-- أختر --') {
+                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
+                return false;
+            } else {
+                alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
+                return true;
+            }
+        }
     }
-        
-    }
+
+
 
 </script>
 
@@ -252,9 +226,9 @@
 
     var PhoneNoResult;
     $("[id$=PhoneNumber]").on('change', function () {
-       
+
         formatJordanianMobileNumber();
-        if (PhoneNoResult==true) {
+        if (PhoneNoResult == true) {
             $('#Name').val($('#PhoneNumber').val());
             var email = $('#PhoneNumber').val() + '@@' + $('#PhoneNumber').val() + '.com';
             $('#Email').val(email);
@@ -274,7 +248,7 @@
             $("#PhoneNumber").attr('maxlength', '10');
             PhoneNoResult = true;
         }
-        else if (/^0/.test(cleanedNumber) && cleanedNumber.length==10 ) {
+        else if (/^0/.test(cleanedNumber) && cleanedNumber.length == 10) {
             $('#PhoneNumber').val(cleanedNumber)
             $("#PhoneNumber").attr('maxlength', '10');
             PhoneNoResult = true;

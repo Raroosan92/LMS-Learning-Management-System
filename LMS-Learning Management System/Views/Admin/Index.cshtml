@@ -69,13 +69,13 @@
                 },{
                     "data": "id", "render": function (data, type, row) {
                         var editAndDeleteButtons = "";
-
                         // Check user type before rendering buttons
                         if (userTypeDesc.toLowerCase() == "admin") {
         var deleteForm = "<form class='delete-form' action='@Url.Action("Delete", "Admin")' method='post'>" +
     "   <input type='hidden' name='id' value='" + data + "' />" +
     "   <button type='button' class='btn btn-sm btn-danger delete-button' onclick='confirmDelete(\"" + data + "\")'>حذف</button>" +
     "</form>";
+
                             editAndDeleteButtons =   deleteForm;
                         }
 
@@ -97,8 +97,7 @@
 
 
     <script>
-
-        function confirmDelete(data) {
+        function confirmDelete(id) {
             Swal.fire({
                 title: 'تأكيد الحذف',
                 text: 'هل انت متأكد من حذف السجل؟',
@@ -110,10 +109,27 @@
                 cancelButtonText: 'تراجع'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // If the user confirms, submit the form
-                    document.querySelector('.delete-form').submit();
+                    // If the user confirms, call the Delete action with the user's id
+                    $.post('@Url.Action("Delete", "Admin")', { id: id })
+                        .done(function (response) {
+                            // Handle success response if needed
+                            if (response.success) {
+                                // Optionally, you can reload the DataTable or perform any other action
+                                Swal.fire('تم حذف المستخدم بنجاح', '', 'success');
+                                $('#classes').DataTable().ajax.reload();
+                            } else {
+                                // Handle error response if needed
+                                Swal.fire('لا يمكن حذف المستخدم', '', 'error');
+                            }
+                        })
+                        .fail(function (xhr, status, error) {
+                            // Handle failure if needed
+                            Swal.fire('خطأ في عملية الحذف', '', 'error');
+                        });
                 }
             });
         }
+
+
     </script>
 }
