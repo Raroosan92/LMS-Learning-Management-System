@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Protocols;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
@@ -20,16 +24,32 @@ namespace LMS_Learning_Management_System.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IConfiguration _configuration;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
         private readonly LMSContext _context;
-        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context)
+        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration)
         {
             userManager = userMgr;
             signInManager = signinMgr;
             _context = context;
+            _configuration = configuration;
         }
+        [AllowAnonymous]
+        public string GetAppVersion()
+        {
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
 
+            //SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ConnectionString);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = connection;
+            cmd.CommandText = "SELECT top 1 App_Version FROM App_Version;";
+            connection.Open();
+            var xwpf = cmd.ExecuteScalar();
+            connection.Close();
+            return xwpf.ToString();
+        }
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
