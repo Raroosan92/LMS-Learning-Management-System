@@ -41,9 +41,9 @@
         }
 
     /* .panel:hover .ring:before,
-        .panel:hover .ring:after {
-            transform: translateX(-50%) translateY(-50%) rotate(310deg);
-        }*/
+            .panel:hover .ring:after {
+                transform: translateX(-50%) translateY(-50%) rotate(310deg);
+            }*/
 
     .ring,
     .card,
@@ -205,8 +205,25 @@
         border-radius: 10px;
         max-width: 100%;
         width: 60%;
-
         text-align: center;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .popup {
+            display: none;
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 100%;
+            width: 89%;
+            text-align: center;
+            z-index: 200;
+        }
     }
 
     .popup-content {
@@ -244,7 +261,7 @@
 </style>
 
 <div class="row">
-   <div></div>
+    <div></div>
     <div class="col-12">
         <div class="row">
             <h2>برنامج منصة دربك</h2>
@@ -295,7 +312,7 @@
 
                                     <!--<div class="line">
                                         <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>-->
-                                        @*<h6 class="para">@item2.FullName</h6>*@
+                                    @*<h6 class="para">@item2.FullName</h6>*@
                                     <!--</div>-->
                                 </div>
                             </div>
@@ -319,15 +336,15 @@
 
 <!-- JavaScript code for SweetAlert -->
 <script>
-    
 
-       
-        function openPopup() {
-            document.getElementById("popup").style.display = "block";
-            document.getElementById("video").play(); // Autoplay video
-        }
 
-      
+
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+        document.getElementById("video").play(); // Autoplay video
+    }
+
+
     function closePopup() {
         var video = document.getElementById("video");
         video.pause(); // Pause video
