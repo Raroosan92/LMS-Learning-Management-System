@@ -7,7 +7,8 @@
 <a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
-<form method="post" onsubmit="return CheckList();">
+@* <form method="post" onsubmit="return CheckList();"> *@
+<form method="post" id="loginForm">
     @if (TempData.ContainsKey("AlertMessage1"))
     {
         <div class="alert alert-danger">
@@ -77,7 +78,7 @@
         if (User.IsInRole("admin"))
         {
 
-            @*<div class="form-group">
+                @*<div class="form-group">
     <label asp-for="UserId" class="control-label"></label>
     <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
     <option value="">-- أختر --</option>
@@ -90,49 +91,51 @@
     <span asp-validation-for="UserName" class="text-danger"></span>
     </div>*@
 
-            <div class="form-group">
-                <label asp-for="RoleId" class="control-label"></label>
-                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId">
+                <div class="form-group">
+                    <label asp-for="RoleId" class="control-label"></label>
+                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId">
 
-                    <option>-- أختر --</option>
-                </select>
+                        <option>-- أختر --</option>
+                    </select>
 
-                @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
-            </div>
-            <div class="form-group" style="display:none">
-                <input asp-for="UserTypeDesc" id="UserTypeDesc" />
-            </div>
-            <div class="form-group" id="SubjectId_D" style="display:none">
-                <label asp-for="SubjectId" class="control-label"></label>
-                <select id="lstSubjecs" name="lstSubjecs" asp-items="ViewBag.SubjectId" class="form-control" onchange="handleSelectChange(this)">
-                    <option>-- أختر --</option>
-                </select>
+                    @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
+                </div>
+                <div class="form-group" style="display:none">
+                    <input asp-for="UserTypeDesc" id="UserTypeDesc" />
+                </div>
+                <div class="form-group" id="SubjectId_D" style="display:none">
+                    <label asp-for="SubjectId" class="control-label"></label>
+                    <select id="lstSubjecs" name="lstSubjecs" asp-items="ViewBag.SubjectId" class="form-control" onchange="handleSelectChange(this)">
+                        <option>-- أختر --</option>
+                    </select>
 
-            </div>
-            <div class="form-group" id="Class_D" style="display:none">
-                <label asp-for="ClassId" class="control-label"></label>
-                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" onchange="handleSelectChange(this)">
-                    <option>-- أختر --</option>
-                </select>
+                </div>
+                <div class="form-group" id="Class_D" style="display:none">
+                    <label asp-for="ClassId" class="control-label"></label>
+                    <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" onchange="handleSelectChange(this)">
+                        <option>-- أختر --</option>
+                    </select>
 
-            </div>
+                </div>
 
 
         }
 
     }
-    <button type="submit" class="btn btn-primary">انشاء</button>
+    @* <button type="submit" class="btn btn-primary">انشاء</button> *@
+    <a id="submit_Btn" class="btn btn-primary">انشاء</a>
+
     @{
         var Role = "";
         if (User.IsInRole("admin"))
         {
             Role = "admin";
-            <input type="hidden" id="Role_H" value="@Role" />
+                <input type="hidden" id="Role_H" value="@Role" />
         }
         else
         {
             Role = "other";
-            <input type="hidden" id="Role_H" value="@Role" />
+                <input type="hidden" id="Role_H" value="@Role" />
         }
 
     }
@@ -172,38 +175,59 @@
     });
 
 
-    async function CheckList() {
-        var role = $("#Role_H").val();
-        var Subject = $("#lstSubjecs").val();
-        var Class = $("#lstClasses").val();
-        var Role = $("#RoleId").val();
-        var phoneNumber = document.getElementById('PhoneNumber').value;
-        var Selected_role = $("#RoleId :selected").text();
-        if (role.toLocaleLowerCase() == "admin") {
-            if (Role == '-- أختر --') {
-                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
-                return false;
-            } else if (Subject == "" || Subject == '-- أختر --') {
-                alert("يرجى اختيار المواد الخاصة بالمعلم");
-                return false;
-            } else if (Class == "" || Class == '-- أختر --') {
-                alert("يرجى اختيار الصفوف الخاصة بالمعلم");
-                return false;
+
+    $(document).ready(function () {
+        // Event listener for form submission
+        $("#submit_Btn").on('click', function (e) {
+            e.preventDefault(); // Prevent default action
+
+            // Call the CheckList function to perform validation
+            CheckList().then(function (result) {
+                if (result) {
+                    // If validation passes, submit the form
+                    $("#loginForm").submit();
+                }
+            });
+        });
+
+        // Function to perform form validation
+        async function CheckList() {
+            var role = $("#Role_H").val();
+            var Subject = $("#lstSubjecs").val();
+            var Class = $("#lstClasses").val();
+            var Role = $("#RoleId").val();
+            var phoneNumber = $("#PhoneNumber").val();
+            var Selected_role = $("#RoleId :selected").text();
+
+            if (confirm("هل انت متأكد من رقم الهاتف الخاص بك")) {
+                if (role.toLocaleLowerCase() == "admin") {
+                    if (Role == '-- أختر --') {
+                        alert("يرجى اختيار نوع المستخدم (الصلاحية)");
+                        return false;
+                    } else if (Subject == "" || Subject == '-- أختر --') {
+                        alert("يرجى اختيار المواد الخاصة بالمعلم");
+                        return false;
+                    } else if (Class == "" || Class == '-- أختر --') {
+                        alert("يرجى اختيار الصفوف الخاصة بالمعلم");
+                        return false;
+                    } else {
+                        alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
+                        return true;
+                    }
+                } else {
+                    if (Role == '-- أختر --') {
+                        alert("يرجى اختيار نوع المستخدم (الصلاحية)");
+                        return false;
+                    } else {
+                        alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
+                        return true;
+                    }
+                }
             } else {
-                alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
-                return true;
-            }
-        } else {
-            if (Role == '-- أختر --') {
-                alert("يرجى اختيار نوع المستخدم (الصلاحية)");
                 return false;
-            } else {
-                alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
-                return true;
             }
         }
-    }
-
+    });
 
 
 </script>

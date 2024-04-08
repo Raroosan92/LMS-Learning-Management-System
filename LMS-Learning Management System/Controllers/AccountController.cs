@@ -27,13 +27,17 @@ namespace LMS_Learning_Management_System.Controllers
         private readonly IConfiguration _configuration;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
-        private readonly LMSContext _context;
-        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration)
+        private readonly LMSContext _context; 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             userManager = userMgr;
             signInManager = signinMgr;
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+
         }
         [AllowAnonymous]
         public string GetAppVersion()
@@ -55,6 +59,11 @@ namespace LMS_Learning_Management_System.Controllers
         {
             Login login = new Login();
             login.ReturnUrl = returnUrl;
+
+
+
+
+
             //string wpfAppIdentifier2 = HttpContext.Request.Headers["X-WPF-App-Identifier"];
 
             //// Store the value in the session
@@ -113,7 +122,9 @@ namespace LMS_Learning_Management_System.Controllers
                     string ActiveSessions = "";
                     var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
-                    if (userdetails.FullName.Contains("Admin"))
+                    var roles = await userManager.GetRolesAsync(appUser);
+
+                    if (roles[0].ToLower()=="admin")
                     {
                         ActiveSessions = "Succeeded";
 
@@ -210,6 +221,57 @@ namespace LMS_Learning_Management_System.Controllers
             }
             return View(login);
         }
+
+
+
+
+
+
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Login(LoginViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await userManager.FindByNameAsync(model.Username);
+        //        if (user != null && await signInManager.CheckPasswordSignInAsync(user, model.Password, false) == SignInResult.Success)
+        //        {
+        //            // Check if user has an active session
+        //            var existingSession = await sessionService.GetActiveSessionAsync(user.Id);
+        //            if (existingSession != null)
+        //            {
+        //                // Compare device identifier with the current device
+        //                if (existingSession.DeviceId != model.DeviceId)
+        //                {
+        //                    ModelState.AddModelError(string.Empty, "You are already logged in from another device.");
+        //                    return View(model);
+        //                }
+        //            }
+
+        //            // Store session identifier and device identifier
+        //            await sessionService.CreateSessionAsync(user.Id, model.DeviceId);
+
+        //            // Redirect to the dashboard or home page
+        //            return RedirectToAction("Dashboard", "Home");
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError(string.Empty, "Invalid username or password.");
+        //        }
+        //    }
+
+        //    return View(model);
+        //}
+
+
+
+
+
+
+
+
+
 
         //public static string GetClientIPAddress(HttpContext context)
         //{
