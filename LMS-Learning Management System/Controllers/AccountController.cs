@@ -55,6 +55,19 @@ namespace LMS_Learning_Management_System.Controllers
             return xwpf.ToString();
         }
         [AllowAnonymous]
+        public string GetWPF()
+        {
+            SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = connection;
+            cmd.CommandText = "SELECT Descriptions FROM codes where id=1;";
+            connection.Open();
+            var xwpf = cmd.ExecuteScalar();
+            connection.Close();
+            return xwpf.ToString();
+        }
+        [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
             Login login = new Login();
