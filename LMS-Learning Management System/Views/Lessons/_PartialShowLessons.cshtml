@@ -1,10 +1,607 @@
 ﻿@model LMS_Learning_Management_System.Models.VLessonCardsSubject
-
+@using System.Web
 @{
     ViewData["Title"] = "عرض الدروس";
 }
 
-<style>
+
+
+
+
+
+
+@******************************For Tabs**********************************@
+
+
+@******************************For Tabs**********************************@
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="container" style="direction:ltr">
+            <div class="form-group">
+                <!-- Add a button for "Back" -->
+                <button type="button" class="btn btn-dark" onclick="goBack()">رجوع</button>
+            </div>
+
+            <script>
+                function goBack() {
+                    // Use the browser's history to navigate back
+                    window.history.back();
+                }
+            </script>
+
+        </div>
+
+    </div>
+</div>
+<hr />
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Fix Footer CSS -->
+    <!-- Material Design Icons -->
+    <link type="text/css" href="~/New folder/css/css-material-icons.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-material-icons.rtl.css" rel="stylesheet">
+
+    <!-- Preloader -->
+    <link type="text/css" href="~/New folder/css/css-preloader.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-preloader.rtl.css" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link type="text/css" href="~/New folder/css/css-app.css" rel="stylesheet">
+    <link type="text/css" href="~/New folder/css/css-app.rtl.css" rel="stylesheet">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/TabsCSS.css" rel="stylesheet" />
+
+    @******************************For files**********************************@
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: #f4f7f6;
+            margin-top: 20px;
+        }
+
+        .file_manager .file a:hover .hover,
+        .file_manager .file .file-name small {
+            display: block
+        }
+
+        .file_manager .file {
+            padding: 0 !important
+        }
+
+            .file_manager .file .icon {
+                text-align: center
+            }
+
+
+        .file_manager .file {
+            position: relative;
+            border-radius: .55rem;
+            overflow: hidden
+        }
+
+            .file_manager .file .image,
+            .file_manager .file .icon {
+                max-height: 180px;
+                overflow: hidden;
+                background-size: cover;
+                background-position: top
+            }
+
+            .file_manager .file .hover {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                display: none;
+                transition: all 0.2s ease-in-out
+            }
+
+            .file_manager .file a:hover .hover {
+                transition: all 0.2s ease-in-out
+            }
+
+            .file_manager .file .icon {
+                padding: 15px 10px;
+                display: table;
+                width: 100%
+            }
+
+                .file_manager .file .icon i {
+                    display: table-cell;
+                    font-size: 30px;
+                    vertical-align: middle;
+                    color: #777;
+                    line-height: 100px
+                }
+
+            .file_manager .file .file-name {
+                padding: 10px;
+                border-top: 1px solid #f7f7f7
+            }
+
+                .file_manager .file .file-name small .date {
+                    float: right
+                }
+
+        .folder {
+            padding: 20px;
+            display: block;
+            color: #777
+        }
+
+        @@media only screen and (max-width: 992px) {
+            .file_manager .nav-tabs {
+                padding-left: 0;
+                padding-right: 0
+            }
+
+                .file_manager .nav-tabs .nav-item {
+                    display: inline-block
+                }
+        }
+
+        .card {
+            background: #fff;
+            transition: .5s;
+            border: 0;
+            margin-bottom: 30px;
+            border-radius: .55rem;
+            position: relative;
+            width: 100%;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    </style>
+    @******************************For files**********************************@
+</head>
+<body class="layout-navbar-mini-fixed-bottom">
+    <div class="preloader">
+        <div class="sk-double-bounce">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+    @if (Model.VLessonCardsSubject_Collection.Count() > 0)
+    {
+
+        <div class="container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">الدروس</a></li>
+                <li><a data-toggle="tab" href="#menu1">الدوسيات</a></li>
+                <li><a data-toggle="tab" href="#menu2">اوراق العمل</a></li>
+                <li>@*<a data-toggle="tab" href="#menu3">Menu 3</a>*@</li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <div class="mdk-header-layout js-mdk-header-layout">
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="border-left-2 page-section pl-32pt">
+
+                                        <div class="d-flex ">
+                                            @*<div class="page-num">1</div>*@
+                                            <h4>الدروس</h4>
+                                        </div>
+
+                                        @*<p class="text-70 mb-24pt">Good tools make application development quick*er and easier to maintain than* if you did everything by hand. The goal in this guide is to build and run a simple Angular application in TypeScript, using the Angular CLI while adhering to the Style Guide recommendations that benefit every Angular project.</p>*@
+
+                                        <div class="card mb-32pt mb-lg-64pt">
+                                            <ul class="accordion accordion--boxed js-accordion mb-0" id="toc-1">
+                                                <li class="accordion__item open">
+                                                    <a class="accordion__toggle" data-toggle="collapse" data-parent="#toc-1" href="#toc-content-1">
+                                                        @*<span class="flex">1 of 4 Steps</span>*@
+                                                        <span class="accordion__toggle-icon material-icons">@*keyboard_arrow_down*@</span>
+                                                    </a>
+                                                    <div class="accordion__menu" style="overflow: scroll; height: 200px; overflow-y: visible; overflow-x: auto; scrollbar-color: #6969dd #e0e0e0; ">
+                                                        <ul class="list-unstyled collapse show" id="toc-content-1">
+                                                            @foreach (var item in Model.VLessonCardsSubject_Collection)
+                                                            {
+                                                                <li class="accordion__menu-link">
+                                                                    <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
+
+                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;display:contents" onclick="toggleVideo('@item.UrlVideo','@item.Name', '@HttpUtility.JavaScriptStringEncode(item.Description)');">@item.Name.ToString().Trim()</button>
+
+                                                                    @*<span class="text-muted">8m 42s</span>*@
+                                                                </li>
+                                                            }
+
+
+
+                                                            @*@foreach (var item in Model.VLessonCardsSubject_Collection)
+                                                                {
+                                                                <li class="accordion__menu-link">
+                                                                <span class="material-icons icon-16pt icon--left text-body">@check_circle@play_circle_outline</span>
+                                                                <a href="#" id="videoLink" onclick="toggleVideo('@item.UrlVideo','@item.Name',  '@item.Description');">@item.Name</a>
+
+                                                                @<span class="text-muted">8m 42s</span>@
+                                                                </li>
+                                                                }*@
+
+
+
+
+                                                            <!--<li class="accordion__menu-link">
+                                                            <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                            <a class="flex" href="#">الدرس الاول</a>-->
+                                                            @*<span class="text-muted">50m 13s</span>*@
+                                                            <!--</li>
+                                                            <li class="accordion__menu-link">
+                                                                <span class="material-icons icon-16pt icon--left text-body">play_circle_outline</span>
+                                                                <a class="flex" href="#">الدرس الثالث</a>-->
+                                                            @*<span class="text-muted">12m 10s</span>*@
+                                                            <!--</li>
+                                                            <li class="accordion__menu-link">
+                                                                <span class="material-icons icon-16pt icon--left text-body">-->
+                                                            @*hourglass_empty*@
+                                                            <!--play_circle_outline</span>
+                                                                <a class="flex" href="#">الدرس الرابع</a>
+                                                            </li>-->
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    @*<nav class="course-nav">
+                                        <a href="tutorio-bootstrap.frontendmatter.html" data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction"><span class="material-icons text-primary">check_circle</span></a>
+                                        <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Introduction to TypeScript" class="active" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">account_circle</span></a>
+                                        <a data-toggle="tooltip" data-placement="bottom" data-title="Getting Started with Angular: Comparing Angular to AngularJS" href="tutorio-bootstrap.frontendmatter.html"><span class="material-icons">play_circle_outline</span></a>
+                                        <a data-toggle="tooltip" data-placement="bottom" data-title="Quiz: Getting Started with Angular" href="student-take-quiz.html"><span class="material-icons">hourglass_empty</span></a>
+                                        </nav>*@
+                                    <div class="js-player embed-responsive embed-responsive-16by9 mb-32pt">
+                                        <div class="player embed-responsive-item">
+                                            <div class="player__content">
+                                                <div class="player__image" style="--player-image: url(/Imagess/player.svg)"></div>
+                                                <a href="tutorio-bootstrap.frontendmatter.html" class="player__play">
+                                                    <span class="material-icons">play_arrow</span>
+                                                </a>
+                                            </div>
+                                            <div id="videoContainer">
+                                                <iframe class="embed-responsive-item" src="" frameborder="0" allowfullscreen id="videoIframe"></iframe>
+                                            </div>
+
+                                            <!--<div class="player__embed d-none">-->
+                                            @*<iframe class="embed-responsive-item" src="https://player.vimeo.com/video/97243285?title=0&amp;byline=0&amp;portrait=0" allowfullscreen=""></iframe>*@
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                    <!-- Description Section -->
+                                    <div id="descriptionContainer" style="display: none;">
+                                        <div class="d-flex flex-wrap align-items-end mb-16pt">
+                                            <h1 class="text-black-70 flex m-0" id="videoTitle"></h1>
+                                            @*<p class="h1 text-black-50 font-weight-light m-0" id="videoDuration"></p>*@
+                                        </div>
+                                        <p class="hero__lead measure-hero-lead text-black mb-24pt" id="videoDescription"></p>
+                                    </div>
+
+
+                                    <!--<div class="d-flex flex-wrap align-items-end mb-16pt">
+                                    <h1 class="text-black-70 flex m-0">Introduction to TypeScript</h1>-->
+                                    @*<p class="h1 text-black-50 font-weight-light m-0">50:13</p>*@
+                                    <!--</div>
+
+                                    <p class="hero__lead measure-hero-lead text-black mb-24pt">JavaScript is now used to power backends, create hybrid mobile applications, architect cloud solutions, design neural networks and even control robots. Enter TypeScript: a superset of JavaScript for scalable, secure, performant and feature-rich applications.</p>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                    <p>الدوسيات</p>
+
+                    <div id="main-content" class="file_manager">
+                        <div class="container">
+                            <div class="row clearfix">
+
+
+                                @{
+                                    foreach (var Book in Model.VDocLessonCardsSubject_Collection.Where(r => r.Booklets != null))
+                                    {
+                                        string filePath = Book.Booklets.ToString();
+                                        int lastSlashIndex = filePath.LastIndexOf('/');
+                                        string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="card">
+                                                <div class="file">
+                                                    <a href="javascript:void(0);">
+                                                        <div class="icon">
+                                                            <i class="fa fa-file text-info"></i>
+                                                        </div>
+                                                        <div class="file-name">
+                                                            <p class="m-b-5 text-muted">@fileName</p>
+                                                            @*  <small>Size: 42KB <span class="date text-muted">Nov 02, 2017</span></small>*@
+                                                        </div>
+                                                        <a href="@Book.Booklets" download class="btn btn-icon btn-danger">
+                                                            <i class="fa fa-download"></i> تنزيل
+                                                        </a>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                    <p>اوراق العمل</p>
+
+                    <div id="main-content" class="file_manager">
+                        <div class="container">
+                            <div class="row clearfix">
+                                @{
+
+                                    foreach (var Sheet in Model.VDocLessonCardsSubject_Collection.Where(r => r.WorkingSheets != null))
+                                    {
+                                        string filePath = Sheet.WorkingSheets.ToString();
+                                        int lastSlashIndex = filePath.LastIndexOf('/');
+                                        string fileName = lastSlashIndex >= 0 ? filePath.Substring(lastSlashIndex + 1) : filePath;
+
+                                        <div class="col-lg-3 col-md-4 col-sm-12">
+                                            <div class="card">
+                                                <div class="file">
+                                                    <a href="javascript:void(0);">
+
+                                                        <div class="icon">
+                                                            <i class="fa fa-file text-info"></i>
+                                                        </div>
+                                                        <div class="file-name">
+                                                            <p class="m-b-5 text-muted">@fileName</p>
+                                                            @*  <small>Size: 42KB <span class="date text-muted">Nov 02, 2017</span></small>*@
+                                                        </div>
+                                                        <a href="@Sheet.WorkingSheets" download class="btn btn-icon btn-danger">
+                                                            <i class="fa fa-download"></i> تنزيل
+                                                        </a>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+    }
+    else
+    {
+        <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
+            <h4>لا يوجد دروس مسجلة حاليا</h4>
+        </div>
+    }
+    <!-- jQuery -->
+    <script src="~/New folder/js/vendor-jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/New folder/js/vendor-popper.min.js"></script>
+    <script src="~/New folder/js/vendor-bootstrap.min.js"></script>
+    <!-- DOM Factory -->
+    <script src="~/New folder/js/vendor-dom-factory.js"></script>
+    <!-- App JS -->
+    <script src="~/New folder/js/js-app.js"></script>
+
+
+
+</body>
+</html>
+
+
+@******************************For Tabs**********************************@
+
+
+
+@******************************For Tabs**********************************@
+
+
+
+<script>
+    angular.module('formApp', [])
+        .controller('formController', ['$scope', function ($scope) {
+            $scope.master = {};
+
+            $scope.update = function (user) {
+                $scope.master = angular.copy(user);
+            };
+
+            $scope.reset = function () {
+                $scope.user = angular.copy($scope.master);
+            };
+
+            $scope.reset();
+        }]);
+</script>
+
+<script>
+
+    function toggleVideo(videoUrl, videoTitle, videoDescription) {
+        // Get the video container element
+        var videoContainer = document.getElementById("videoContainer");
+
+        // Get the iframe element
+        var videoIframe = document.getElementById("videoIframe");
+
+        // Get the description container element
+        var descriptionContainer = document.getElementById("descriptionContainer");
+
+        // Get the title, duration, and description elements
+        var videoTitleElement = document.getElementById("videoTitle");
+        var videoDescriptionElement = document.getElementById("videoDescription");
+
+        // Set the iframe source URL
+        videoIframe.src = videoUrl;
+
+        // Set the title and description
+        videoTitleElement.innerText = videoTitle;
+        videoDescriptionElement.innerText = videoDescription;
+
+        // Show the video and description containers
+        videoContainer.style.display = "block";
+        descriptionContainer.style.display = "block";
+    }
+
+
+
+
+
+    //function toggleVideo(videoUrl, videoTitle, videoDescription) {
+    //    // Get the video container element
+    //    var videoContainer = document.getElementById("videoContainer");
+
+    //    // Get the iframe element
+    //    var videoIframe = document.getElementById("videoIframe");
+
+    //    // Get the description container element
+    //    var descriptionContainer = document.getElementById("descriptionContainer");
+
+    //    // Get the title, duration, and description elements
+    //    var videoTitleElement = document.getElementById("videoTitle");
+    //    //var videoDurationElement = document.getElementById("videoDuration");
+    //    var videoDescriptionElement = document.getElementById("videoDescription");
+
+    //    // Set the iframe source URL
+    //    videoIframe.src = videoUrl;
+
+    //    // Set the title, duration, and description
+    //    videoTitleElement.innerText = videoTitle;
+    //    //videoDurationElement.innerText = videoDuration;
+    //    videoDescriptionElement.innerText = videoDescription;
+
+
+    //    videoContainer.style.display = "block";
+    //    descriptionContainer.style.display = "block";
+
+
+    //    //// Toggle the visibility of the video container and description container
+    //    //if (videoContainer.style.display === "none" || videoContainer.style.display === "") {
+    //    //    videoContainer.style.display = "block";
+    //    //    descriptionContainer.style.display = "block";
+    //    //} else {
+    //    //    videoContainer.style.display = "none";
+    //    //    descriptionContainer.style.display = "none";
+    //    //}
+    //}
+
+</script>
+<script>
+
+    $(document).ready(function () {
+        //$('#Nav').css('display', 'none');
+    });
+</script>
+<script>
+
+    // منع عمليات النسخ واللصق
+    document.addEventListener('copy', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('cut', function (e) {
+        e.preventDefault();
+    });
+
+    document.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
+
+    // منع زر الفأرة الأيمن
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+
+    // عند فتح صفحة الويب
+    window.onload = function () {
+        document.addEventListener('contextmenu', function (e) {
+            // منع زر الفأرة الأيمن
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            // منع Ctrl + Shift + I (فتح أدوات المطور)
+            if ((e.ctrlKey && e.shiftKey && e.keyCode == 73) || (e.ctrlKey && e.shiftKey && e.key == 'C')) {
+                e.preventDefault();
+            }
+        });
+    };
+
+
+
+    // منع فتح أدوات المطور
+    document.onkeydown = function (e) {
+        if (event.keyCode == 123) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+            return false;
+        }
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<style>
 
 
     .panel {
@@ -257,7 +854,6 @@
         button:hover {
             background-color: #0056b3;
         }
-
 </style>
 
 <div class="row">
@@ -286,23 +882,23 @@
 
             </div>
         </div>
-        @if (Model.VLessonCardsSubject_Collection.Count() > 0)
+        @@if (Model.VLessonCardsSubject_Collection.Count() > 0)
         {
             <div class="container D1">
-                @foreach (var item in Model.VLessonCardsSubject_Collection)
+                @@foreach (var item in Model.VLessonCardsSubject_Collection)
                 {
                     <div class="panel">
 
                         <div class="ring">
                             <div class="card card1"></div>
                             <div class="border">
-                                <p class="title">@item.Description</p>
+                                <p class="title">@@item.Description</p>
                                 <div class="slide">
-                                    <h6 class="para">@item.Name</h6>
-                                    @foreach (var item2 in Model.TeacherInfo_Collection.Select(r => new { r.FullName, r.Id }).Where(r => r.Id == item.TeacherId).Distinct())
+                                    <h6 class="para">@@item.Name</h6>
+                                    @@foreach (var item2 in Model.TeacherInfo_Collection.Select(r => new { r.FullName, r.Id }).Where(r => r.Id == item.TeacherId).Distinct())
                                     {
                                         <div class="line">
-                                            <h6 class="para">@item2.FullName</h6>
+                                            <h6 class="para">@@item2.FullName</h6>
 
                                         </div>
                                     }
@@ -311,10 +907,10 @@
                                     </div>
 
                                     <!--<div class="line">
-                                        <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>-->
-                                    @*<h6 class="para">@item2.FullName</h6>*@
-                                    <!--</div>-->
-                                </div>
+                                        <h6 class="para">@@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>->-->
+<!--@*<h6 class="para">@item2.FullName</h6>*@-->
+<!--</div>-->
+<!--</div>
                             </div>
 
                         </div>
@@ -332,10 +928,9 @@
             </div>
         }
     </div>
-</div>
-
+</div>-->
 <!-- JavaScript code for SweetAlert -->
-<script>
+<!--<script>
 
 
 
@@ -366,4 +961,4 @@
             }
         });
     }
-</script>
+</script>-->

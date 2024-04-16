@@ -22,6 +22,7 @@ namespace LMS_Learning_Management_System.Models
         public bool Classes_Status { get; set; }
  
         public int Semester { get; set; }
+        public bool CardStatus { get; set; }
 
 
 

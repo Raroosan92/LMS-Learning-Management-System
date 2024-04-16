@@ -1,0 +1,817 @@
+﻿Get subjects
+
+@model LMS_Learning_Management_System.Models.VEnrollmentStdDetail
+
+@{
+    ViewData["Title"] = "عرض المواد المسجلة";
+}
+<style>
+    body section {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+        body section .row {
+            align-items: center;
+            height: 100vh;
+        }
+
+    .card {
+        position: relative;
+        height: 260px;
+        width: 100%;
+        margin: 10px 0;
+        transition: ease all 2.3s;
+        perspective: 1200px;
+    }
+
+        .card:hover .cover {
+            transform: rotateX(0deg) rotateY(-180deg);
+        }
+
+            .card:hover .cover:before {
+                transform: translateZ(30px);
+            }
+
+            .card:hover .cover:after {
+                background-color: black;
+            }
+
+            .card:hover .cover h1 {
+                transform: translateZ(100px);
+            }
+
+            .card:hover .cover .price {
+                transform: translateZ(60px);
+            }
+
+            .card:hover .cover a {
+                transform: translateZ(-60px) rotatey(-180deg);
+            }
+
+        .card .cover {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: ease all 2.3s;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+            .card .cover:before {
+                content: "";
+                position: absolute;
+                border: 5px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                z-index: 2;
+                transition: ease all 2.3s;
+                transform-style: preserve-3d;
+                transform: translateZ(0px);
+            }
+
+            .card .cover:after {
+                content: "";
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                right: 0px;
+                bottom: 0px;
+                z-index: 2;
+                transition: ease all 1.3s;
+                background: rgba(0, 0, 0, 0.4);
+            }
+
+            .card .cover.item-a {
+                background-image: url("../Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg");
+                background-size: 100% 100%;
+                /*background-image: url("https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80");*/
+            }
+
+            .card .cover.item-b {
+                background-image: url("https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&fit=crop&w=600&q=80");
+            }
+
+            .card .cover.item-c {
+                background-image: url("https://images.unsplash.com/photo-1525945518069-b924046d1385?auto=format&fit=crop&w=600&q=80");
+            }
+
+            .card .cover h1 {
+                font-weight: 600;
+                position: absolute;
+                bottom: 55px;
+                left: 50px;
+                color: white !important;
+                transform-style: preserve-3d;
+                transition: ease all 2.3s;
+                z-index: 3;
+                font-size: 2em;
+                transform: translateZ(0px);
+            }
+
+            .card .cover .price {
+                font-weight: 200;
+                position: absolute;
+                top: 55px;
+                right: 50px;
+                color: white !important;
+                transform-style: preserve-3d;
+                transition: ease all 2.3s;
+                z-index: 4;
+                font-size: 2em;
+                transform: translateZ(0px);
+            }
+
+        .card .card-back {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: #0b0f08;
+            transform-style: preserve-3d;
+            transition: ease all 2.3s;
+            transform: translateZ(-1px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+            .card .card-back a {
+                transform-style: preserve-3d;
+                transition: ease transform 2.3s, ease background 0.5s;
+                transform: translateZ(-1px) rotatey(-180deg);
+                background: transparent;
+                border: 1px solid white;
+                font-weight: 200;
+                font-size: 1.3em;
+                color: white !important;
+                padding: 14px 32px;
+                outline: none;
+                text-decoration: none;
+            }
+
+                .card .card-back a:hover {
+                    background-color: white;
+                    color: #0b0f08 !important;
+                }
+</style>
+<section>
+    <div class="row">
+        
+            @if (Model.VEnrollmentStdDetailt_Collection.Count() > 0)
+            {
+                @foreach (var item in Model.VEnrollmentStdDetailt_Collection)
+                {
+
+                    if (item.TeacherId != null)
+                    {
+
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+                                <div class="cover item-a">
+                                    <h1>@item.Name</h1>
+                                    @{var ss = 0;}
+                                    @if (@item.Semester == 1)
+                                    {
+                                        <span class="price">الفصل الاول</span>
+                                        ss = 1;
+                                    }
+                                    else
+                                    {
+                                        <span class="price">الفصل الثاني</span>
+                                        ss = 2;
+                                    }                                    @*<div class="card-back">
+            <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
+        </div>*@
+
+                                    <div class="card-back">
+                                    <form id="@item.TeacherId+@ss" action="/Academy/Lessons/_PartialShowLessons" method="post">
+                                            <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
+                                            <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
+                                            <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
+                                            <input type="hidden" id="semester" name="semester" value="@ss" />
+                                        <input type="hidden" id="CardNo" name="CardNo" value="@item.CardNo" />
+
+                                        </form>
+                                        <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>
+
+                                        @*<a href="_PartialShowLessons/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+                                <div class="cover item-b">
+                                    <h1>@item.Name</h1>
+                                    @if (@item.Semester == 1)
+                                    {
+                                        <span class="price">الفصل الاول</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="price">الفصل الثاني</span>
+
+                                    }
+                                    <div class="card-back">
+
+                                        <a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@item.SubjectId,@item.ClassId,@item.CardNo,@item.Semester)">
+                                            اختر المعلم
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="teacherModalLabel">اختيار المعلم</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style=" background: transparent; color: white; border: transparent; font-size: 27px; }">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- DropDownList -->
+                                        <label for="selectedItem">اختر المعلم:</label>
+                                        <select id="TeacherID" class="form-control"></select>
+
+                                        @*@Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })*@
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                        <button type="button" class="btn btn-primary" id="saveTeacherSelection">حفظ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                }
+            }
+            else
+            {
+                <h2>لا يوجد دروس مسجلة</h2>
+                
+            }
+
+    
+  
+    </div>
+</section>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+    function openLessonsForm(TeacherId) {
+        document.getElementById(TeacherId).submit();
+    }
+
+    var Subject_id;
+    var Class_id;
+    var Card_No;
+    var semester;
+    function openTeacherModal(modalId, SubjectId, ClassId, CardNo, Semester) {
+        Subject_id = "";
+        Class_id = "";
+        Card_No = "";
+        semester = "";
+        // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
+        $("#" + modalId).modal("show");
+        Subject_id = SubjectId;
+        Class_id = ClassId;
+        Card_No = CardNo;
+        semester = Semester;
+        // جلب القيمة المحددة في dropdown1 (المواد)
+        var selectedSubjectId = SubjectId;
+        var selectedClassId = ClassId;
+        $.ajax({
+            url: '@Url.Action("GetTeachersBySubject", "Lessons")',
+            type: "POST",
+            data: { "subjectId": selectedSubjectId, "classId": selectedClassId, "Semester": semester },
+            success: function (response) {
+                // قم بحذف الخيارات الحالية في الـ DropDownList
+                $('#TeacherID').empty();
+
+                // إضافة الخيار "-- اختر --" أو أي قيمة أخرى تناسب احتياجاتك
+                $('#TeacherID').append('<option value="">-- اختر --</option>');
+
+                // إضافة الخيارات الجديدة بناءً على البيانات التي تم جلبها من الخادم
+                $.each(response, function (index, teacher) {
+                    if (teacher.id.length > 0) {
+
+                        $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
+                    }
+                    else {
+                        alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
+
+                    }
+                });
+            },
+            error: function (request, status, error) {
+                alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
+            }
+        });
+
+
+
+
+    }
+    $(document).ready(function () {
+
+        // كود jQuery للقيام بشيء ما عندما يتم اختيار المعلم
+        // يمكنك استخدام AJAX لإرسال القيمة إلى الخادم هنا
+
+        // على سبيل المثال:
+        $("#saveTeacherSelection").on("click", function () {
+
+            var selectedTeacher = $("#TeacherID").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
+            if (selectedTeacher == "") {
+                alert("يرجى اختيار معلم.");
+                return;
+            }
+            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
+         var url = '@Url.Action("AssignTeacher", "Lessons")'; // Get the URL using Url.Action
+
+                // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
+                $.post(url, { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
+                    function (data) {
+                    // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
+                    alert(data.message);
+                    // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                    window.location.reload();
+                });
+
+            // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك
+        });
+
+
+
+
+
+        //$('.load-lessons').on('click', function (e) {
+        //    e.preventDefault();
+        //    var classId = $(this).data('classid');
+        //    var subjectId = $(this).data('subjectid');
+        //    var teacherId = $(this).data('teacherid');
+        //    // إجراء طلب AJAX لتحميل الصفحة الأخرى
+        //    $.ajax({
+        //        url: '/Lessons/_PartialShowLessons/',
+        //        method: 'GET',
+        //        data: { "ClassId": classId, "SubjectId": subjectId, "TeacherId": teacherId },
+        //        success: function (result) {
+
+        //                var urlWithParams = '/Lessons/_PartialShowLessons';
+        //                //alert(urlWithParams)
+        //                window.location = window.location.protocol + urlWithParams;
+
+        //        },
+        //        error: function (xhr, status, error) {
+        //            var errorMessage = "حدث خطأ أثناء تحميل الصفحة.\n";
+        //            errorMessage += "الحالة: " + status + "\n";
+        //            errorMessage += "خطأ: " + error + "\n";
+        //            if (xhr.responseJSON && xhr.responseJSON.error) {
+        //                alert(xhr.responseJSON.error);
+        //            } else {
+        //                alert("حدث خطأ غير متوقع أثناء تحميل الصفحة.");
+        //            }
+        //            alert(errorMessage);
+        //        }
+
+        //    });
+        //});
+
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+lessons
+
+@model LMS_Learning_Management_System.Models.VLessonCardsSubject
+
+@{
+    ViewData["Title"] = "عرض الدروس";
+}
+
+<style>
+
+
+    .panel {
+        height: 270px;
+        width: 190px;
+        position: relative;
+        margin: 0 0 0 2%;
+    }
+
+        .panel:hover .card {
+            filter: blur(1.5px);
+        }
+
+        .panel:hover .card1 {
+            background-size: 215% 135%;
+        }
+
+        .panel:hover .card2 {
+            background-size: 115% 115%;
+        }
+
+        .panel:hover .card3 {
+            background-size: 155% 115%;
+        }
+
+        .panel:hover .title {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+
+
+        .panel:hover .slide {
+            bottom: 0px;
+        }
+
+    /* .panel:hover .ring:before,
+            .panel:hover .ring:after {
+                transform: translateX(-50%) translateY(-50%) rotate(310deg);
+            }*/
+
+    .ring,
+    .card,
+    .border,
+    .slide,
+    .line {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ring {
+        color: #fffbf1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        font-size: 170px;
+    }
+
+    .card {
+        background: #f0ead6;
+        position: relative;
+        transition: all 1s;
+        height: 270px;
+        width: 190px;
+        border: 1px solid white;
+    }
+
+    .card1 {
+        background-image: url("../Images/1662031872916075092-13382.jpg");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .card2 {
+        background-image: url("https://assets.codepen.io/489403/belize.jpg");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .card3 {
+        background-image: url("https://assets.codepen.io/489403/egypt.jpg");
+        background-repeat: no-repeat;
+        background-size: 140% 100%;
+    }
+
+    .ring:before,
+    .ring:after {
+        content: "";
+        padding: 0.7em 0.4em;
+        position: absolute;
+        left: 50%;
+        width: 115%;
+        top: 50%;
+        display: block;
+        /*border: 5px solid #50c9c3;*/
+        border-radius: 50%;
+        transition: transform 1s;
+        transform: translateX(-50%) translateY(-50%) rotate(50deg);
+    }
+
+    .ring:before {
+        border-color: #ebebeb #ebebeb rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+        z-index: -1;
+    }
+
+    .ring:after {
+        border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #ebebeb #ebebeb;
+    }
+
+    p {
+        text-align: center;
+        position: absolute;
+        font-family: "Playfair Display";
+    }
+
+    .title {
+        font-size: 36px;
+        font-weight: 700;
+        transition: all 1s;
+        top: 90px;
+        color: black;
+        backdrop-filter: blur(17px);
+    }
+
+    .para {
+        bottom: 0;
+        font-size: 16px;
+        font-family: "Raleway";
+        padding: 20px;
+        margin: 0;
+        text-align: center;
+    }
+
+    .border {
+        position: absolute;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        height: 260px;
+        width: 180px;
+        transition: border 1s;
+        overflow: hidden;
+    }
+
+    .slide {
+        height: 260px;
+        width: 180px;
+        position: absolute;
+        border: 1px solid black;
+        bottom: -270px;
+        background: rgba(0, 0, 0, 0.5);
+        transition: bottom 1s;
+        flex-direction: column;
+    }
+
+    .fa-plane {
+        font-size: 16px;
+    }
+
+    .D1 {
+        display: flex
+    }
+
+    @@media (min-width: 768px) and (max-width: 1000px) {
+        .D1 {
+            display: flex
+        }
+    }
+
+    @@media (min-width: 1001px) and (max-width: 1199px) {
+        .D1 {
+            display: flex
+        }
+    }
+
+    @@media (min-width: 100px) and (max-width: 767px) {
+        .D1 {
+            display: inline-grid;
+            place-items: center;
+        }
+
+        .panel {
+            height: 270px;
+            width: 190px;
+            position: relative;
+            margin: 0 0 7% 0;
+        }
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #ffffff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 100%;
+        width: 60%;
+        text-align: center;
+    }
+
+    @@media only screen and (max-width: 600px) {
+        .popup {
+            display: none;
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 100%;
+            width: 89%;
+            text-align: center;
+            z-index: 200;
+        }
+    }
+
+    .popup-content {
+        padding: 20px;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #aaa;
+    }
+
+        .close:hover {
+            color: #333;
+        }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+</style>
+
+<div class="row">
+    <div></div>
+    <div class="col-12">
+        <div class="row">
+            <h2>برنامج منصة دربك</h2>
+            <div>
+
+                <button class="btn btn-primary" onclick="showDownloadAlert()">تحميل التطبيق</button>
+                <button class="btn btn-warning" id="openPopupButton" onclick="openPopup()">فيديو توضيحي</button>
+                <div id="popup" class="popup">
+                    <h3>فيديو توضيحي لعملية تنزيل الملف</h3>
+                    <br />
+                    <div class="popup-content">
+                        <span class="close" onclick="closePopup()">&times;</span>
+                        <video id="video" width="100%" controlsList="nodownload">
+                            <source src="~/images/tutorial.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+        @if (Model.VLessonCardsSubject_Collection.Count() > 0)
+        {
+            <div class="container D1">
+                @foreach (var item in Model.VLessonCardsSubject_Collection)
+                {
+                    <div class="panel">
+
+                        <div class="ring">
+                            <div class="card card1"></div>
+                            <div class="border">
+                                <p class="title">@item.Description</p>
+                                <div class="slide">
+                                    <h6 class="para">@item.Name</h6>
+                                    @foreach (var item2 in Model.TeacherInfo_Collection.Select(r => new { r.FullName, r.Id }).Where(r => r.Id == item.TeacherId).Distinct())
+                                    {
+                                        <div class="line">
+                                            <h6 class="para">@item2.FullName</h6>
+
+                                        </div>
+                                    }
+                                    <div class="line">
+                                        <h6 class="para">يرجى الانتقال الى تطبيق المنصة لمشاهدة الدروس</h6>
+                                    </div>
+
+                                    <!--<div class="line">
+                                        <h6 class="para">@DateTime.Parse(item.CreatedDate.ToString()).ToString("dd-MM-yyyy")</h6> <i class="" aria-hidden="true"></i>-->
+                                    @*<h6 class="para">@item2.FullName</h6>*@
+                                    <!--</div>-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                }
+            </div>
+        }
+
+        else
+        {
+            <div class="container" style="text-align: -webkit-center; vertical-align: middle; align-items: center; align-content: center; display: grid;">
+                <h4>لا يوجد دروس مسجلة حاليا</h4>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- JavaScript code for SweetAlert -->
+<script>
+
+
+
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+        document.getElementById("video").play(); // Autoplay video
+    }
+
+
+    function closePopup() {
+        var video = document.getElementById("video");
+        video.pause(); // Pause video
+        document.getElementById("popup").style.display = "none";
+    }
+    function showDownloadAlert() {
+        Swal.fire({
+            title: 'تحميل التطبيق',
+            text: 'يُرجى تحميل التطبيق لمشاهدة الدروس',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'تحميل الآن',
+            cancelButtonText: 'لاحقًا',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Add the download link or redirect to the app store
+                // You can customize this based on your app download location
+                window.location.href = '/Academy/App_exe/DarbakJo.msi';
+            }
+        });
+    }
+</script>

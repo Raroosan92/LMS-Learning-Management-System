@@ -145,7 +145,7 @@ namespace LMS_Learning_Management_System.Controllers
                     else
                     {
 
-                        ActiveSessions = GetActiveSession(userdetails.Id,login.clientIpAddress);
+                        ActiveSessions = await GetActiveSessionAsync(userdetails.Id,login.clientIpAddress);
                     }
 
                     if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
@@ -322,7 +322,7 @@ namespace LMS_Learning_Management_System.Controllers
                 return null;
             }
         }
-        public string GetActiveSession(string userId, string clientIpAddress)
+        public async Task<string> GetActiveSessionAsync(string userId, string clientIpAddress)
         {
             try
             {
@@ -330,7 +330,9 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                 var username = _context.ActiveSessions.Where(m => m.UserId == userId).SingleOrDefault();
-
+                var countUsername = await _context.ActiveSessions
+                    .Where(m => m.UserId == userId)
+                    .CountAsync();
                 if (username != null)
                 {
                     string computerName = Environment.MachineName;

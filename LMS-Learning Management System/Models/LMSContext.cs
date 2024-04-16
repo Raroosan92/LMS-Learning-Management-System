@@ -81,6 +81,7 @@ namespace LMS_Learning_Management_System.Models
 
                 entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
                 entity.Property(e => e.Semester).HasColumnName("Semester");
+                entity.Property(e => e.CardStatus).HasColumnName("Card_Status");
 
                 entity.Property(e => e.UserId)
                     .IsRequired()
