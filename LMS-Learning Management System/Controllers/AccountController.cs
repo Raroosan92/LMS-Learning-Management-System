@@ -137,7 +137,7 @@ namespace LMS_Learning_Management_System.Controllers
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
                     var roles = await userManager.GetRolesAsync(appUser);
 
-                    if (roles[0].ToLower()=="admin")
+                    if (roles[0].ToLower()=="admin" || roles[0].ToLower() == "teacher")
                     {
                         ActiveSessions = "Succeeded";
 

@@ -15,7 +15,7 @@
 
     <label for="endDate">تاريخ النهاية:</label>
     <input asp-for="endDate" type="date" id="endDate" />
-    
+
     <label for="teacherName">اسم المعلم:</label>
     <select asp-for="teacherName" id="teacherName" asp-items="ViewBag.TeacherId">
         <option value="">-- أختر --</option>
@@ -195,7 +195,7 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
         });
-   
+
 
         // تحديد الكل
         $("#selectAllCheckbox").on("change", function () {
@@ -209,34 +209,40 @@
 
         // زر تسليم
         $("#deliverSelectedRows").on("click", function () {
-            // جمع الصفوف المحددة
-            var selectedRows = $(".select-row-checkbox:checked");
 
-            // التحقق من وجود صفوف محددة
-            if (selectedRows.length === 0) {
-                alert("الرجاء تحديد صفوف قبل النقر على زر 'تسليم'");
-                return;
+            if (confirm("هل انت متأكد من البيانات المحددة بالاسفل؟")) {
+                // جمع الصفوف المحددة
+                var selectedRows = $(".select-row-checkbox:checked");
+
+                // التحقق من وجود صفوف محددة
+                if (selectedRows.length === 0) {
+                    alert("الرجاء تحديد صفوف قبل النقر على زر 'تسليم'");
+                    return;
+                }
+
+                // قم بتنفيذ الإجراء المناسب لتسليم الصفوف المحددة
+                var cardno = selectedRows.map(function () {
+                    return $(this).closest("tr").find("td:first-child").text(); // تحديد العنصر الذي يمثل الهوية
+                }).get();
+                var amount = selectedRows.map(function () {
+                    return $(this).closest("tr").find("td:eq(3)").text(); // تحديد العنصر amount
+                }).get();
+                var CardSer = selectedRows.map(function () {
+                    return $(this).closest("tr").find("td:eq(11)").text(); // تحديد العنصر الذي يمثل الهوية
+                }).get();
+                // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال طلب AJAX باستخدام $.post
+                $.post("/Academy/TeacherCardsSales/Pay", { cardno: cardno, CardSer: CardSer, amount: amount }, function (data) {
+                    // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
+                    //alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+
+                    window.location.reload();
+                });
+
+                // إذا كنت تستخدم ASP.NET MVC، يمكنك إرسال البيانات باستخدام $.ajax مباشرة وتكوين الطلب حسب احتياجاتك
+
+            } else {
+                return false;
             }
-
-            // قم بتنفيذ الإجراء المناسب لتسليم الصفوف المحددة
-            var cardno = selectedRows.map(function () {
-                return $(this).closest("tr").find("td:first-child").text(); // تحديد العنصر الذي يمثل الهوية
-            }).get();
-            var amount = selectedRows.map(function () {
-                return $(this).closest("tr").find("td:eq(3)").text(); // تحديد العنصر amount
-            }).get();
-            var CardSer = selectedRows.map(function () {
-                return $(this).closest("tr").find("td:eq(11)").text(); // تحديد العنصر الذي يمثل الهوية
-            }).get();
-            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال طلب AJAX باستخدام $.post
-            $.post("/TeacherCardsSales/Pay", { cardno: cardno, CardSer: CardSer, amount: amount }, function (data) {
-                // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                //alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
-
-                window.location.reload();
-            });
-
-            // إذا كنت تستخدم ASP.NET MVC، يمكنك إرسال البيانات باستخدام $.ajax مباشرة وتكوين الطلب حسب احتياجاتك
         });
 
         $("#searchByDateRange").on("click", function () {
@@ -250,7 +256,7 @@
             }
 
             // قم بتنفيذ البحث بناءً على نطاق التاريخ
-            $.post("/TeacherCardsSales/SearchByDateRange", { startDate: startDateValue, endDate: endDateValue }, function (data) {
+            $.post("/Academy/TeacherCardsSales/SearchByDateRange", { startDate: startDateValue, endDate: endDateValue }, function (data) {
                 // تحديث جدول البيانات بناءً على النتائج المسترجعة
                 $("#dataTable tbody").empty(); // حذف البيانات الحالية
                 $.each(data, function (index, item) {

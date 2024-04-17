@@ -534,16 +534,25 @@ namespace LMS_Learning_Management_System.Controllers
             }
             else
             {
-                var teacher_Lessons = _context.TeacherEnrollments.Where(r => r.UserId == User.Identity.GetUserId()).Distinct().ToList();
-                for (int i = 0; i < teacher_Lessons.Count; i++)
-                {
-                    var x = _context.Lessons.Where(r => r.SubjectId == teacher_Lessons[i].SubjectId && r.ClassId == teacher_Lessons[i].ClassId).OrderByDescending(r => r.Id).FirstOrDefault();
-                    if (x != null)
-                    {
-                        stList.Add(x);
-                    }
+                var teacher_Lessons = _context.TeacherEnrollments
+    .Where(r => r.UserId == User.Identity.GetUserId())
+    .Distinct()
+    .ToList();
 
+                foreach (var enrollment in teacher_Lessons)
+                {
+                    var lessons = _context.Lessons
+                        .Where(r => r.SubjectId == enrollment.SubjectId && r.ClassId == enrollment.ClassId)
+                        .OrderByDescending(r => r.Id)
+                        .ToList();
+
+                    // Assuming you want to add each lesson to stList
+                    foreach (var lesson in lessons)
+                    {
+                        stList.Add(lesson);
+                    }
                 }
+
             }
             for (int i = 0; i < stList.Count; i++)
             {
