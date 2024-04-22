@@ -210,24 +210,32 @@
 
             if (confirm("هل انت متأكد من رقم الهاتف الخاص بك")) {
                 if (role.toLocaleLowerCase() == "admin") {
-                    if (Role == '-- أختر --') {
+                    if (Role == '-- أختر --')
+                    {
                         alert("يرجى اختيار نوع المستخدم (الصلاحية)");
                         return false;
-                    } else if (Subject == "" || Subject == '-- أختر --') {
+                    } 
+                    else if (Role.toLocaleLowerCase() == "teacher" && (Subject == "" || Subject == '-- أختر --')) {
                         alert("يرجى اختيار المواد الخاصة بالمعلم");
                         return false;
-                    } else if (Class == "" || Class == '-- أختر --') {
+                    } else if (Role.toLocaleLowerCase() == "teacher" && (Class == "" || Class == '-- أختر --'))
+                    {
                         alert("يرجى اختيار الصفوف الخاصة بالمعلم");
                         return false;
-                    } else {
+                    } 
+                    else
+                    {
                         alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
                         return true;
                     }
-                } else {
-                    if (Role == '-- أختر --') {
+                }
+                    else {
+                    if (Role == '-- أختر --') 
+                    {
                         alert("يرجى اختيار نوع المستخدم (الصلاحية)");
                         return false;
-                    } else {
+                    } 
+                    else {
                         alert('تم تأكيد رقم الهاتف، يمكن المتابعة بالتسجيل.');
                         return true;
                     }

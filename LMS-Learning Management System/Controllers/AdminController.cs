@@ -119,7 +119,8 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 else
                 {
-
+                    try
+                    {
                     if (uploadedPhoto.Length > 0)
                     {
                         var fileExtension = Path.GetExtension(uploadedPhoto.FileName);
@@ -144,6 +145,13 @@ namespace LMS_Learning_Management_System.Controllers
 
                         PhotoPath = "/Photos/" + uniqueFileName + fileExtension;
 
+                    }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        
                     }
 
 

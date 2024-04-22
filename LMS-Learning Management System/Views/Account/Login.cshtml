@@ -276,9 +276,22 @@
         color: #fff;
         border: none;
     }
+
+    .bg-white {
+        --bs-bg-opacity: 1;
+        background-color: rgb(255 255 255 / 34%) !important;
+    }
 </style>
 
-
+<div class="col-md-12">
+    <div class="d-flex justify-content-between align-items-center breaking-news bg-white">
+        <div class="d-flex flex-row flex-grow-1 flex-fill justify-content-center bg-danger py-2 text-white px-1 news"><span class="d-flex align-items-center">&nbsp;تحذير!!</span></div>
+        <marquee class="news-scroll" behavior="scroll" direction="right" onmouseover="this.stop();" onmouseout="this.start();">
+            <p>نرجو منك الدخول من نفس الجهاز في كل مرة، حيث أنه في حال تغيّر الجهاز، قد لا تتمكن من الدخول.</p>
+        </marquee>
+        <div class="d-flex flex-row flex-grow-1 flex-fill justify-content-center bg-danger py-2 text-white px-1 news"><span class="d-flex align-items-center">&nbsp;تحذير!!</span></div>
+    </div>
+</div>
 <!--dust particel-->
 <ul class="circles">
     <li></li>
@@ -348,37 +361,106 @@
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
 </script>*@
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+<script>
+    // Function to generate a device fingerprint
+    function generateDeviceFingerprint() {
+        var fingerprint = '';
+        // Collect device-specific information
+        var platform = navigator.platform;
+        var screenResolution = screen.width + 'x' + screen.height;
+        var hardwareConcurrency = navigator.hardwareConcurrency || 'N/A'; // Number of logical processor cores available
+        var deviceMemory = navigator.deviceMemory || 'N/A'; // Amount of device memory in gigabytes
+        // Concatenate the collected information
+        fingerprint = platform + screenResolution + hardwareConcurrency + deviceMemory;
+        // Hash the fingerprint to make it less identifiable
+        fingerprint = hashString(fingerprint); // You'll need a hashing function like SHA-256
+        return fingerprint;
+    }
 
+    // Function to hash a string (SHA-256 example)
+    function hashString(str) {
+        var hash = 0, i, chr;
+        if (str.length === 0) return hash;
+        for (i = 0; i < str.length; i++) {
+            chr = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
 
-
-
+    // Generate the device fingerprint
+    var deviceFingerprint = generateDeviceFingerprint();
+    //alert("Device Fingerprint: " + deviceFingerprint); // Display device fingerprint
+    $('#clientIpAddress2').val(deviceFingerprint);
+</script>
 
 <script>
-    /* Add "https://api.ipify.org?format=json" to
-    get the IP Address of user*/
-    $(document).ready(() => {
-        $.getJSON("https://api.ipify.org?format=json",
-            function (data) {
-                // Displayin IP address on screen
-                $('#clientIpAddress2').val(data.ip);
 
-                // var deviceId = generateUUID(); // Generate a unique identifier for the device
-                // $('#clientIpAddress2').val(deviceId);
-                // alert(deviceId);
+        // var fingerprint = '';
 
-            })
-    });
+        // // Collect various browser and device information
+        // var userAgent = navigator.userAgent;
+        // var language = navigator.language;
+        // var platform = navigator.platform;
+        // var plugins = Array.from(navigator.plugins).map(plugin => plugin.name).join(',');
+        // var screenResolution = screen.width + 'x' + screen.height;
+        // var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        // // Concatenate the collected information
+        // fingerprint = userAgent + language + platform + plugins + screenResolution + timeZone;
+
+        // // Hash the fingerprint to make it less identifiable
+        // alert(fingerprint);
 
 
-    function generateUUID() {
-        // Implementation of UUID generation goes here
-        // Here's a simple example using Math.random():
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0,
-                v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
+
+    // // Generate fingerprint using FingerprintJS2
+    // function generateFingerprint() {
+    //     return new Promise((resolve, reject) => {
+    //         Fingerprint2.get((components) => {
+    //             const fingerprint = Fingerprint2.x64hash128(components.map(pair => pair.value).join(), 31);
+    //             resolve(fingerprint);
+    //         });
+    //     });
+    // }
+
+    // // Call the function to generate fingerprint
+    // generateFingerprint().then((fingerprint) => {
+    //     // Use the fingerprint as needed
+    //     alert('Device fingerprint (excluding browser): ' + fingerprint);
+    //     console.log('Device fingerprint (excluding browser):', fingerprint);
+    // });
+
+
+
+
+    // /* Add "https://api.ipify.org?format=json" to
+    // get the IP Address of user*/
+    // $(document).ready(() => {
+    //     $.getJSON("https://api.ipify.org?format=json",
+    //         function (data) {
+    //             // Displayin IP address on screen
+    //             $('#clientIpAddress2').val(data.ip);
+
+    //             // var deviceId = generateUUID(); // Generate a unique identifier for the device
+    //             // $('#clientIpAddress2').val(deviceId);
+    //             // alert(deviceId);
+
+    //         })
+    // });
+
+
+    // function generateUUID() {
+    //     // Implementation of UUID generation goes here
+    //     // Here's a simple example using Math.random():
+    //     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    //         var r = Math.random() * 16 | 0,
+    //             v = c == 'x' ? r : (r & 0x3 | 0x8);
+    //         return v.toString(16);
+    //     });
+    // }
 </script>
 
 <script>
