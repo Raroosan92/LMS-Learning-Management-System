@@ -56,7 +56,7 @@ namespace LMS_Learning_Management_System.Controllers
         // GET: Cards
         public async Task<IActionResult> Index()
         {
-            GenerateAndInsertCards();
+            //GenerateAndInsertCards();
             GetUserRole();
             return View();
             // var lMSContext = _context.Cards.Include(c => c.User);
@@ -385,7 +385,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                         foreach (var item in cardsSubjects)
                         {
-                            Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester).FirstOrDefault<Enrollment>();
+                            Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester && x.CardNo==item.CardNo).FirstOrDefault<Enrollment>();
                             if (Enrollments != null)
                             {
 
