@@ -1,12 +1,15 @@
 ﻿using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
@@ -22,15 +25,17 @@ namespace LMS_Learning_Management_System.Controllers
         string Month;
         DateTime Jor;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private IPasswordHasher<AppUser> passwordHasher;
 
         public LMSContext _context = new LMSContext();
         public AppIdentityDbContext _contextUsers = new AppIdentityDbContext();
 
-        public AdminController(Microsoft.AspNetCore.Identity.UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHash, AppIdentityDbContext iden)
+        public AdminController(Microsoft.AspNetCore.Identity.UserManager<AppUser> usrMgr, IPasswordHasher<AppUser> passwordHash, AppIdentityDbContext iden, IWebHostEnvironment hostingEnvironment)
         {
             userManager = usrMgr;
             passwordHasher = passwordHash;
+            _hostingEnvironment = hostingEnvironment;
             _contextUsers = iden;
 
         }
@@ -75,11 +80,14 @@ namespace LMS_Learning_Management_System.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create(User user, IFormFile uploadedPhoto)
         {
             if (ModelState.IsValid)
             {
+                var PhotoPath = "";
+              
                 string email;
+                string Uname;
                 try
                 {
                     email = userManager.Users.Where(c => c.PhoneNumber == user.PhoneNumber).FirstOrDefault().Email;
@@ -89,6 +97,21 @@ namespace LMS_Learning_Management_System.Controllers
                 {
                     email = null;
                 }
+                
+                try
+                {
+                    Uname = userManager.Users.Where(c => c.FullName.ToLower() == user.FullName.ToLower()).FirstOrDefault().FullName;
+
+                }
+                catch (Exception)
+                {
+                    Uname = null;
+                }
+
+                if (Uname != null)
+                {
+                    ModelState.AddModelError("", "اسم المستخدم تم استخدامه مسبقاً");
+                }
 
                 if (email != null)
                 {
@@ -96,6 +119,32 @@ namespace LMS_Learning_Management_System.Controllers
                 }
                 else
                 {
+
+                    if (uploadedPhoto.Length > 0)
+                    {
+                        var fileExtension = Path.GetExtension(uploadedPhoto.FileName);
+                        var fileName = user.PhoneNumber;
+
+                        // Generate a unique identifier for the new file name
+                        //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
+                        var uniqueFileName = fileName;
+
+                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Photos", uniqueFileName + fileExtension);
+
+                        // Check if the "ProductsImageuploads" folder exists, and create it if not
+                        if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                        }
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await uploadedPhoto.CopyToAsync(stream);
+                        }
+
+                        PhotoPath = "/Photos/" + uniqueFileName + fileExtension;
+
+                    }
 
 
                     GetTime();
@@ -119,6 +168,7 @@ namespace LMS_Learning_Management_System.Controllers
                         CreatedDateTime = Jor,
                         FullName = user.FullName,
                         Country = user.Country,
+                        Photo = PhotoPath,
 
                         UserTypeDesc = UserTypeDesc,
                         UserType = UserType,
@@ -388,7 +438,7 @@ namespace LMS_Learning_Management_System.Controllers
         }
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<IActionResult> Update(string id, string email, string FullName, string PhoneNumber, string password, List<string> SelectedClasses, List<string> SelectedSubjectes)
+        public async Task<IActionResult> Update(string id, string email, string FullName, string PhoneNumber, string password, List<string> SelectedClasses, List<string> SelectedSubjectes, IFormFile uploadedPhoto)
         {
             AppUser user = await userManager.FindByIdAsync(id);
             if (user != null)
@@ -425,6 +475,34 @@ namespace LMS_Learning_Management_System.Controllers
 
                 //if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
                 //{
+                var PhotoPath = "";
+                if (uploadedPhoto.Length > 0)
+                {
+                    var fileExtension = Path.GetExtension(uploadedPhoto.FileName);
+                    var fileName = user.PhoneNumber;
+
+                    // Generate a unique identifier for the new file name
+                    //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
+                    var uniqueFileName = fileName;
+
+                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Photos", uniqueFileName+fileExtension);
+
+                    // Check if the "ProductsImageuploads" folder exists, and create it if not
+                    if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await uploadedPhoto.CopyToAsync(stream);
+                    }
+
+                    PhotoPath = "/Photos/" + uniqueFileName+ fileExtension;
+
+                }
+                user.Photo = PhotoPath;
+
                 IdentityResult result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -440,6 +518,7 @@ namespace LMS_Learning_Management_System.Controllers
                     //    enrollment.SelectedSubjectes = SelectedSubjectes;
                     //}
 
+                   
 
 
                     try

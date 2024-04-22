@@ -91,7 +91,7 @@
             }
 
             .card .cover.item-a {
-                background-image: url("../Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg ");
+                /* background-image: url("../Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg "); */
                 background-size: 100% 100%;
                 /*background-image: url("https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?auto=format&fit=crop&w=600&q=80");*/
             }
@@ -196,8 +196,8 @@
     }
 
     /* body {
-        font-family: "Lato", sans-serif;
-    }*/
+                font-family: "Lato", sans-serif;
+            }*/
 
     /* Style the tab */
     .tab {
@@ -264,50 +264,71 @@
 
             @if (Model.VEnrollmentStdDetailt_Collection.Count() > 0)
             {
-            <div class="tab">
-                @foreach (var item1 in Model.VEnrollmentStdDetailt_Collection.Select(r => r.Descriptions).Distinct())
+                <div class="tab">
+                    @foreach (var item1 in Model.VEnrollmentStdDetailt_Collection.Select(r => r.Descriptions).Distinct())
                     {
                         string defaultOpen = item1 == Model.VEnrollmentStdDetailt_Collection.Select(r => r.Descriptions).Distinct().First() ? "id='defaultOpen'" : "";
 
-                <button class="tablinks" onclick="openCity(event, '@item1')" @Html.Raw(defaultOpen)>@item1</button>
+                        <button class="tablinks" onclick="openCity(event, '@item1')" @Html.Raw(defaultOpen)>@item1</button>
                     }
 
-            </div>
-            @foreach (var item2 in Model.VEnrollmentStdDetailt_Collection.Select(r => r.Descriptions).Distinct())
+                </div>
+                @foreach (var item2 in Model.VEnrollmentStdDetailt_Collection.Select(r => r.Descriptions).Distinct())
                 {
-            <div id="@item2" class="tabcontent">
-                @foreach (var item in Model.VEnrollmentStdDetailt_Collection.Where(r => r.Descriptions == item2))
+                    <div id="@item2" class="tabcontent">
+                        @foreach (var item in Model.VEnrollmentStdDetailt_Collection.Where(r => r.Descriptions == item2))
                         {
 
 
-                @if (item.TeacherId != null)
+                            @if (item.TeacherId != null)
                             {
-                <div class="col-md-2 col-sm-2 col-xs-12">
-                    <div class="card">
-                        <div class="cover item-a">
-                            <h1>@item.Name</h1>
-                            @{var ss = 0;}
-                            @if (@item.Semester == 1)
+
+                                string photo = "";
+                                if (Model.TeacherInfo_Collection.Count() > 0)
+                                {
+                                    @foreach (var item3 in Model.TeacherInfo_Collection.Where(r => r.Id == item.TeacherId))
+                                    {
+                                        if (item3.Photo != null )
+                                        {
+                                            photo = item3.Photo;
+
+                                        }
+                                        else
+                                        {
+                                            photo = "/Images/أسماء-جميع-المواد-الدراسية-بالانجليزية-School-Subjects-القاموس-الناطق-المصور.jpg ";
+                                        }
+                                    }
+                                }
+
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <div class="card">
+                                        <div class="cover item-a" style="background-image:url(..@photo) !important;background-size: contain;">
+
+                                            <h1>@item.Name</h1>
+                                            @{
+                                                var ss = 0;
+                                            }
+                                            @if (@item.Semester == 1)
                                             {
-                            <span class="price">الفصل الاول</span>
+                                                <span class="price">الفصل الاول</span>
                                                 ss = 1;
                                             }
                                             else
                                             {
-                            <span class="price">الفصل الثاني</span>
+                                                <span class="price">الفصل الثاني</span>
                                                 ss = 2;
                                             }                                    @*<div class="card-back">
-                                    <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
-                                </div>*@
+                            <a href="#" class="load-lessons" data-classid="@item.ClassId" data-subjectid="@item.SubjectId" data-teacherid="@item.TeacherId">عرض الدروس</a>
+                            </div>*@
 
                                             <div class="card-back">
                                                 @*<form id="@item.TeacherId+@ss" action="/Lessons/k8vdUMEW0uLWyai31xmmWhtv" method="post">
-                                                        <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
-                                                        <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
-                                                        <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
-                                                        <input type="hidden" id="semester" name="semester" value="@ss" />
-                                                    </form>
-                                                    <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>*@
+                                <input type="hidden" id="ClassId" name="ClassId" value="@item.ClassId" />
+                                <input type="hidden" id="SubjectId" name="SubjectId" value="@item.SubjectId" />
+                                <input type="hidden" id="TeacherId" name="TeacherId" value="@item.TeacherId" />
+                                <input type="hidden" id="semester" name="semester" value="@ss" />
+                                </form>
+                                <a href="#" onclick="openLessonsForm('@item.TeacherId+@ss')">عرض الدروس</a>*@
 
 
 
@@ -346,12 +367,12 @@
                                             <h1>@item.Name</h1>
                                             @if (@item.Semester == 1)
                                             {
-                                            <span class="price">الفصل الاول</span>
+                                                <span class="price">الفصل الاول</span>
 
                                             }
                                             else
                                             {
-                                            <span class="price">الفصل الثاني</span>
+                                                <span class="price">الفصل الثاني</span>
 
                                             }
                                             <div class="card-back">
@@ -360,8 +381,8 @@
                                                 </button>
 
                                                 @*<a class="text-dark" href="#" onclick="openTeacherModal('teacherModal',@item.SubjectId,@item.ClassId,@item.CardNo,@item.Semester)">
-                                                        اختر المعلم
-                                                    </a>*@
+                                اختر المعلم
+                                </a>*@
                                             </div>
                                         </div>
                                     </div>
@@ -369,7 +390,7 @@
 
 
 
- <!-- Modal -->
+                                <!-- Modal -->
                                 <div class="modal fade" id="teacherModal" tabindex="-1" role="dialog" aria-labelledby="teacherModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
@@ -400,14 +421,14 @@
 
 
                         }
-            </div>
+                    </div>
                 }
 
 
             }
             else
             {
-            <h2>لا يوجد دروس مسجلة</h2>
+                <h2>لا يوجد دروس مسجلة</h2>
 
             }
         </div>
@@ -559,125 +580,125 @@
     }
 </script>
 <script>
-        function openLessonsForm(TeacherId) {
-            document.getElementById(TeacherId).submit();
-        }
+    function openLessonsForm(TeacherId) {
+        document.getElementById(TeacherId).submit();
+    }
 
-        var Subject_id;
-        var Class_id;
-        var Card_No;
-        var semester;
-        function openTeacherModal(modalId, SubjectId, ClassId, CardNo, Semester) {
-            Subject_id = "";
-            Class_id = "";
-            Card_No = "";
-            semester = "";
-            // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
-            $("#" + modalId).modal("show");
-            Subject_id = SubjectId;
-            Class_id = ClassId;
-            Card_No = CardNo;
-            semester = Semester;
-            // جلب القيمة المحددة في dropdown1 (المواد)
-            var selectedSubjectId = SubjectId;
-            var selectedClassId = ClassId;
-            $.ajax({
-                url: '@Url.Action("GetTeachersBySubject", "Lessons")',
-                type: "POST",
-                data: { "subjectId": selectedSubjectId, "classId": selectedClassId, "Semester": semester },
-                success: function (response) {
-                    // قم بحذف الخيارات الحالية في الـ DropDownList
-                    $('#TeacherID').empty();
+    var Subject_id;
+    var Class_id;
+    var Card_No;
+    var semester;
+    function openTeacherModal(modalId, SubjectId, ClassId, CardNo, Semester) {
+        Subject_id = "";
+        Class_id = "";
+        Card_No = "";
+        semester = "";
+        // يمكنك قم بتنفيذ أي كود إضافي هنا قبل فتح النموذج إذا لزم الأمر
+        $("#" + modalId).modal("show");
+        Subject_id = SubjectId;
+        Class_id = ClassId;
+        Card_No = CardNo;
+        semester = Semester;
+        // جلب القيمة المحددة في dropdown1 (المواد)
+        var selectedSubjectId = SubjectId;
+        var selectedClassId = ClassId;
+        $.ajax({
+            url: '@Url.Action("GetTeachersBySubject", "Lessons")',
+            type: "POST",
+            data: { "subjectId": selectedSubjectId, "classId": selectedClassId, "Semester": semester },
+            success: function (response) {
+                // قم بحذف الخيارات الحالية في الـ DropDownList
+                $('#TeacherID').empty();
 
-                    // إضافة الخيار "-- اختر --" أو أي قيمة أخرى تناسب احتياجاتك
-                    $('#TeacherID').append('<option value="">-- اختر --</option>');
+                // إضافة الخيار "-- اختر --" أو أي قيمة أخرى تناسب احتياجاتك
+                $('#TeacherID').append('<option value="">-- اختر --</option>');
 
-                    // إضافة الخيارات الجديدة بناءً على البيانات التي تم جلبها من الخادم
-                    $.each(response, function (index, teacher) {
-                        if (teacher.id.length > 0) {
+                // إضافة الخيارات الجديدة بناءً على البيانات التي تم جلبها من الخادم
+                $.each(response, function (index, teacher) {
+                    if (teacher.id.length > 0) {
 
-                            $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
-                        }
-                        else {
-                            alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
+                        $('#TeacherID').append('<option value="' + teacher.id + '">' + teacher.fullName + '</option>');
+                    }
+                    else {
+                        alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
 
-                        }
-                    });
-                },
-                error: function (request, status, error) {
-                    alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
-                }
-            });
-
-
-
-
-        }
-        $(document).ready(function () {
-            //$('#Nav').css('display', 'none');
-
-            // كود jQuery للقيام بشيء ما عندما يتم اختيار المعلم
-            // يمكنك استخدام AJAX لإرسال القيمة إلى الخادم هنا
-
-            // على سبيل المثال:
-            $("#saveTeacherSelection").on("click", function () {
-
-                var selectedTeacher = $("#TeacherID").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
-                if (selectedTeacher == "") {
-                    alert("يرجى اختيار معلم.");
-                    return;
-                }
-                var url = '@Url.Action("AssignTeacher", "Lessons")'; // Get the URL using Url.Action
-
-                // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
-                $.post(url, { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
-                    function (data) {
-                        // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                        alert(data.message);
-                        // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
-                        window.location.reload();
-                    });
-
-                // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك
-            });
-
-
-
-
-
-            //$('.load-lessons').on('click', function (e) {
-            //    e.preventDefault();
-            //    var classId = $(this).data('classid');
-            //    var subjectId = $(this).data('subjectid');
-            //    var teacherId = $(this).data('teacherid');
-            //    // إجراء طلب AJAX لتحميل الصفحة الأخرى
-            //    $.ajax({
-            //        url: '/Lessons/_PartialShowLessons/',
-            //        method: 'GET',
-            //        data: { "ClassId": classId, "SubjectId": subjectId, "TeacherId": teacherId },
-            //        success: function (result) {
-
-            //                var urlWithParams = '/Lessons/_PartialShowLessons';
-            //                //alert(urlWithParams)
-            //                window.location = window.location.protocol + urlWithParams;
-
-            //        },
-            //        error: function (xhr, status, error) {
-            //            var errorMessage = "حدث خطأ أثناء تحميل الصفحة.\n";
-            //            errorMessage += "الحالة: " + status + "\n";
-            //            errorMessage += "خطأ: " + error + "\n";
-            //            if (xhr.responseJSON && xhr.responseJSON.error) {
-            //                alert(xhr.responseJSON.error);
-            //            } else {
-            //                alert("حدث خطأ غير متوقع أثناء تحميل الصفحة.");
-            //            }
-            //            alert(errorMessage);
-            //        }
-
-            //    });
-            //});
-
+                    }
+                });
+            },
+            error: function (request, status, error) {
+                alert("لا يوجد معلمين للمادة والمستوى المطلوبين");
+            }
         });
+
+
+
+
+    }
+    $(document).ready(function () {
+        //$('#Nav').css('display', 'none');
+
+        // كود jQuery للقيام بشيء ما عندما يتم اختيار المعلم
+        // يمكنك استخدام AJAX لإرسال القيمة إلى الخادم هنا
+
+        // على سبيل المثال:
+        $("#saveTeacherSelection").on("click", function () {
+
+            var selectedTeacher = $("#TeacherID").val(); // افتراضياً، قم بتغيير "teacherDropdown" بالعنصر الذي تستخدمه لاختيار المعلم
+            if (selectedTeacher == "") {
+                alert("يرجى اختيار معلم.");
+                return;
+            }
+            var url = '@Url.Action("AssignTeacher", "Lessons")'; // Get the URL using Url.Action
+
+            // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال القيمة باستخدام $.post
+            $.post(url, { teacherId: selectedTeacher, Card_No: Card_No, Subject_id: Subject_id, Class_id: Class_id, Semester: semester },
+                function (data) {
+                    // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
+                    alert(data.message);
+                    // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                    window.location.reload();
+                });
+
+            // يمكنك استخدام $.ajax أو أي طريقة أخرى حسب احتياجاتك
+        });
+
+
+
+
+
+        //$('.load-lessons').on('click', function (e) {
+        //    e.preventDefault();
+        //    var classId = $(this).data('classid');
+        //    var subjectId = $(this).data('subjectid');
+        //    var teacherId = $(this).data('teacherid');
+        //    // إجراء طلب AJAX لتحميل الصفحة الأخرى
+        //    $.ajax({
+        //        url: '/Lessons/_PartialShowLessons/',
+        //        method: 'GET',
+        //        data: { "ClassId": classId, "SubjectId": subjectId, "TeacherId": teacherId },
+        //        success: function (result) {
+
+        //                var urlWithParams = '/Lessons/_PartialShowLessons';
+        //                //alert(urlWithParams)
+        //                window.location = window.location.protocol + urlWithParams;
+
+        //        },
+        //        error: function (xhr, status, error) {
+        //            var errorMessage = "حدث خطأ أثناء تحميل الصفحة.\n";
+        //            errorMessage += "الحالة: " + status + "\n";
+        //            errorMessage += "خطأ: " + error + "\n";
+        //            if (xhr.responseJSON && xhr.responseJSON.error) {
+        //                alert(xhr.responseJSON.error);
+        //            } else {
+        //                alert("حدث خطأ غير متوقع أثناء تحميل الصفحة.");
+        //            }
+        //            alert(errorMessage);
+        //        }
+
+        //    });
+        //});
+
+    });
 
 </script>
 <!--<style>
@@ -875,7 +896,7 @@
 
                                         </form>
                                         <a href="#" onclick="openLessonsForm('@@item.TeacherId+@@ss')">عرض الدروس</a>-->
-@*<a href="_PartialShowLessons/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
+                    @*<a href="_PartialShowLessons/@item.ClassId/@item.SubjectId/@item.TeacherId">عرض الدروس</a>*@
 <!--</div>
             </div>
         </div>
@@ -924,7 +945,7 @@ else
 <!--<label for="selectedItem">اختر المعلم:</label>
                                         <select id="TeacherID" class="form-control"></select>->
 
-                                        @*@Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })*@
+        @*@Html.DropDownList("selectedItem", new SelectList(Model.TeacherInfo_Collection.Where(r => r.ClassId == item.ClassId && r.SubjectId == item.SubjectId), "Id", "FullName"), "-- اختر --", new { @class = "form-control" })*@
 
                                     </div>
                                     <div class="modal-footer">

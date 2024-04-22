@@ -19,6 +19,7 @@ namespace LMS_Learning_Management_System.Models
         public string Class { get; set; }
         public int ClassId { get; set; }
         public int SubjectId { get; set; }
+        public string Photo { get; set; }
         [NotMapped]
         public virtual ICollection<VTechersInfo> VTecherInfo { get; set; }
 

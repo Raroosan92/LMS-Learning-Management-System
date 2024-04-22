@@ -28,6 +28,7 @@ namespace LMS_Learning_Management_System.Models
         public DateTime? PaymentDate { get; set; }
         public int CardSer { get; set; }
         public string TeacherUserID { get; set; }
+        public string Photo { get; set; }
 
         public int Semester { get; set; }
         [NotMapped]

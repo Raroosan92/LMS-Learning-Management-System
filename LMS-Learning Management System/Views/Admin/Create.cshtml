@@ -8,7 +8,7 @@
 <div asp-validation-summary="All" class="text-danger"></div>
 
 @* <form method="post" onsubmit="return CheckList();"> *@
-<form method="post" id="loginForm">
+<form method="post" id="loginForm" enctype="multipart/form-data">
     @if (TempData.ContainsKey("AlertMessage1"))
     {
         <div class="alert alert-danger">
@@ -78,7 +78,7 @@
         if (User.IsInRole("admin"))
         {
 
-                @*<div class="form-group">
+            @*<div class="form-group">
     <label asp-for="UserId" class="control-label"></label>
     <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId">
     <option value="">-- أختر --</option>
@@ -91,33 +91,40 @@
     <span asp-validation-for="UserName" class="text-danger"></span>
     </div>*@
 
-                <div class="form-group">
-                    <label asp-for="RoleId" class="control-label"></label>
-                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId">
+            <div class="form-group">
+                <label asp-for="RoleId" class="control-label"></label>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId">
 
-                        <option>-- أختر --</option>
-                    </select>
+                    <option>-- أختر --</option>
+                </select>
 
-                    @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
-                </div>
-                <div class="form-group" style="display:none">
-                    <input asp-for="UserTypeDesc" id="UserTypeDesc" />
-                </div>
-                <div class="form-group" id="SubjectId_D" style="display:none">
-                    <label asp-for="SubjectId" class="control-label"></label>
-                    <select id="lstSubjecs" name="lstSubjecs" asp-items="ViewBag.SubjectId" class="form-control" onchange="handleSelectChange(this)">
-                        <option>-- أختر --</option>
-                    </select>
+                @*<select asp-for="ClassId" class="form-control" asp-items="ViewBag.ClassId" required></select>*@
+            </div>
+            <div class="form-group" style="display:none">
+                <input asp-for="UserTypeDesc" id="UserTypeDesc" />
+            </div>
+            <div class="form-group" id="SubjectId_D" style="display:none">
+                <label asp-for="SubjectId" class="control-label"></label>
+                <select id="lstSubjecs" name="lstSubjecs" asp-items="ViewBag.SubjectId" class="form-control" onchange="handleSelectChange(this)">
+                    <option>-- أختر --</option>
+                </select>
 
-                </div>
-                <div class="form-group" id="Class_D" style="display:none">
-                    <label asp-for="ClassId" class="control-label"></label>
-                    <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" onchange="handleSelectChange(this)">
-                        <option>-- أختر --</option>
-                    </select>
+            </div>
+            <div class="form-group" id="Class_D" style="display:none">
+                <label asp-for="ClassId" class="control-label"></label>
+                <select id="lstClasses" name="lstClasses" multiple multiselect-search="true" multiselect-select-all="true" asp-items="ViewBag.ClassId" class="form-control" onchange="handleSelectChange(this)">
+                    <option>-- أختر --</option>
+                </select>
 
-                </div>
-
+            </div>
+            <div class="form-group" id="Photo_D" style="display:none">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" name="uploadedPhoto" id="uploadedPhoto" class="form-control file-input" type="file" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+                <br />
+                <img id="previewImage" src="#" alt="Uploaded Image" style="max-width: 200px; max-height: 200px; display: none;" />
+            </div>
+            
 
         }
 
@@ -130,12 +137,12 @@
         if (User.IsInRole("admin"))
         {
             Role = "admin";
-                <input type="hidden" id="Role_H" value="@Role" />
+            <input type="hidden" id="Role_H" value="@Role" />
         }
         else
         {
             Role = "other";
-                <input type="hidden" id="Role_H" value="@Role" />
+            <input type="hidden" id="Role_H" value="@Role" />
         }
 
     }
@@ -165,10 +172,12 @@
         if (SelectedRoleId.toLocaleLowerCase() == "teacher") {
             $("#SubjectId_D").css("display", "block");
             $("#Class_D").css("display", "block");
+            $("#Photo_D").css("display", "block");
         }
         else {
             $("#SubjectId_D").css("display", "none");
             $("#Class_D").css("display", "none");
+            $("#Photo_D").css("display", "none");
         }
         $('#UserTypeDesc').val($("#RoleId :selected").text());
 
@@ -286,5 +295,29 @@
     }
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var fileInput = document.querySelector('.file-input');
+        fileInput.addEventListener('change', previewImage);
+    });
+
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var preview = document.getElementById('previewImage');
+            if (preview) {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            } else {
+                console.error("Preview image element not found.");
+            }
+        }
+        if (event.target.files && event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            console.error("No file selected.");
+        }
+    }
 
 
+</script>

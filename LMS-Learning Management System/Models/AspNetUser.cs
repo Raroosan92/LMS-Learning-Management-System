@@ -37,6 +37,7 @@ namespace LMS_Learning_Management_System.Models
         public string UserTypeDesc { get; set; }
         public string Country { get; set; }
         public string FullName { get; set; }
+        public string Photo { get; set; }
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

@@ -37,6 +37,10 @@ namespace LMS_Learning_Management_System.Models
         [Display(Name = "الاسم الكامل")]
         [Required]
         public string FullName { get; set; }
+        
+        
+        [Display(Name = "الصورة")]
+        public string Photo { get; set; }
 
         //[NotMapped]
         //[Display(Name = "المحاضر")]

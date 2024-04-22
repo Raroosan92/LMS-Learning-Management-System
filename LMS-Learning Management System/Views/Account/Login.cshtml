@@ -326,11 +326,14 @@
 
                         <br />
 
-
+                        
 
                         <button class="btn btn-primary" type="submit">تسجيل الدخول</button>
                         @*<a class="btn btn-info" asp-action="GoogleLogin">Log In With Google</a>*@
                         <a class="btn btn-warning" asp-controller="Admin" asp-action="create">انشاء مستخدم جديد</a>
+                        <button class="btn btn-danger" id="showInfoButton">تعليمات التسجيل في المنصة</button>
+
+
                         @*<a class="btn btn-secondary" asp-action="ForgotPassword">نسيت كلمة المرور؟</a>*@
                     </form>
                 </div>
@@ -377,6 +380,7 @@
         });
     }
 </script>
+
 <script>
     $(document).ready(function () {
         // JavaScript code to detect the device type and submit it to the server
@@ -442,3 +446,44 @@
 </script>
 
 
+<!-- Include SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- Include SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var showInfoButton = document.getElementById('showInfoButton');
+        showInfoButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default button behavior (postback or navigation)
+            showInformationSteps();
+        });
+    });
+    
+    function showInformationSteps() {
+        Swal.fire({
+            title: 'تعليمات التسجيل',
+            html: '<h3 style="color:orangered">تعليمات التسجيل لأول مرة</h3><br/>' + 
+            '<ol style="text-align: justify;font-size: smaller;">' +
+                '<li>الضغط على زر "انشاء مستخدم جديد"</li>' +
+                '<li>تعبئة المعلومات الخاصة بالطالب والتأكد جيداً من "رقم الهاتف" و"كلمة المرور" قبل عملية الحفظ</li>' +
+                '<p style="color:red;">**ملاحظة رقم الهاتف مهم جدا لانه سيكون المعرف الوحيد للطالب لذلك تأكد من رقم الهاتف جيداً</p>' +
+                '<li>اضغط على زر انشاء</li>' +
+                '</ol>' +
+                '<h3 style="color:limegreen">تعليمات الدخول لطالب مسجل بالفعل</h3><br/>' + 
+                '<ol style="text-align: justify;font-size: smaller;">' +
+                '<li>ادخل "رقم الهاتف "</li>' +
+                '<li>ادخل "كلمة المرور"</li>' +
+                '<li>اضغط زر تسجيل الدخول</li>' +
+                '<li>انتقل الى التسجيل في المواد في حال شراء بطاقة جديدة</li>' +
+                '<li>ادخل رقم البطاقة وكلمة المرور للبطاقة</li>' +
+                '<li>اختر المادة / المواد والفصل</li>' +
+                '<li>اختر المستوى المطلوب</li>' +
+                '<li>ثم انقر على تسجيل</li>' +
+                '<li>في حال التسجيل المسبق لمادة/مواد الانتقال الى خانة دروس الطالب مباشرة</li>' +
+                '</ol>',
+            confirmButtonText: 'تم!',
+            icon: 'info'
+        });
+    }
+</script>

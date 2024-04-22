@@ -18,6 +18,7 @@ namespace LMS_Learning_Management_System.Models
         public DateTime CreatedDateTime { get; set; }
 
         public string Country { get; set; }
+        public string Photo { get; set; }
 
         public string SecurityStamp { get; set; }
 

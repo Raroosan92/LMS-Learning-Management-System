@@ -14,6 +14,7 @@ using System.Data;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -27,7 +28,7 @@ namespace LMS_Learning_Management_System.Controllers
         private readonly IConfiguration _configuration;
         private Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private SignInManager<AppUser> signInManager;
-        private readonly LMSContext _context; 
+        private readonly LMSContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
@@ -137,15 +138,16 @@ namespace LMS_Learning_Management_System.Controllers
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
                     var roles = await userManager.GetRolesAsync(appUser);
 
-                    if (roles[0].ToLower()=="admin" || roles[0].ToLower() == "teacher")
+                    if (roles[0].ToLower() == "admin" || roles[0].ToLower() == "teacher")
                     {
                         ActiveSessions = "Succeeded";
 
                     }
                     else
                     {
-
-                        ActiveSessions = await GetActiveSessionAsync(userdetails.Id,login.clientIpAddress);
+                        //string client_MACAddress=GetClientMAC(GetIPAddress());
+                        //ActiveSessions = await GetActiveSessionAsync(userdetails.Id, client_MACAddress);
+                        ActiveSessions = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
                     }
 
                     if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
@@ -175,6 +177,8 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                                     GetTime();
+                                    //macAddressString = GetClientMAC(GetIPAddress());
+
                                     activesession.LoginDate = DateTime.Parse(time);
                                     activesession.UserId = appUser.Id;
                                     activesession.UserName = appUser.FullName;
@@ -236,10 +240,60 @@ namespace LMS_Learning_Management_System.Controllers
         }
 
 
+        public string GetIPAddress()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            var ipAddress = context.Connection.RemoteIpAddress.ToString();
 
+            // You can implement your logic for handling X-Forwarded-For header if needed
 
+            return ipAddress;
+        }
 
+        private static string GetClientMAC(string strClientIP)
+        {
+            string mac_dest = "";
+            try
+            {
+                Int32 ldest = inet_addr(strClientIP);
+                Int32 lhost = inet_addr("");
+                Int64 macinfo = new Int64();
+                Int32 len = 6;
+                int res = SendARP(ldest, 0, ref macinfo, ref len);
+                string mac_src = macinfo.ToString("X");
 
+                while (mac_src.Length < 12)
+                {
+                    mac_src = mac_src.Insert(0, "0");
+                }
+
+                for (int i = 0; i < 11; i++)
+                {
+                    if (0 == (i % 2))
+                    {
+                        if (i == 10)
+                        {
+                            mac_dest = mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+                        else
+                        {
+                            mac_dest = "-" + mac_dest.Insert(0, mac_src.Substring(i, 2));
+                        }
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("L?i " + err.Message);
+            }
+            return mac_dest;
+        }
+
+        [DllImport("Iphlpapi.dll")]
+        private static extern int SendARP(Int32 dest, Int32 host, ref Int64 mac, ref Int32 length);
+
+        [DllImport("Ws2_32.dll")]
+        private static extern Int32 inet_addr(string ip);
 
         //[HttpPost]
         //[ValidateAntiForgeryToken]

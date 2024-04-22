@@ -9,7 +9,7 @@
 <a asp-action="Index" class="btn btn-secondary">رجوع</a>
 <div asp-validation-summary="All" class="text-danger"></div>
 
-<form asp-action="Update" method="post">
+<form asp-action="Update" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Id"></label>
         <input asp-for="Id" class="form-control" disabled />
@@ -49,7 +49,13 @@
         <span asp-validation-for="SelectedSubjectes" class="text-danger"></span>
     </div>
 
-
+    <div class="form-group" id="Photo_D">
+        <label asp-for="Photo" class="control-label"></label>
+        <input asp-for="Photo" name="uploadedPhoto" id="uploadedPhoto" class="form-control file-input" type="file" />
+        <span asp-validation-for="Photo" class="text-danger"></span>
+        <br />
+        <img id="previewImage" src="#" alt="Uploaded Image" style="max-width: 200px; max-height: 200px; display: none;" />
+    </div>
     <button type="submit" class="btn btn-primary">حفظ</button>
 </form>
 
@@ -58,6 +64,19 @@
 <script src="~/js/jquery3.3.1.js"></script>
 <script src="~/js/multiselect-dropdown.js"></script>
 <script type="text/javascript">
+    $(function () {
+        var existingImageUrl = "@Model.Photo"; // Assuming you have a variable storing the URL of the existing image
+        if (existingImageUrl) {
+            var preview = document.getElementById('previewImage');
+            if (preview) {
+                preview.src = existingImageUrl;
+                preview.style.display = 'block';
+            } else {
+                console.error("Preview image element not found.");
+            }
+        }
+    });
+    
     $(function () {
         $('#lstSubjecs').multiselect({
             includeSelectAllOption: true
@@ -69,5 +88,31 @@
             includeSelectAllOption: true
         });
     });
+   
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var fileInput = document.querySelector('.file-input');
+        fileInput.addEventListener('change', previewImage);
+    });
 
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var preview = document.getElementById('previewImage');
+            if (preview) {
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            } else {
+                console.error("Preview image element not found.");
+            }
+        }
+        if (event.target.files && event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        } else {
+            console.error("No file selected.");
+        }
+    }
+
+    
 </script>

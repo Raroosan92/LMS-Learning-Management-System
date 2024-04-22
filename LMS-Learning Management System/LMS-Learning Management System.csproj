@@ -55,6 +55,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\App_exe\" />
     <Folder Include="wwwroot\Documents\" />
+    <Folder Include="wwwroot\Photos\" />
   </ItemGroup>
 
 </Project>
