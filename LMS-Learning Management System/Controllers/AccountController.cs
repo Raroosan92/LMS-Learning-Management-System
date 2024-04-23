@@ -185,7 +185,7 @@ namespace LMS_Learning_Management_System.Controllers
                                     activesession.PhoneNumber = appUser.PhoneNumber;
                                     activesession.DeviceType = login.devicetype;
                                     activesession.ComputerName = computerName;
-                                    activesession.MacAddress = login.clientIpAddress;
+                                    activesession.MacAddress = login.clientIpAddress.ToString();
                                     //activesession.MacAddress = macAddressString;
                                     _context.Add(activesession);
 

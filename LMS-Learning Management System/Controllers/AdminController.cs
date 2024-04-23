@@ -84,7 +84,7 @@ namespace LMS_Learning_Management_System.Controllers
         {
             if (ModelState.IsValid)
             {
-                var PhotoPath = "";
+                var PhotoPath = "NULL";
               
                 string email;
                 string Uname;
@@ -484,6 +484,8 @@ namespace LMS_Learning_Management_System.Controllers
                 //if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(password))
                 //{
                 var PhotoPath = "";
+                try
+                {
                 if (uploadedPhoto.Length > 0)
                 {
                     var fileExtension = Path.GetExtension(uploadedPhoto.FileName);
@@ -509,7 +511,13 @@ namespace LMS_Learning_Management_System.Controllers
                     PhotoPath = "/Photos/" + uniqueFileName+ fileExtension;
 
                 }
+
                 user.Photo = PhotoPath;
+                }
+                catch (Exception)
+                {
+
+                }
 
                 IdentityResult result = await userManager.UpdateAsync(user);
                 if (result.Succeeded)
