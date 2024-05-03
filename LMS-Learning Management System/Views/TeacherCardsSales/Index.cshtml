@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "عرض البطاقات المباعة";
+    // Layout = null;
 }
 
 <h1>المحتويات</h1>
@@ -32,154 +33,170 @@
 </form>
 
 
-<table id="myTable" class="table table-striped table-bordered table-inverse table-responsive ">
-    <thead>
-        <tr class="table-warning" style=" text-align: -webkit-center; vertical-align: middle;">
+<!-- Dropdown for Rows per Page -->
+<div>
+    <label for="rowsPerPage">عدد الصفوف في الصفحة :</label>
+    <select id="rowsPerPage">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+    </select>
+</div>
 
-            <th>
-                رقم البطاقة
-            </th>
-            <th>
-                قيمة البطاقة الكلية
-            </th>
-            <th>
-                عدد مواد البطاقة
-            </th>
-            <th>
-                القيمة النهائية لكل مادة
-            </th>
-            @*<th>
-                    اسم المستخدم
-                </th>*@
-
-            <th>
-                الاسم الكامل
-            </th>
-            <th>
-                الموضوع
-            </th>
-            <th>
-                الصف
-            </th>
-
-            <th>
-                القيمة
-            </th>
-            <th>
-                مدفوع؟
-            </th>
-            <th>
-                اسم الطالب
-            </th>
-            <th>
-                تاريخ التسجيل
-            </th>
-
-            <th>
-                <input type="checkbox" id="selectAllCheckbox" />
-            </th>
-
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            if (Model.Teacher_Sales_Cards_Collection != null && Model.Teacher_Sales_Cards_Collection.Any())
-            {
-                @foreach (var item in Model.Teacher_Sales_Cards_Collection)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CardNo)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CardPrice)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.NumberOfSubjects)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TeacherCardPrice)
-                        </td>
-
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.UserName)
-                            </td>*@
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TeacherName)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Subject)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Class)
-                        </td>
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PaymentAmount)
-                        </td>
-
-                        @{ if (item.IsPayment == true)
-                            {
-                                <td style="color:greenyellow">
-                                    مدفوع
-                                </td>
-                            }
-                            else
-                            {
-                                <td style="color:orangered">
-
-                                    غير مدفوع
-                                </td>
-                            }
-
-                        }
-
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StudentName)
-                        </td>
-                        <td>
-                            @*@Html.DisplayFor(modelItem => item.CreatedDate)*@
-                            @item.CreatedDate.ToShortDateString()
-                        </td>
-                        <td style="display:none">
-                            @Html.DisplayFor(modelItem => item.CardSer)
-                            @*<input type="hidden" value="@item.CardSer" id="CardSer" />*@
-                        </td>
-                        <td>
-                            @{ if (item.IsPayment == true)
-                                {
-
-                                }
-                                else
-                                {
-
-
-                                    <input type="checkbox" class="select-row-checkbox" />
-
-                                }
-                            }
-                        </td>
-                    </tr>
-                }
-
-            }
-            else
-            {
-                <p>لا يوجد بيانات</p>
-            }
-        }
-    </tbody>
-</table>
 <br />
 <button class="btn btn-primary" id="deliverSelectedRows">تسليم المحدد</button>
 
+<table id="myTable" class="table table-striped table-bordered table-inverse table-responsive">
+    <thead>
+        <tr class="table-warning" style="text-align: -webkit-center; vertical-align: middle;">
+            <th>رقم البطاقة</th>
+            <th>قيمة البطاقة الكلية</th>
+            <th>عدد مواد البطاقة</th>
+            <th>القيمة النهائية لكل مادة</th>
+            <th>الاسم الكامل</th>
+            <th>الموضوع</th>
+            <th>الصف</th>
+            <th>القيمة</th>
+            <th>مدفوع؟</th>
+            <th>اسم الطالب</th>
+            <th>تاريخ التسجيل</th>
+            <th><input type="checkbox" id="selectAllCheckbox" /></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Teacher_Sales_Cards_Collection != null && Model.Teacher_Sales_Cards_Collection.Any())
+        {
+            @foreach (var item in Model.Teacher_Sales_Cards_Collection)
+            {
+                <tr>
+                    <td>@item.CardNo</td>
+                    <td>@item.CardPrice</td>
+                    <td>@item.NumberOfSubjects</td>
+                    <td>@item.TeacherCardPrice</td>
+                    <td>@item.TeacherName</td>
+                    <td>@item.Subject</td>
+                    <td>@item.Class</td>
+                    <td>@item.PaymentAmount</td>
+                    <td style="color:@(item.IsPayment == true ? "greenyellow" : "orangered")">@if (item.IsPayment == true)
+                        {
+                            <text>مدفوع</text>
+                        }
+                        else
+                        {
+                            <text>غير مدفوع</text>
+                        }</td>
+
+                    <td>@item.StudentName</td>
+                    <td>@item.CreatedDate.ToShortDateString()</td>
+                    <td style="display:none">@item.CardSer</td>
+                    <td>
+                        @if (item.IsPayment != true)
+                        {
+                            <input type="checkbox" class="select-row-checkbox" />
+                        }
+                    </td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="12">لا يوجد بيانات</td></tr>
+        }
+    </tbody>
+</table>
+<div id="rowRange"></div>
+
+<!-- Pagination Controls -->
+<div id="pagination">
+    <button id="prevPage" class="btn btn-outline-danger">السابق</button>
+    <span id="pageNumbers"></span>
+    <button id="nextPage" class="btn btn-outline-primary">التالي</button>
+</div>
+
+
+<script>
+    // Function to generate table rows
+    function generateTableRows(startIndex, endIndex) {
+        var tableRows = document.querySelectorAll('#myTable tbody tr');
+        for (var i = 0; i < tableRows.length; i++) {
+            tableRows[i].style.display = 'none';
+        }
+        for (var i = startIndex; i < endIndex; i++) {
+            tableRows[i].style.display = '';
+        }
+    }
+
+    // Ensure currentPage, rowsPerPage, and totalRows are properly initialized
+    var currentPage = 1; // Update with your initial value
+    var rowsPerPage = 10; // Update with your initial value
+    var totalRows = @Model.Teacher_Sales_Cards_Collection.Count(); // Update to dynamically get the total number of rows
+
+    // Function to update the row range display
+    function updateRowRange() {
+        var startIndex = (currentPage - 1) * rowsPerPage + 1;
+        var endIndex = Math.min(currentPage * rowsPerPage, totalRows);
+        var rowRangeElement = document.getElementById('rowRange');
+
+        // Update the row range display
+        if (!isNaN(startIndex) && !isNaN(endIndex) && !isNaN(totalRows)) {
+            rowRangeElement.textContent = 'عرض ' + startIndex + ' من ' + endIndex + ' الى ' + totalRows + ' صفوف';
+        } else {
+            rowRangeElement.textContent = 'Invalid row range';
+        }
+    }
+
+    // Call the updateRowRange function initially and whenever currentPage, rowsPerPage, or totalRows changes
+    updateRowRange();
+
+    // Call updateRowRange function initially and whenever currentPage or rowsPerPage changes
+    updateRowRange(currentPage, rowsPerPage, totalRows);
+    // Initial page setup
+    var currentPage = 1;
+    var rowsPerPage = 10;
+    var totalRows = document.querySelectorAll('#myTable tbody tr').length;
+    var totalPages = Math.ceil(totalRows / rowsPerPage);
+    generateTableRows(0, rowsPerPage);
+
+    // Update pagination controls
+    function updatePagination() {
+        var pageNumbers = document.getElementById('pageNumbers');
+        pageNumbers.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+    }
+
+    // Event listeners for pagination
+    document.getElementById('prevPage').addEventListener('click', function () {
+        if (currentPage > 1) {
+            currentPage--;
+            generateTableRows((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+            updatePagination();
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', function () {
+        if (currentPage < totalPages) {
+            currentPage++;
+            generateTableRows((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+            updatePagination();
+        }
+    });
+
+    // Event listener for rows per page dropdown
+    document.getElementById('rowsPerPage').addEventListener('change', function () {
+        rowsPerPage = parseInt(this.value);
+        totalPages = Math.ceil(totalRows / rowsPerPage);
+        currentPage = 1;
+        generateTableRows(0, rowsPerPage);
+        updatePagination();
+    });
+</script>
+
 <script src="~/js/jquery3.3.1.js"></script>
+
+
+
+
 <script>
 
     $(document).ready(function () {
@@ -196,11 +213,19 @@
             });
         });
 
-
         // تحديد الكل
         $("#selectAllCheckbox").on("change", function () {
-            $(".select-row-checkbox").prop("checked", $(this).prop("checked"));
+            // Get the visible rows only
+            var visibleRows = $("#myTable tbody tr:visible");
+
+            // Check or uncheck the checkboxes for the visible rows
+            visibleRows.find(".select-row-checkbox").prop("checked", $(this).prop("checked"));
         });
+
+        // // تحديد الكل
+        // $("#selectAllCheckbox").on("change", function () {
+        //     $(".select-row-checkbox").prop("checked", $(this).prop("checked"));
+        // });
 
         // تحديد الصف الحالي
         $(".select-row-checkbox").on("change", function () {
@@ -209,7 +234,6 @@
 
         // زر تسليم
         $("#deliverSelectedRows").on("click", function () {
-
             if (confirm("هل انت متأكد من البيانات المحددة بالاسفل؟")) {
                 // جمع الصفوف المحددة
                 var selectedRows = $(".select-row-checkbox:checked");
@@ -221,29 +245,27 @@
                 }
 
                 // قم بتنفيذ الإجراء المناسب لتسليم الصفوف المحددة
-                var cardno = selectedRows.map(function () {
-                    return $(this).closest("tr").find("td:first-child").text(); // تحديد العنصر الذي يمثل الهوية
-                }).get();
-                var amount = selectedRows.map(function () {
-                    return $(this).closest("tr").find("td:eq(3)").text(); // تحديد العنصر amount
-                }).get();
-                var CardSer = selectedRows.map(function () {
-                    return $(this).closest("tr").find("td:eq(11)").text(); // تحديد العنصر الذي يمثل الهوية
-                }).get();
-                // إذا كنت تستخدم ASP.NET Core، يمكنك إرسال طلب AJAX باستخدام $.post
-                $.post("/Academy/TeacherCardsSales/Pay", { cardno: cardno, CardSer: CardSer, amount: amount }, function (data) {
-                    // قم بمعالجة الاستجابة من الخادم إذا لزم الأمر
-                    //alert(data.message); // قد تكون رسالة نجاح أو أي نوع آخر من الرسائل
+                var cardnoArray = [];
+                var CardSerArray = [];
+                var amountArray = [];
 
-                    window.location.reload();
+                selectedRows.each(function () {
+                    var row = $(this).closest("tr");
+                    cardnoArray.push(row.find("td:first-child").text());
+                    amountArray.push(row.find("td:eq(3)").text());
+                    CardSerArray.push(row.find("td:eq(11)").text());
                 });
 
-                // إذا كنت تستخدم ASP.NET MVC، يمكنك إرسال البيانات باستخدام $.ajax مباشرة وتكوين الطلب حسب احتياجاتك
-
+                // إرسال البيانات إلى الخادم
+                $.post("/Academy/TeacherCardsSales/Pay", { cardno: cardnoArray, CardSer: CardSerArray, amount: amountArray }, function (data) {
+                    // إعادة تحميل الصفحة بعد الانتهاء
+                    window.location.reload();
+                });
             } else {
                 return false;
             }
         });
+
 
         $("#searchByDateRange").on("click", function () {
             var startDateValue = $("#startDate").val();
@@ -265,38 +287,7 @@
                 });
             });
         });
-        //// زر البحث
 
-        //$('#searchButton').on('click', function () {
-        //    // جلب قيم حقول البحث
-        //    var startDate = $('#startDate').val();
-        //    var endDate = $('#endDate').val();
-        //    var teacherName = $('#teacherName').val();
-        //    var subject = $('#subject').val();
-
-        //    //var searchData = {
-        //    //    startDate: startDate,
-        //    //    endDate: endDate,
-        //    //    teacherName: teacherName,
-        //    //    subject: subject
-        //    //};
-
-        //    $.ajax({
-        //        url: "/TeacherCardsSales/GetData",
-        //        type: "GET",
-        //        data: {},
-        //        success: function (response) {
-        //            // تحديث الجدول باستخدام البيانات الجديدة
-        //            updateTable(response);
-
-        //        },
-        //        error: function (error) {
-        //            console.error('حدث خطأ: ', error);
-        //        }
-        //    });
-
-
-        //});
     });
     function updateTable(data) {
         var tbody = $('#dataTable tbody');
@@ -311,27 +302,6 @@
         }
     }
 
-    //document.getElementById('searchButton').addEventListener('click', function () {
-    //    // جلب قيم حقول البحث
-    //    var startDate = document.getElementById('startDate').value;
-    //    var endDate = document.getElementById('endDate').value;
-    //    var teacherName = document.getElementById('teacherName').value;
-    //    var subject = document.getElementById('subject').value;
-
-    //    // يمكنك إرسال هذه القيم إلى الخادم أو استخدامها محليًا في تنفيذ بحثك
-    //    performSearch(startDate, endDate, teacherName, subject);
-    //});
-
-    //function performSearch(startDate, endDate, teacherName, subject) {
-    //    // هنا يمكنك كتابة الكود الخاص بك لتنفيذ البحث باستخدام القيم المستلمة
-    //    // على سبيل المثال، يمكنك استخدام AJAX لإرسال هذه القيم إلى الخادم واسترجاع النتائج
-    //    // أو يمكنك تنفيذ البحث محليًا على جهاز العميل (المتصفح).
-
-    //    // على سبيل المثال:
-    //    console.log('تم البحث باستخدام التواريخ: ', startDate, endDate);
-    //    console.log('تم البحث باستخدام اسم المعلم: ', teacherName);
-    //    console.log('تم البحث باستخدام اسم المادة: ', subject);
-    //}
 
 
 </script>

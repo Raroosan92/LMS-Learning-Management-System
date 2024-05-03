@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -30,14 +31,16 @@ namespace LMS_Learning_Management_System.Controllers
         private SignInManager<AppUser> signInManager;
         private readonly LMSContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger _logger;
 
-        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ILogger<AppUser> logger)
         {
             userManager = userMgr;
             signInManager = signinMgr;
             _context = context;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
 
         }
         [AllowAnonymous]
@@ -156,7 +159,7 @@ namespace LMS_Learning_Management_System.Controllers
                         if (appUser != null)
                         {
                             await signInManager.SignOutAsync();
-                            Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, false, false);
+                            Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
 
                             if (result.Succeeded)
                             {
@@ -198,6 +201,7 @@ namespace LMS_Learning_Management_System.Controllers
                                     //var testValue = HttpContext.Session.GetString("TestKey");
                                 }
                                 TempData["FullName"] = appUser.FullName;
+                                _logger.LogInformation("User logged in.");
 
                                 //return Redirect(login.ReturnUrl ?? "/");
                                 return Redirect(login.ReturnUrl ?? "/Academy");
@@ -220,7 +224,7 @@ namespace LMS_Learning_Management_System.Controllers
                             /*if (result.IsLockedOut)
                                 ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
                         }
-                        ModelState.AddModelError(nameof(login.Email), "Login Failed: Invalid Email or password");
+                        ModelState.AddModelError(nameof(login.Email), " فشل تسجيل الدخول: رقم الهاتف أو كلمة المرور غير صالحة");
                     }
                     else
                     {

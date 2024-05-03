@@ -65,7 +65,7 @@
 <script src="~/js/multiselect-dropdown.js"></script>
 <script type="text/javascript">
     $(function () {
-        var existingImageUrl = "@Model.Photo"; // Assuming you have a variable storing the URL of the existing image
+        var existingImageUrl = "../../@Model.Photo"; // Assuming you have a variable storing the URL of the existing image
         if (existingImageUrl) {
             var preview = document.getElementById('previewImage');
             if (preview) {

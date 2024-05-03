@@ -176,8 +176,11 @@ namespace LMS_Learning_Management_System.Controllers
                     {
                         var fileExtension = Path.GetExtension(file.FileName);
                         var fileName = Path.GetFileName(file.FileName);
-
-                        // Generate a unique identifier for the new file name
+                        // Sanitize the file name to remove potentially harmful characters
+                        // Define a regular expression pattern to match the characters you want to replace
+                        var pattern = @"[+\-\/\*,\'""\\%$#@()=]";
+                        // Replace matched characters with underscores
+                        fileName = Regex.Replace(fileName, pattern, "_");                        // Generate a unique identifier for the new file name
                         //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{w}{fileExtension}";
                         var uniqueFileName = fileName;
 
@@ -218,8 +221,11 @@ namespace LMS_Learning_Management_System.Controllers
                     {
                         var fileExtension = Path.GetExtension(file.FileName);
                         var fileName = Path.GetFileName(file.FileName);
-
-                        // Generate a unique identifier for the new file name
+                        // Sanitize the file name to remove potentially harmful characters
+                        // Define a regular expression pattern to match the characters you want to replace
+                        var pattern = @"[+\-\/\*,\'""\\%$#@()=]";
+                        // Replace matched characters with underscores
+                        fileName = Regex.Replace(fileName, pattern, "_");                        // Generate a unique identifier for the new file name
                         //var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{b}{fileExtension}";
                         var uniqueFileName = fileName;
 
@@ -381,8 +387,11 @@ namespace LMS_Learning_Management_System.Controllers
                         {
                             var fileExtension = Path.GetExtension(file.FileName);
                             var fileName = Path.GetFileName(file.FileName);
-
-                            // Generate a unique identifier for the new file name
+                            // Sanitize the file name to remove potentially harmful characters
+                            // Define a regular expression pattern to match the characters you want to replace
+                            var pattern = @"[+\-\/\*,\'""\\%$#@()=]";
+                            // Replace matched characters with underscores
+                            fileName = Regex.Replace(fileName, pattern, "_");                            // Generate a unique identifier for the new file name
                             //var uniqueFileName = $"{lesson_name}{lesson_subject}_WorkSheet_{maxNumber + 1}{fileExtension}";
                             var uniqueFileName = fileName;
 
@@ -436,8 +445,11 @@ namespace LMS_Learning_Management_System.Controllers
                         {
                             var fileExtension = Path.GetExtension(file.FileName);
                             var fileName = Path.GetFileName(file.FileName);
-
-                            // Generate a unique identifier for the new file name
+                            // Sanitize the file name to remove potentially harmful characters
+                            // Define a regular expression pattern to match the characters you want to replace
+                            var pattern = @"[+\-\/\*,\'""\\%$#@()=]";
+                            // Replace matched characters with underscores
+                            fileName = Regex.Replace(fileName, pattern, "_");                            // Generate a unique identifier for the new file name
                             //var uniqueFileName = $"{lesson_name}{lesson_subject}_Booklet_{maxNumber2 + 1}{fileExtension}";
                             var uniqueFileName = fileName;
 

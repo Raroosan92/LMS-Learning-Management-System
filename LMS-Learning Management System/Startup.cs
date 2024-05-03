@@ -35,56 +35,56 @@ namespace LMS_Learning_Management_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Configure cookie authentication
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(99999);
-                options.LoginPath = "/Academy/Account/Login";
-                options.AccessDeniedPath = "/Academy/Account/AccessDenied";
-                options.SlidingExpiration = true;
-                // Add event handler for OnRedirectToLogin
-                options.Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogout = context =>
-                    {
-                        // Check if the user is being redirected due to an expired cookie
-                        if (context.Request.Path.StartsWithSegments("/Academy/Account/Login")
-                            && context.Response.StatusCode == (int)HttpStatusCode.OK)
-                        {
-                            // Redirect to a specific page after ExpireTimeSpan has elapsed
-                            context.Response.Redirect("/Academy/Account/logout");
-                        }
-                        else
-                        {
-                            // Default behavior (redirect to the login page)
-                            context.Response.Redirect("/Academy/Account/logout");
-                            //context.Response.Redirect(context.RedirectUri);
-                        }
+            //// Configure cookie authentication
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.HttpOnly = true;
+            //    options.ExpireTimeSpan = TimeSpan.FromDays(99999);
+            //    options.LoginPath = "/Academy/Account/Login";
+            //    options.AccessDeniedPath = "/Academy/Account/AccessDenied";
+            //    options.SlidingExpiration = true;
+            //    // Add event handler for OnRedirectToLogin
+            //    options.Events = new CookieAuthenticationEvents
+            //    {
+            //        OnRedirectToLogout = context =>
+            //        {
+            //            // Check if the user is being redirected due to an expired cookie
+            //            if (context.Request.Path.StartsWithSegments("/Academy/Account/Login")
+            //                && context.Response.StatusCode == (int)HttpStatusCode.OK)
+            //            {
+            //                // Redirect to a specific page after ExpireTimeSpan has elapsed
+            //                context.Response.Redirect("/Academy/Account/logout");
+            //            }
+            //            else
+            //            {
+            //                // Default behavior (redirect to the login page)
+            //                context.Response.Redirect("/Academy/Account/logout");
+            //                //context.Response.Redirect(context.RedirectUri);
+            //            }
 
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+            //            return Task.CompletedTask;
+            //        }
+            //    };
+            //});
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = "Cookies";
-                options.DefaultSignInScheme = "Cookies";
-                options.DefaultSignOutScheme = "Cookies";
-            })
-                .AddCookie(options =>
-                {
-                    options.Cookie.Name = ".AspNetCore.Identity.Application22";
-                    options.ExpireTimeSpan = TimeSpan.FromDays(99999); // Set your desired session timeout
-                    options.SlidingExpiration = true;
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = "Cookies";
+            //    options.DefaultSignInScheme = "Cookies";
+            //    options.DefaultSignOutScheme = "Cookies";
+            //})
+            //    .AddCookie(options =>
+            //    {
+            //        options.Cookie.Name = ".AspNetCore.Identity.Application22";
+            //        options.ExpireTimeSpan = TimeSpan.FromDays(99999); // Set your desired session timeout
+            //        options.SlidingExpiration = true;
 
-                    options.Events.OnSigningOut = context =>
-                    {
-                        context.Response.StatusCode = 401; // Unauthorized status code
-                        return Task.CompletedTask;
-                    };
-                });
+            //        options.Events.OnSigningOut = context =>
+            //        {
+            //            context.Response.StatusCode = 401; // Unauthorized status code
+            //            return Task.CompletedTask;
+            //        };
+            //    });
 
             //services.AddSession(options =>
             //{
@@ -103,39 +103,11 @@ namespace LMS_Learning_Management_System
 );
 
             services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(90);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
-
-            //services.AddDbContext<ModelContext>(options =>
-            //   options.UseOracle(
-            //         Configuration.GetConnectionString("DefaultConnection"), b => b.UseOracleSQLCompatibility("11")));
-
-            //     services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationType)
-            //.AddCookie(options =>
-            //{
-            //    options.LoginPath = "/Account/Login";
-            //    options.AccessDeniedPath = "/Account/AccessDenied";
-            //    // Additional options...
-            //});
+           
             services.AddDbContext<LMSContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-
-
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
 
-
-            //services.Configure<DataProtectionTokenProviderOptions>(opts => opts.TokenLifespan = TimeSpan.FromHours(10));
-            //services.ConfigureApplicationCookie(options =>
-            //{
-            //    options.Cookie.Name = ".AspNetCore.Identity.Application";
-            //    options.ExpireTimeSpan = TimeSpan.FromDays(3900);
-            //    options.SlidingExpiration = true;
-            //});
 
             services.AddAuthorization(opts =>
             {
@@ -164,25 +136,6 @@ namespace LMS_Learning_Management_System
                 });
             });
 
-            //services.AddAuthentication().AddGoogle(opts =>
-            //{
-            //    opts.ClientId = "717469225962-3vk00r8tglnbts1cgc4j1afqb358o8nj.apps.googleusercontent.com";
-            //    opts.ClientSecret = "babQzWPLGwfOQVi0EYR-7Fbb";
-            //    opts.SignInScheme = IdentityConstants.ExternalScheme;
-            //});
-
-            //services.Configure<IdentityOptions>(opts =>
-            //{
-            //    opts.Lockout.AllowedForNewUsers = false;
-            //    opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            //    opts.Lockout.MaxFailedAccessAttempts = 3;
-
-            //});
-
-            /*services.Configure<IdentityOptions>(opts =>
-            {
-                opts.SignIn.RequireConfirmedEmail = true;
-            });*/
             services.Configure<MvcNewtonsoftJsonOptions>(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -211,7 +164,7 @@ namespace LMS_Learning_Management_System
         {
             app.UseAuthentication();
 
-            app.UseSession();
+            //app.UseSession();
 
             if (env.IsDevelopment())
             {

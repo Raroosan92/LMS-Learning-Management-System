@@ -336,31 +336,42 @@ namespace LMS_Learning_Management_System.Controllers
         }
 
         [Authorize(Roles = "admin")]
-
-        public async Task<IActionResult> Pay(int cardno, int CardSer, decimal amount)
+        public async Task<IActionResult> Pay(List<int> cardno, List<int> CardSer, List<decimal> amount)
         {
             if (ModelState.IsValid)
             {
                 GetTime();
 
-                var Card_Details = _context.CardSubjects.Where(r => r.Id == CardSer).FirstOrDefault();
-
-                if (Card_Details.TeacherId != null)
+                // Iterate through the selected rows and update their payment details
+                for (int i = 0; i < cardno.Count; i++)
                 {
-                    // Update the properties directly on the tracked entity
-                    Card_Details.PaymentAmount = amount;
-                    Card_Details.IsPayment = true;
-                    Card_Details.PaymentDate = Jor;
+                    var cardNo = cardno[i];
+                    var cardSer = CardSer[i];
+                    var paymentAmount = amount[i];
 
-                    // Exclude specific properties from modification
-                    _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.TeacherId).IsModified = false;
-                    _context.Entry(Card_Details).Property(x => x.Semester).IsModified = false;
-                    await _context.SaveChangesAsync();
+                    var cardDetails = _context.CardSubjects.FirstOrDefault(r => r.Id == cardSer);
+
+                    if (cardDetails != null && cardDetails.TeacherId != null)
+                    {
+                        // Update the payment details
+                        cardDetails.PaymentAmount = paymentAmount;
+                        cardDetails.IsPayment = true;
+                        cardDetails.PaymentDate = Jor;
+
+                        // Exclude specific properties from modification
+                        _context.Entry(cardDetails).Property(x => x.CardNo).IsModified = false;
+                        _context.Entry(cardDetails).Property(x => x.SubjectId).IsModified = false;
+                        _context.Entry(cardDetails).Property(x => x.ClassId).IsModified = false;
+                        _context.Entry(cardDetails).Property(x => x.TeacherId).IsModified = false;
+                        _context.Entry(cardDetails).Property(x => x.Semester).IsModified = false;
+                    }
                 }
 
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // Reload the page or return appropriate response
+                // Redirect to the action or view you want after processing
                 var model = new Mixed_VTeacher_Sales_Cards()
                 {
 
@@ -368,13 +379,59 @@ namespace LMS_Learning_Management_System.Controllers
 
                 };
                 GetUserRole();
+
                 return View("index", model);
 
             }
             var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
             GetUserRole();
-            return View("index", model2.ToList());
 
+            return View("index", model2.ToList());
         }
+
+
+        //public async Task<IActionResult> Pay(int cardno, int CardSer, decimal amount)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        GetTime();
+
+        //        var Card_Details = _context.CardSubjects.Where(r => r.Id == CardSer).FirstOrDefault();
+
+        //        if (Card_Details.TeacherId != null)
+        //        {
+        //            // Update the properties directly on the tracked entity
+        //            Card_Details.PaymentAmount = amount;
+        //            Card_Details.IsPayment = true;
+        //            Card_Details.PaymentDate = Jor;
+
+        //            // Exclude specific properties from modification
+        //            _context.Entry(Card_Details).Property(x => x.CardNo).IsModified = false;
+        //            _context.Entry(Card_Details).Property(x => x.SubjectId).IsModified = false;
+        //            _context.Entry(Card_Details).Property(x => x.ClassId).IsModified = false;
+        //            _context.Entry(Card_Details).Property(x => x.TeacherId).IsModified = false;
+        //            _context.Entry(Card_Details).Property(x => x.Semester).IsModified = false;
+        //            await _context.SaveChangesAsync();
+        //        }
+
+        //        var model = new Mixed_VTeacher_Sales_Cards()
+        //        {
+
+        //            Teacher_Sales_Cards_Collection = await _context.VTeacherSalesCards.OrderByDescending(r => r.UserName).ToListAsync()
+
+        //        };
+        //        GetUserRole();
+        //        return View(model);
+
+        //        //return View("index", model);
+
+        //    }
+        //    var model2 = _context.VTeacherSalesCards.OrderByDescending(r => r.UserName);
+        //    GetUserRole();
+        //    return View(model2.ToList());
+
+        //    //return View("index", model2.ToList());
+
+        //}
     }
 }

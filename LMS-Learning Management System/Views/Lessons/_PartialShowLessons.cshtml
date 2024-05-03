@@ -211,7 +211,7 @@
                                                                 <li class="accordion__menu-link">
                                                                     <span class="material-icons icon-16pt icon--left text-body">@*check_circle*@play_circle_outline</span>
 
-                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;display:contents" onclick="toggleVideo('@item.UrlVideo','@item.Name', '@HttpUtility.JavaScriptStringEncode(item.Description)');">@item.Name.ToString().Trim()</button>
+                                                                    <button type="button" class="btn btn-dark video-link-button" style=" background: none; border: none; color: black; font-size: 18px;display:contents" onclick="toggleVideo('@HttpUtility.JavaScriptStringEncode(item.UrlVideo)','@HttpUtility.JavaScriptStringEncode(item.Name)', '@HttpUtility.JavaScriptStringEncode(item.Description)');">@item.Name.ToString().Trim()</button>
 
                                                                     @*<span class="text-muted">8m 42s</span>*@
                                                                 </li>

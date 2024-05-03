@@ -20,10 +20,10 @@
 
     /* Override the default styles for other notification types as needed */
 </style>
+<p style="background-color: darkseagreen;width: fit-content;border-radius: 5px;" id="ccards"></p>
 <p>
     <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
 </p>
-
 <table id="classes" class="table table-striped table-bordered table-inverse table-responsive " style="font-size: 17px;">
     <thead>
         <tr>
@@ -47,20 +47,22 @@
             </th>
             @*<th>
             @Html.DisplayNameFor(model => model.Class)
-        </th>
-        <th>
+            </th>
+            <th>
             @Html.DisplayNameFor(model => model.Subject)
-        </th>
-        <th>
+            </th>
+            <th>
             @Html.DisplayNameFor(model => model.User)
-        </th>*@
+            </th>*@
             <th></th>
         </tr>
 
     </thead>
 </table>
-@section scripts{
+@section scripts {
     <script>
+        var cardsWithUserDescCount = 0; // Define the external variable to store the count
+
         $(document).ready(function () {
             $("#classes").DataTable({
                 "ajax": {
@@ -75,10 +77,12 @@
                     { "data": "numberOfSubjects" },
                     { "data": "cardPrice" },
                     { "data": "status2" },
-                    { "data": "userdesc" },
+                    {
+                        "data": "userdesc",
+                    },
                     {
                         "data": "id", "render": function (data) {
-                            return "<a asp-action='Edit' style='font-size: 15px;' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' style='font-size: 15px;' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' style='font-size: 15px;' onclick=DeleteCource(" + data +") class='btn btn-danger'>حذف</a> ";
+                            return "<a asp-action='Edit' style='font-size: 15px;' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' style='font-size: 15px;' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' style='font-size: 15px;' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> ";
                         },
                         "orderable": true,
                         "searchable": true,
@@ -87,16 +91,24 @@
                 ],
                 "language": {
                     "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
+                },
+                "initComplete": function (settings, json) {
+                    // Iterate over the data to count cards with non-null userdesc
+                    json.data.forEach(function (item) {
+
+                        if (item.userdesc !== null && item.userdesc !== "") {
+                            cardsWithUserDescCount++;
+                        }
+                    });
+                    $("#ccards").text("عدد البطاقات المباعة " + cardsWithUserDescCount);
                 }
-
-
-
             });
-
-
-
-
         });
+
+
+
+
+
 
 
         function PopupFormCource2(url) {
@@ -121,7 +133,7 @@
 
         function PopupFormCource(url) {
             var formDiv = $('<div/>');
-                $.get(url)
+            $.get(url)
                 .done(function (response) {
                     formDiv.html(response);
 
@@ -142,14 +154,12 @@
 
 
         function DeleteCource(id) {
-            if (confirm('هل أنت متأكد أنك تريد حذف السجل؟'))
-            {
+            if (confirm('هل أنت متأكد أنك تريد حذف السجل؟')) {
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Delete", "Cards")/' + id,
                     success: function (data) {
-                        if (data.success)
-                        {
+                        if (data.success) {
                             $.notify(data.message, {
                                 globalPosition: "top center",
                                 className: "notification-custom"
