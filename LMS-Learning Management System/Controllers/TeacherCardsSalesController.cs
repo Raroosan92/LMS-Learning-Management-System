@@ -61,7 +61,7 @@ namespace LMS_Learning_Management_System.Controllers
         public async Task<IActionResult> Index()
         {
             ViewData["SubjectId"] = new SelectList(_context.Subjects.Where(r => r.Status == true), "Abbreviation", "Abbreviation", "-- أختر --");
-            ViewData["TeacherId"] = new SelectList(_context.VTeacherSalesCards.Select(r => new { r.TeacherName, r.TeacherUserID }), "TeacherName", "TeacherName", "-- أختر --");
+            ViewData["TeacherId"] = new SelectList(_context.VTeacherSalesCards.Select(r => new { r.TeacherName, r.TeacherUserID }).Distinct(), "TeacherName", "TeacherName", "-- أختر --");
 
 
             var model = new Mixed_VTeacher_Sales_Cards()
