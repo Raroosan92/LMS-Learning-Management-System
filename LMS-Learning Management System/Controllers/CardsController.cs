@@ -455,6 +455,99 @@ namespace LMS_Learning_Management_System.Controllers
 
 
         }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> MakeNew(int id)
+        {
+            using (LMSContext db = new LMSContext())
+            {
+                try
+                {
+                    bool deleted = true;
+                    //CardSubject cardsdtl = db.CardSubjects.Where(x => x.CardNo == id).FirstOrDefault<CardSubject>();
+                    //db.CardSubjects.Remove(cardsdtl);
+                    //db.SaveChanges();
+                    Card cards2 = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
+
+                    var cardsSubjects = await db.CardSubjects.Where(x => x.CardNo == cards2.Id).ToListAsync();
+
+                    try
+                    {
+
+                        foreach (var item in cardsSubjects)
+                        {
+                            Enrollment Enrollments = db.Enrollments.Where(x => x.SubjectId == item.SubjectId && x.ClassId == item.ClassId && x.Semester == item.Semester && x.CardNo==item.CardNo).FirstOrDefault<Enrollment>();
+                            if (Enrollments != null)
+                            {
+
+                                db.Enrollments.Remove(Enrollments);
+                                await db.SaveChangesAsync();
+                                deleted = true;
+                            }
+                            else
+                            {
+                                deleted = true;
+                            }
+
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        deleted = false;
+                    }
+
+                    try
+                    {
+
+
+                        foreach (var item2 in cardsSubjects)
+                        {
+                            CardSubject cardsSubjects1 = db.CardSubjects.Where(x => x.CardNo == item2.CardNo && x.SubjectId == item2.SubjectId && x.ClassId == item2.ClassId && x.Semester == item2.Semester).FirstOrDefault<CardSubject>();
+
+                            if (cardsSubjects1 != null)
+                            {
+
+                                db.CardSubjects.Remove(cardsSubjects1);
+                                await db.SaveChangesAsync();
+                                deleted = true;
+                            }
+
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        deleted = false;
+                    }
+                    if (deleted)
+                    {
+
+                        Card cards = db.Cards.Where(x => x.Id == id).FirstOrDefault<Card>();
+                        cards.UserName = null;
+                        cards.UserId = null;
+                        db.Cards.Update(cards);
+                        db.SaveChanges();
+
+                        return Json(new { success = true, message = "تمت عملية التجديد بنجاح" });
+                    }
+                    else
+                    {
+                        return Json(new { success = true, message = "تمت عملية التجديد بنجاح" });
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = true, message = "خطأ في عملية التجديد" });
+
+                }
+            }
+
+
+        }
         public void GetTime()
         {
 

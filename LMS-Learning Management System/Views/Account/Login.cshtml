@@ -283,6 +283,7 @@
     }
 </style>
 <style>
+
     .marquee-container {
         position: relative;
         width: 80%; /* Adjust the width as needed */
@@ -396,17 +397,43 @@
             }
         }
     }
+
+
+</style>
+<style>
+    .position-relative {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 361px;
+        transform: translateY(-50%);
+        border: none;
+        background-color: transparent;
+    }
+
+        .toggle-password:focus {
+            outline: none;
+        }
+
+        .toggle-password i {
+            cursor: pointer;
+        }
 </style>
 
-    <div class="marquee-container">
-        <span class="marquee-label left-label">تحذير!</span>
-        <div class="marquee">
-            <p>نرجو منك الدخول من نفس الجهاز في كل مرة، حيث أنه في حال تغيّر الجهاز، قد لا تتمكن من الدخول</p>
-        </div>
-        <span class="marquee-label right-label">تحذير!</span>
-    </div>
 
-    
+<div class="marquee-container" onmouseover="stopMarquee()" onmouseout="startMarquee()">
+    <span class="marquee-label left-label">تحذير!</span>
+    <div class="marquee">
+        <p>نرجو منك الدخول من نفس الجهاز في كل مرة، حيث أنه في حال تغيّر الجهاز، قد لا تتمكن من الدخول</p>
+    </div>
+    <span class="marquee-label right-label">تحذير!</span>
+</div>
+
+
+
 <!--dust particel-->
 <ul class="circles">
     <li></li>
@@ -424,7 +451,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <section class="wrapper my-5 mx-auto">
+            <section class="wrapper my-5 mx-auto login header">
                 <div class="form signup">
 
                     <header>تسجيل الدخول</header>
@@ -444,8 +471,15 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Password"></label>
-                            <input asp-for="Password" class="form-control" type="password" />
+                            <div class="position-relative">
+                                <input asp-for="Password" class="form-control" type="password" id="passwordInput" />
+                                <button class="btn btn-outline-secondary toggle-password" type="button">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
+
+
                         <div class="form-group">
                             تذكرني؟ <input type="checkbox" asp-for="Remember" />
                         </div>
@@ -454,7 +488,7 @@
 
                         <br />
 
-                        
+
 
                         <button class="btn btn-primary" type="submit">تسجيل الدخول</button>
                         @*<a class="btn btn-info" asp-action="GoogleLogin">Log In With Google</a>*@
@@ -476,7 +510,7 @@
 @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
 </script>*@
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
 <script>
     // Function to generate a device fingerprint
     function generateDeviceFingerprint() {
@@ -509,25 +543,65 @@
     var deviceFingerprint = generateDeviceFingerprint();
     //alert("Device Fingerprint: " + deviceFingerprint); // Display device fingerprint
     $('#clientIpAddress2').val(deviceFingerprint);
-</script>
+</script> *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function generateDeviceFingerprint() {
+            // Collect data points
+            
+            var screenResolution = screen.width + "x" + screen.height;
+            // var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            var platform = navigator.platform;
+            // Additional data points
+            var cpuCores = navigator.hardwareConcurrency || "Unknown";
+            var memory = navigator.deviceMemory || (navigator.hardwareConcurrency ? navigator.hardwareConcurrency : "Unknown");
+            // var pluginsLength = navigator.plugins.length || "Unknown";
+            // Concatenate data points
+            // var data = userAgent + screenResolution + timezone + platform + language + canvasData;
+            var data = screenResolution  + platform + cpuCores + memory;
 
+          
+
+            // Hash the concatenated data
+            var fingerprint = CryptoJS.SHA256(data).toString(CryptoJS.enc.Hex);
+            return fingerprint;
+        }
+
+        var fingerprint = generateDeviceFingerprint();
+        // alert("Fingerprint: "+ fingerprint);
+
+        $('#clientIpAddress2').val(fingerprint);
+
+        // // Optionally store in localStorage
+        // localStorage.setItem('fingerprint', fingerprint);
+        // alert(localStorage.getItem('fingerprint'))
+
+        // // Check fingerprint on subsequent visits
+        // if (localStorage.getItem('fingerprint') === fingerprint) {
+        //     alert("Fingerprint matches.");
+        // } else {
+        //     alert("New fingerprint generated.");
+        // }
+    });
+</script>
 <script>
 
-        // var fingerprint = '';
+    // var fingerprint = '';
 
-        // // Collect various browser and device information
-        // var userAgent = navigator.userAgent;
-        // var language = navigator.language;
-        // var platform = navigator.platform;
-        // var plugins = Array.from(navigator.plugins).map(plugin => plugin.name).join(',');
-        // var screenResolution = screen.width + 'x' + screen.height;
-        // var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // // Collect various browser and device information
+    // var userAgent = navigator.userAgent;
+    // var language = navigator.language;
+    // var platform = navigator.platform;
+    // var plugins = Array.from(navigator.plugins).map(plugin => plugin.name).join(',');
+    // var screenResolution = screen.width + 'x' + screen.height;
+    // var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        // // Concatenate the collected information
-        // fingerprint = userAgent + language + platform + plugins + screenResolution + timeZone;
+    // // Concatenate the collected information
+    // fingerprint = userAgent + language + platform + plugins + screenResolution + timeZone;
 
-        // // Hash the fingerprint to make it less identifiable
-        // alert(fingerprint);
+    // // Hash the fingerprint to make it less identifiable
+    // alert(fingerprint);
 
 
 
@@ -642,7 +716,39 @@
 
 </script>
 
+<script>
+    $(document).ready(function () {
+        $('.toggle-password').on('click', function () {
+            var passwordField = $('#passwordInput');
+            var passwordFieldType = passwordField.attr('type');
 
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                $(this).find('i').removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordField.attr('type', 'password');
+                $(this).find('i').removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+    });
+</script>
+<script>
+    function stopMarquee() {
+        var marqueeElements = document.querySelectorAll('.marquee');
+        marqueeElements.forEach(function (element) {
+            element.style.animationPlayState = 'paused';
+        });
+    }
+
+    function startMarquee() {
+        var marqueeElements = document.querySelectorAll('.marquee');
+        marqueeElements.forEach(function (element) {
+            element.style.animationPlayState = 'running';
+        });
+    }
+
+
+</script>
 <!-- Include SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -656,18 +762,18 @@
             showInformationSteps();
         });
     });
-    
+
     function showInformationSteps() {
         Swal.fire({
             title: 'تعليمات التسجيل',
-            html: '<h3 style="color:orangered">تعليمات التسجيل لأول مرة</h3><br/>' + 
-            '<ol style="text-align: justify;font-size: smaller;">' +
+            html: '<h3 style="color:orangered">تعليمات التسجيل لأول مرة</h3><br/>' +
+                '<ol style="text-align: justify;font-size: smaller;">' +
                 '<li>الضغط على زر "انشاء مستخدم جديد"</li>' +
                 '<li>تعبئة المعلومات الخاصة بالطالب والتأكد جيداً من "رقم الهاتف" و"كلمة المرور" قبل عملية الحفظ</li>' +
                 '<p style="color:red;">**ملاحظة رقم الهاتف مهم جدا لانه سيكون المعرف الوحيد للطالب لذلك تأكد من رقم الهاتف جيداً</p>' +
                 '<li>اضغط على زر انشاء</li>' +
                 '</ol>' +
-                '<h3 style="color:limegreen">تعليمات الدخول لطالب مسجل بالفعل</h3><br/>' + 
+                '<h3 style="color:limegreen">تعليمات الدخول لطالب مسجل بالفعل</h3><br/>' +
                 '<ol style="text-align: justify;font-size: smaller;">' +
                 '<li>ادخل "رقم الهاتف "</li>' +
                 '<li>ادخل "كلمة المرور"</li>' +

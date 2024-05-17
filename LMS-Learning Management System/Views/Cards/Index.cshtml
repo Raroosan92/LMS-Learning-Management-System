@@ -82,7 +82,7 @@
                     },
                     {
                         "data": "id", "render": function (data) {
-                            return "<a asp-action='Edit' style='font-size: 15px;' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> |<a asp-action='Details' style='font-size: 15px;' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>عرض التفاصيل</a> |<a asp-action='Delete' style='font-size: 15px;' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> ";
+                            return "<a asp-action='Edit' style='font-size: 15px;' onclick=PopupFormCource2('@Url.Action("Edit", "Cards")/" + data + "') class='btn btn-warning'>تعديل</a> | <a asp-action='Details' style='font-size: 15px;' onclick=PopupFormCource('@Url.Action("Details", "Cards")/" + data + "') class='btn btn-info'>التفاصيل</a> | <a asp-action='Delete' style='font-size: 15px;' onclick=DeleteCource(" + data + ") class='btn btn-danger'>حذف</a> | <a asp-action='MakeNew' style='font-size: 15px;' onclick=MakeNewF(" + data + ") class='btn btn-dark'>اعادة تجديد</a>";
                         },
                         "orderable": true,
                         "searchable": true,
@@ -158,6 +158,29 @@
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Delete", "Cards")/' + id,
+                    success: function (data) {
+                        if (data.success) {
+                            $.notify(data.message, {
+                                globalPosition: "top center",
+                                className: "notification-custom"
+                            })
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 3000);
+                        }
+                    }
+
+                });
+            }
+        }
+
+
+
+        function MakeNewF(id) {
+            if (confirm('هل أنت متأكد من اعادة تجديد البطاقة الحالية؟')) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("MakeNew", "Cards")/' + id,
                     success: function (data) {
                         if (data.success) {
                             $.notify(data.message, {
