@@ -408,7 +408,7 @@
     .toggle-password {
         position: absolute;
         top: 50%;
-        right: 361px;
+        left: 10px; /* Adjust this value as needed */
         transform: translateY(-50%);
         border: none;
         background-color: transparent;
@@ -417,7 +417,7 @@
         .toggle-password {
             position: absolute;
             top: 50%;
-            right: 210px;
+            left: 10px; /* Adjust this value as needed */
             transform: translateY(-50%);
             border: none;
             background-color: transparent;
@@ -554,7 +554,26 @@
     //alert("Device Fingerprint: " + deviceFingerprint); // Display device fingerprint
     $('#clientIpAddress2').val(deviceFingerprint);
 </script> *@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+
+<script>
+
+    // Generate or retrieve the clientIpAddress2
+    let deviceId = localStorage.getItem('clientIpAddress2');
+    if (!deviceId) {
+        deviceId = uuid.v4();  // Generate a new UUID
+        localStorage.setItem('clientIpAddress2', deviceId);  // Store it in local storage
+    }
+
+    // Include the clientIpAddress2 in the form submission
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('clientIpAddress2').value = deviceId;
+        // alert(deviceId);
+    });
+
+</script>
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 <script>
     $(document).ready(function () {
         function generateDeviceFingerprint() {
@@ -594,7 +613,7 @@
         //     alert("New fingerprint generated.");
         // }
     });
-</script>
+</script> *@
 <script>
 
     // var fingerprint = '';
