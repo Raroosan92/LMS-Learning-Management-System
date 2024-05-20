@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS_Learning_Management_System.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS_Learning_Management_System.Controllers
 {
+    [Authorize(Roles = "admin")]
+
     public class ActiveSessionsController : Controller
     {
         private readonly LMSContext _context;
