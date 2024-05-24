@@ -79,5 +79,6 @@ namespace LMS_Learning_Management_System.Models
         public IEnumerable<CardSubject> DTL_Collection { get; set; }
         public IEnumerable<Subject> Subject_Collection { get; set; }
         public IEnumerable<Class> Class_Collection { get; set; }
+        public IEnumerable<AppUser> Users_Collection { get; set; }
     }
 }

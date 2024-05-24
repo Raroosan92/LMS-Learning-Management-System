@@ -10,7 +10,9 @@
 <div>
     <h4>البطاقات</h4>
     <hr />
-
+    @{
+        var id = 0;
+    }
     <div class="col-md-12">
         <table class="table table-hover" id="tab1">
             <thead>
@@ -18,36 +20,51 @@
                     <th>رقم البطاقة</th>
                     <th>الصف</th>
                     <th>المادة</th>
+                    <th>الطالب</th>
                 </tr>
             </thead>
             <tbody>
                 @{
 
-                    foreach (var item in Model.DTL_Collection.OrderBy(x => x.ClassId))
-                    {
-                                <tr class="table-light">
-                                    @{foreach (var cardno in Model.HD_Collection.Where(c => c.Id == @item.CardNo).Distinct())
-                                        {
+                    <tr class="table-light">
+                        @{
+                            foreach (var item in Model.DTL_Collection.OrderBy(x => x.ClassId))
+                            {
+                                foreach (var cardno in Model.HD_Collection.Where(c => c.Id == @item.CardNo).Distinct())
+                                {
+                                    id = @cardno.Id;
+                                    <th>@cardno.CardNo</th>
+                                }
+                                foreach (var classdesc in Model.Class_Collection.Where(c => c.Id == @item.ClassId).Distinct())
+                                {
 
-                                            <th>@cardno.CardNo</th>
-                                        }
-                                        foreach (var classdesc in Model.Class_Collection.Where(c => c.Id == @item.ClassId).Distinct())
-                                        {
+                                    <td>@classdesc.Descriptions</td>
 
-                                            <td>@classdesc.Descriptions</td>
+                                }
+                                foreach (var subjectdesc in Model.Subject_Collection.Where(c => c.Id == @item.SubjectId).Distinct())
+                                {
 
-                                        }
-                                        foreach (var subjectdesc in Model.Subject_Collection.Where(c => c.Id == @item.SubjectId).Distinct())
-                                        {
+                                    <th>@subjectdesc.Name</th>
+                                }
+                            }
 
-                                            <th>@subjectdesc.Name</th>
-                                        }
-                                    }
-                                </tr>
-                    }
+
+
+
+                            foreach (var items in Model.HD_Collection.Where(x => x.Id == id).Distinct())
+                            {
+
+
+                                foreach (var cardno in Model.Users_Collection.Where(c => c.Id == @items.UserId).Distinct())
+                                {
+
+                                    <th>@cardno.FullName</th>
+                                }
+                            }
+                        }
+                    </tr>
 
                 }
-
             </tbody>
         </table>
     </div>
@@ -55,40 +72,40 @@
 
 
     @*<dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CardNo)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CardNo)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CardPassword)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CardPassword)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CardPrice)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CardPrice)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.CardStatus)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.CardStatus)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.UserName)
-            </dt>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.User)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.User.Id)
-            </dd>
-        </dl>*@
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.CardNo)
+    </dt>
+    <dd class="col-sm-10">
+    @Html.DisplayFor(model => model.CardNo)
+    </dd>
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.CardPassword)
+    </dt>
+    <dd class="col-sm-10">
+    @Html.DisplayFor(model => model.CardPassword)
+    </dd>
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.CardPrice)
+    </dt>
+    <dd class="col-sm-10">
+    @Html.DisplayFor(model => model.CardPrice)
+    </dd>
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.CardStatus)
+    </dt>
+    <dd class="col-sm-10">
+    @Html.DisplayFor(model => model.CardStatus)
+    </dd>
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.UserName)
+    </dt>
+    <dt class="col-sm-2">
+    @Html.DisplayNameFor(model => model.User)
+    </dt>
+    <dd class="col-sm-10">
+    @Html.DisplayFor(model => model.User.Id)
+    </dd>
+    </dl>*@
 </div>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Id"  class="btn btn-warning">تعديل</a> |*@

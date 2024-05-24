@@ -268,6 +268,9 @@ namespace LMS_Learning_Management_System.Controllers
                 try
                 {
                     _context.Update(card);
+                    _context.Entry(card).Property(u => u.UserId).IsModified = false;
+                    _context.Entry(card).Property(u => u.UserName).IsModified = false;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -581,7 +584,8 @@ namespace LMS_Learning_Management_System.Controllers
                 HD_Collection = _context.Cards.ToList(),
                 DTL_Collection = query.AsEnumerable(),
                 Subject_Collection = _context.Subjects.ToList(),
-                Class_Collection = _context.Classes.ToList()
+                Class_Collection = _context.Classes.ToList(),
+                Users_Collection= _contextUsers.Users.ToList()
             };
             return (model);
 
