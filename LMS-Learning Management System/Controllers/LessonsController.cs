@@ -534,29 +534,35 @@ namespace LMS_Learning_Management_System.Controllers
         [Authorize(Roles = "teacher,admin")]
 
         [HttpPost]
-        public IActionResult GetData()
+        public async Task<ActionResult<List<Lesson>>> GetData()
         {
 
             List<Lesson> stList = new List<Lesson>();
 
             if (User.IsInRole("admin"))
             {
-                stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
+                //stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
+                stList = await _context.Lessons.Include(l => l.Class)
+                                   .Include(l => l.Subject)
+                                   .OrderByDescending(r => r.Id)
+                                   .ToListAsync();
+
 
             }
             else
             {
-                var teacher_Lessons = _context.TeacherEnrollments
-    .Where(r => r.UserId == User.Identity.GetUserId())
-    .Distinct()
-    .ToList();
+
+                var teacher_Lessons = await _context.TeacherEnrollments
+                                            .Where(r => r.UserId == User.Identity.GetUserId())
+                                            .Distinct()
+                                            .ToListAsync();
 
                 foreach (var enrollment in teacher_Lessons)
                 {
-                    var lessons = _context.Lessons
+                    var lessons = await _context.Lessons
                         .Where(r => r.SubjectId == enrollment.SubjectId && r.ClassId == enrollment.ClassId)
                         .OrderByDescending(r => r.Id)
-                        .ToList();
+                        .ToListAsync();
 
                     // Assuming you want to add each lesson to stList
                     foreach (var lesson in lessons)
@@ -566,36 +572,71 @@ namespace LMS_Learning_Management_System.Controllers
                 }
 
             }
-            for (int i = 0; i < stList.Count; i++)
-            {
-                var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
-                var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
-                stList[i].Classdesc = classes.Descriptions;
-                stList[i].Subjectdesc = subjects.Name;
-                if (stList[i].Status == true)
-                {
-                    stList[i].Status2 = "فعال";
 
-                }
-                else
-                {
-                    stList[i].Status2 = "غير فعال";
+            //for (int i = 0; i < stList.Count; i++)
+            //{
+            //    var subjects = await _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefaultAsync();
+            //    var classes = await _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefaultAsync();
+            //    stList[i].Classdesc = classes.Descriptions;
+            //    stList[i].Subjectdesc = subjects.Name;
+            //    if (stList[i].Status == true)
+            //    {
+            //        stList[i].Status2 = "فعال";
 
-                }
-                if (stList[i].Semester == 1)
-                {
-                    stList[i].SemesterDesc = "الفصل الأول";
+            //    }
+            //    else
+            //    {
+            //        stList[i].Status2 = "غير فعال";
 
-                }
-                else
-                {
-                    stList[i].SemesterDesc = "الفصل الثاني";
+            //    }
+            //    if (stList[i].Semester == 1)
+            //    {
+            //        stList[i].SemesterDesc = "الفصل الأول";
 
-                }
-            }
+            //    }
+            //    else
+            //    {
+            //        stList[i].SemesterDesc = "الفصل الثاني";
+
+            //    }
+            //}
+
+
+
+
+
+            //var subjectIds = stList.Select(s => s.SubjectId).Distinct().ToList();
+            //var classIds = stList.Select(s => s.ClassId).Distinct().ToList();
+
+            //var subjects = await _context.Subjects
+            //                             .Where(s => subjectIds.Contains(s.Id))
+            //                             .ToDictionaryAsync(s => s.Id);
+
+            //var classes = await _context.Classes
+            //                            .Where(c => classIds.Contains(c.Id))
+            //                            .ToDictionaryAsync(c => c.Id);
+
+            //for (int i = 0; i < stList.Count; i++)
+            //{
+            //    if (subjects.TryGetValue(stList[i].SubjectId, out var subject))
+            //    {
+            //        stList[i].Subjectdesc = subject.Name;
+            //    }
+
+            //    if (classes.TryGetValue(stList[i].ClassId, out var classEntity))
+            //    {
+            //        stList[i].Classdesc = classEntity.Descriptions;
+            //    }
+
+            //    // Handle nullable bool (bool?)
+            //    stList[i].Status2 = stList[i].Status.HasValue && stList[i].Status.Value ? "فعال" : "غير فعال";
+            //    stList[i].SemesterDesc = stList[i].Semester == 1 ? "الفصل الأول" : "الفصل الثاني";
+            //}
+
             return new JsonResult(new { data = stList.OrderByDescending(r => r.Id) });
 
         }
+
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Delete(int id)

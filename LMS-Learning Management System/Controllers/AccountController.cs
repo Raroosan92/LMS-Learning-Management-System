@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
@@ -150,6 +151,14 @@ namespace LMS_Learning_Management_System.Controllers
                     {
                         //string client_MACAddress=GetClientMAC(GetIPAddress());
                         //ActiveSessions = await GetActiveSessionAsync(userdetails.Id, client_MACAddress);
+
+
+                        //**********************************************************************************
+                      
+
+
+                        //**********************************************************************************
+
                         ActiveSessions = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
                     }
 
@@ -628,5 +637,7 @@ namespace LMS_Learning_Management_System.Controllers
         {
             return View();
         }
+
+
     }
 }
