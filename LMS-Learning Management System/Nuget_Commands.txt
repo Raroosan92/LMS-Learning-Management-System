@@ -1,0 +1,30 @@
+﻿Scaffold-dbcontext "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.19)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XE)));Persist Security Info=True;User Id=TEST_CORE;Password=TEST;" Oracle.EntityFrameworkCore -OutputDir Models -Force
+scaffold-dbcontext "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.30.15)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=mce)));Persist Security Info=True;User Id=COMMDIV;Password=COMMDIVPASS;" Oracle.EntityFrameworkCore -OutputDir Models -TABLES MARKET_BRANCH_HD,MARKET_BRANCH_DTL,COMMDIV_VIEW,STORE_VIEW,STORE_VIEW_M,ORDERS_STORE_DTL,ORDERS_STORS_HD,ORDARS_SERIAL,ORDERS_MARKETS,EL_DSTP_ORDER_HD,EL_DSTP_ORDER_DTL,ORDERS_LOOKUP_TABLE,ITEMS_TOTAL_TRANSACTION,STORE_CHECK_ITEMS_HD,STORE_CHECK_ITEMS_DTL,ORDERS_FIN_MASTER,ORDERS_FIN_DETAILS -Force
+Scaffold-DbContext "Server=.\SQLExpress;Database=TEST_CORE;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+Scaffold-DbContext "Server=.;Database=LMS;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -TABLES V_LessonsDesc -Force
+
+EntityFrameworkCore\Add-Migration "InitialCreate" -context AppIdentityDbContext
+EntityFrameworkCore\update-database -context AppIdentityDbContext
+
+
+
+
+
+خطوات اضافة ال identity
+1- install nuget (Microsoft.AspNetCore.Authentication.Google) مش ضروري
+2- install nuget (Microsoft.AspNetCore.Identity.EntityFrameworkCore)
+3- copy the files (Models,Controller,Views) from indetity project to new project 
+4- Change HomeController from identity project to HomeLoginController in New Project
+5- Change namespace from ( identity.) to ( ProjectName.)--لا تنسى الفراغ في البداية
+6- go to =>View _ViewImports and copy from identity to new project
+7- Copy startup.cs From identity project to new one (لعند services.AddControllersWithViews();)
+8- EntityFrameworkCore\Add-Migration "InitialCreate" -context AppIdentityDbContext--لأنشاء الجداول بقاعدة البيانات
+9- EntityFrameworkCore\update-database -context AppIdentityDbContext
+
+
+
+
+
+
+
+

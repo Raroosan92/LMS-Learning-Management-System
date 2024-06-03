@@ -534,17 +534,15 @@ namespace LMS_Learning_Management_System.Controllers
         [Authorize(Roles = "teacher,admin")]
 
         [HttpPost]
-        public async Task<ActionResult<List<Lesson>>> GetData()
+        public async Task<ActionResult<List<VLessonsDesc>>> GetData()
         {
 
-            List<Lesson> stList = new List<Lesson>();
+            List<VLessonsDesc> stList = new List<VLessonsDesc>();
 
             if (User.IsInRole("admin"))
             {
                 //stList = _context.Lessons.Include(l => l.Class).Include(l => l.Subject).OrderByDescending(r => r.Id).ToList();
-                stList = await _context.Lessons.Include(l => l.Class)
-                                   .Include(l => l.Subject)
-                                   .OrderByDescending(r => r.Id)
+                stList = await _context.VLessonsDescs.OrderByDescending(r => r.Id)
                                    .ToListAsync();
 
 
@@ -559,7 +557,7 @@ namespace LMS_Learning_Management_System.Controllers
 
                 foreach (var enrollment in teacher_Lessons)
                 {
-                    var lessons = await _context.Lessons
+                    var lessons = await _context.VLessonsDescs
                         .Where(r => r.SubjectId == enrollment.SubjectId && r.ClassId == enrollment.ClassId)
                         .OrderByDescending(r => r.Id)
                         .ToListAsync();

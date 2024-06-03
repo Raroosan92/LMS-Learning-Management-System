@@ -39,6 +39,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<VTechersInfo> VTechersInfos { get; set; }
         public virtual DbSet<VEnrollmentStdDetail> VEnrollmentStdDetails { get; set; }
         public virtual DbSet<Code> Codes { get; set; }
+        public virtual DbSet<VLessonsDesc> VLessonsDescs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -56,6 +57,36 @@ namespace LMS_Learning_Management_System.Models
             modelBuilder.Entity<Code>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+            });
+            modelBuilder.Entity<VLessonsDesc>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_LessonsDesc");
+
+                entity.Property(e => e.ClassDesc).IsRequired();
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Created_Date");
+
+                entity.Property(e => e.CreatedUser).HasColumnName("Created_User");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.SemesterDesc)
+                    .IsRequired()
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.StatusDesc).HasMaxLength(8);
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+
+                entity.Property(e => e.TeacherId).HasColumnName("Teacher_ID");
+
+                entity.Property(e => e.UrlVideo).HasColumnName("URL_Video");
             });
             modelBuilder.Entity<VEnrollmentStdDetail>(entity =>
             {

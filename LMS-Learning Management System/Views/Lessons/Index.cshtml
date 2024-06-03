@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LMS_Learning_Management_System.Models.Lesson>
+﻿@model IEnumerable<LMS_Learning_Management_System.Models.VLessonsDesc>
 
 @{
     ViewData["Title"] = "عرض الدروس";
@@ -34,10 +34,10 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Class)
+                @Html.DisplayNameFor(model => model.ClassDesc)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                @Html.DisplayNameFor(model => model.SubjectDesc)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Semester)
@@ -85,10 +85,10 @@
                 },
                 "columns": [
                     { "data": "name" },
-                    { "data": "status2" },
-                    { "data": "classdesc" },
-                    { "data": "subjectdesc" },
-                    { "data": "semester" },
+                    { "data": "statusDesc" },
+                    { "data": "classDesc" },
+                    { "data": "subjectDesc" },
+                    { "data": "semesterDesc" },
                     { "data": "createdUser" },
                     { "data": "createdDate" },
                     {
