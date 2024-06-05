@@ -919,7 +919,7 @@ namespace LMS_Learning_Management_System.Controllers
                 .OrderBy(r => r.Id)
                 .ToList();
 
-            var Doc_lessons = _context.Documents.OrderBy(r => r.Id).ToList();
+            var Doc_lessons = _context.VLessonsDocuments.Where(r=>r.SubjectId==SubjectId && r.ClassId==ClassId && r.Semester==semester).OrderBy(r => r.DocId).ToList();
 
 
             var lessonViewModel = new VLessonCardsSubject()
@@ -953,7 +953,7 @@ namespace LMS_Learning_Management_System.Controllers
                 .OrderBy(r => r.Id)
                 .ToList();
 
-            var Doc_lessons = _context.Documents.OrderBy(r => r.Id).ToList();
+            var Doc_lessons = _context.VLessonsDocuments.Where(r => r.SubjectId == SubjectId && r.ClassId == ClassId && r.Semester == semester).OrderBy(r => r.DocId).ToList();
 
 
             var lessonViewModel = new VLessonCardsSubject()

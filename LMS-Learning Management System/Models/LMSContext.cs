@@ -40,6 +40,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<VEnrollmentStdDetail> VEnrollmentStdDetails { get; set; }
         public virtual DbSet<Code> Codes { get; set; }
         public virtual DbSet<VLessonsDesc> VLessonsDescs { get; set; }
+        public virtual DbSet<VLessonsDocument> VLessonsDocuments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -58,6 +59,24 @@ namespace LMS_Learning_Management_System.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
             });
+
+            modelBuilder.Entity<VLessonsDocument>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_LessonsDocuments");
+
+                entity.Property(e => e.Abbreviation).IsRequired();
+
+                entity.Property(e => e.ClassId).HasColumnName("Class_ID");
+
+                entity.Property(e => e.Descriptions).IsRequired();
+
+                entity.Property(e => e.DocId).HasColumnName("Doc_ID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("Subject_ID");
+            });
+
             modelBuilder.Entity<VLessonsDesc>(entity =>
             {
                 entity.HasNoKey();

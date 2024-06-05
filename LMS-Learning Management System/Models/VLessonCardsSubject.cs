@@ -34,6 +34,6 @@ namespace LMS_Learning_Management_System.Models
         public IEnumerable<VTechersInfo> TeacherInfo_Collection { get; set; }
         public IEnumerable<VLessonCardsSubject> VLessonCardsSubject_Collection { get; set; }
         public IEnumerable<VEnrollmentStdDetail> VEnrollmentStdDetailt_Collection { get; set; }
-        public IEnumerable<Document> VDocLessonCardsSubject_Collection { get; set; }
+        public IEnumerable<VLessonsDocument> VDocLessonCardsSubject_Collection { get; set; }
     }
 }
