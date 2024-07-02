@@ -1,5 +1,7 @@
 ﻿using LMS_Learning_Management_System.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -154,7 +156,7 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                         //**********************************************************************************
-                      
+
 
 
                         //**********************************************************************************
@@ -168,10 +170,23 @@ namespace LMS_Learning_Management_System.Controllers
                         if (appUser != null)
                         {
                             await signInManager.SignOutAsync();
-                            Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
+                             
 
+                            //Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
+                            var result = await signInManager.PasswordSignInAsync(appUser.UserName, login.Password, login.Remember, lockoutOnFailure: false);
+                             
                             if (result.Succeeded)
                             {
+                                // Authentication properties with expiration and persistence settings
+                                AuthenticationProperties prop = new AuthenticationProperties()
+                                {
+                                    IsPersistent = login.Remember,
+                                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(20)
+                                };
+
+                                // Sign in the user with the given authentication properties
+                                await signInManager.SignInAsync(appUser, prop);
+
                                 if (ActiveSessions == "NotExist")
                                 {
                                     string computerName = Environment.MachineName;

@@ -474,6 +474,7 @@
                     <div class="text-danger" asp-validation-summary="All"></div>
 
                     <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="ReturnUrl" />
                         <div class="form-group">
                             <label asp-for="PhoneNumber"></label>

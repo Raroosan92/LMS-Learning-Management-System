@@ -241,12 +241,22 @@ namespace LMS_Learning_Management_System.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
+            try
+            {
+
             using (LMSContext db = new LMSContext())
             {
                 Class std = db.Classes.Where(x => x.Id == id).FirstOrDefault<Class>();
                 db.Classes.Remove(std);
                 db.SaveChanges();
                 return Json(new { success = true, message = "تمت عملية الحذف بنجاح" });
+            }
+
+            }
+            catch (Exception)
+            {
+
+                return Json(new { success = true, message = "لا يمكن حذف السجل لانه مرتبط بمواد وطلاب" });
             }
         }
         public void GetTime()

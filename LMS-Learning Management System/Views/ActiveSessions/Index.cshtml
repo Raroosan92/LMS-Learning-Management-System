@@ -50,7 +50,7 @@
                     "url": "@Url.Action("GetData", "ActiveSessions")",
                     "type": "POST",
                     "data": "{}",
-                    "datatype": "json"
+                    "datatype": "json",
                 },
                 "columns": [
                     { "data": "userName" },
@@ -75,13 +75,13 @@
                     "emptyTable": "لا يوجد بيانات يرجى الضغط على زر اضافة جديدة"
                 },
 
-                        "responsive": true // Enable responsive feature
+                "responsive": true // Enable responsive feature
 
 
             });
             // Adjust the container width and overflow style
             $(".datatable-container").css({
-                "width": "100%",
+                "width": "auto",
                 "overflow-x": "auto"
             });
 

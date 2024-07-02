@@ -35,11 +35,36 @@ namespace LMS_Learning_Management_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //// Configure cookie authentication
+            services.AddControllersWithViews();
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
+            // Configure cookie authentication
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(20); // Set cookie expiration to 14 days
+                options.SlidingExpiration = true; // Renew cookie on each request
+                options.LoginPath = "/Academy/Account/Login";
+                options.LogoutPath = "/Academy/Account/Logout";
+                options.AccessDeniedPath = "/Academy/Account/AccessDenied";
+            });
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(20); // Set the idle timeout to 20 days
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
+
             //services.ConfigureApplicationCookie(options =>
             //{
             //    options.Cookie.HttpOnly = true;
-            //    options.ExpireTimeSpan = TimeSpan.FromDays(99999);
+            //    options.ExpireTimeSpan = TimeSpan.FromDays(14);
             //    options.LoginPath = "/Academy/Account/Login";
             //    options.AccessDeniedPath = "/Academy/Account/AccessDenied";
             //    options.SlidingExpiration = true;
@@ -86,25 +111,27 @@ namespace LMS_Learning_Management_System
             //        };
             //    });
 
-            services.AddSession(options =>
-            {
-                //options.IdleTimeout = TimeSpan.Zero; // Set your desired session timeout
-                options.IdleTimeout = TimeSpan.FromMinutes(3330); ; // Set your desired session timeout
-                //options.Cookie.HttpOnly = true;
+            //services.AddSession(options =>
+            //{
+            //    //options.IdleTimeout = TimeSpan.Zero; // Set your desired session timeout
+            //    options.IdleTimeout = TimeSpan.FromMinutes(3330); ; // Set your desired session timeout
+            //    //options.Cookie.HttpOnly = true;
 
-            });
+            //});
 
 
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin, UnicodeRanges.Arabic }));
 
 
             services.AddControllersWithViews()
-    .AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+                     .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+             );
+
 
             services.AddDistributedMemoryCache();
-           
+
+
             services.AddDbContext<LMSContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
             services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
@@ -149,7 +176,6 @@ namespace LMS_Learning_Management_System
 
 
 
-            services.AddControllersWithViews();
 
             JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = Newtonsoft.Json.TypeNameHandling.None };
 
@@ -163,8 +189,9 @@ namespace LMS_Learning_Management_System
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSession();
+            app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseSession(); // Add session middleware
 
 
             if (env.IsDevelopment())
