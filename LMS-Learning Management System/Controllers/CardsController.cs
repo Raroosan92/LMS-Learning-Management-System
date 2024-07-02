@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNet.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
+using System.IO;
+using OfficeOpenXml.Style;
+using System.Security.Cryptography;
 
 namespace LMS_Learning_Management_System.Controllers
 {
@@ -328,38 +332,38 @@ namespace LMS_Learning_Management_System.Controllers
             {
 
 
-                var stList = _context.Cards.ToList();
-                for (int i = 0; i < stList.Count; i++)
-                {
-                    //var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
-                    //var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
-                    var users = _context.AspNetUsers.Where(r => r.Id == stList[i].UserId).SingleOrDefault();
-                    //stList[i].Classdesc = classes.Descriptions;
-                    //stList[i].Subjectdesc = subjects.Name;
-                    try
-                    {
-                        stList[i].Userdesc = users.FullName;
+                var stList = _context.VCardsDetails.ToList();
+                //for (int i = 0; i < stList.Count; i++)
+                //{
+                //    //var subjects = _context.Subjects.Where(r => r.Id == stList[i].SubjectId).SingleOrDefault();
+                //    //var classes = _context.Classes.Where(r => r.Id == stList[i].ClassId).SingleOrDefault();
+                //    var users = _context.AspNetUsers.Where(r => r.Id == stList[i].UserId).SingleOrDefault();
+                //    //stList[i].Classdesc = classes.Descriptions;
+                //    //stList[i].Subjectdesc = subjects.Name;
+                //    try
+                //    {
+                //        stList[i].Userdesc = users.FullName;
 
-                    }
-                    catch (Exception xx)
-                    {
-                        stList[i].Userdesc = "";
+                //    }
+                //    catch (Exception xx)
+                //    {
+                //        stList[i].Userdesc = "";
 
-                    }
+                //    }
 
 
-                    if (stList[i].CardStatus == true)
-                    {
-                        stList[i].Status2 = "فعال";
+                //    if (stList[i].CardStatus == true)
+                //    {
+                //        stList[i].Status2 = "فعال";
 
-                    }
-                    else
-                    {
-                        stList[i].Status2 = "غير فعال";
+                //    }
+                //    else
+                //    {
+                //        stList[i].Status2 = "غير فعال";
 
-                    }
+                //    }
 
-                }
+                //}
                 return new JsonResult(new { data = stList });
             }
             catch (Exception dd)
@@ -594,73 +598,128 @@ namespace LMS_Learning_Management_System.Controllers
 
 
 
-        public void GenerateAndInsertCards()
+        //public void GenerateAndInsertCards(string numberOfCards)
+        //{
+        //    // Database connection string
+        //    string connectionString = _configuration.GetConnectionString("DefaultConnection");
+
+        //    // Generate 12 unique card numbers
+        //    int[] cardNumbers = GenerateUniqueNumbers(12);
+
+        //    // Generate 5 unique passwords
+        //    string[] passwords = GenerateUniquePasswords(5);
+
+        //    // Insert records into the database
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        connection.Open();
+
+        //        for (int i = 0; i < int.Parse(numberOfCards); i++)
+        //        {
+        //            int cardNo = cardNumbers[i % 12];
+        //            string cardPassword = passwords[i % 5];
+        //            var cardsExist2 = _context.Cards.Where(r => r.CardNo == cardNo).ToList();
+
+        //            if (cardsExist2.Count == 0)
+        //            {
+        //                // SQL command to insert a record
+        //                string sql = "INSERT INTO Cards (Card_No, Card_Password, Card_Price, Card_Status, User_ID, User_Name, Number_Of_Subjects) " +
+        //                             "VALUES (@CardNo, @CardPassword, '10', 1, NULL, NULL, 1)";
+
+        //                using (SqlCommand command = new SqlCommand(sql, connection))
+        //                {
+        //                    command.Parameters.AddWithValue("@CardNo", cardNo);
+        //                    command.Parameters.AddWithValue("@CardPassword", cardPassword);
+        //                    command.ExecuteNonQuery();
+        //                }
+        //            }
+        //            else
+        //            {
+        //                continue;
+        //            }
+
+        //        }
+        //            connection.Close();
+        //    }
+
+        //}
+
+        public void GenerateAndInsertCards(string numberOfCards)
         {
             // Database connection string
             string connectionString = _configuration.GetConnectionString("DefaultConnection");
+            int cardsToGenerate = int.Parse(numberOfCards);
 
-            // Generate 12 unique card numbers
-            int[] cardNumbers = GenerateUniqueNumbers(12);
+            // Initialize lists for unique card numbers and passwords
+            List<int> cardNumbers = new List<int>();
+            List<string> passwords = new List<string>();
 
-            // Generate 5 unique passwords
-            string[] passwords = GenerateUniquePasswords(5);
-
-            // Insert records into the database
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                for (int i = 0; i < 5000; i++)
+                for (int i = 0; i < cardsToGenerate; i++)
                 {
-                    int cardNo = cardNumbers[i % 12];
-                    string cardPassword = passwords[i % 5];
-                    var cardsExist2 = _context.Cards.Where(r => r.CardNo == cardNo).ToList();
+                    int cardNo;
+                    string cardPassword;
 
-                    if (cardsExist2.Count == 0)
+                    do
                     {
-                        // SQL command to insert a record
-                        string sql = "INSERT INTO Cards (Card_No, Card_Password, Card_Price, Card_Status, User_ID, User_Name, Number_Of_Subjects) " +
-                                     "VALUES (@CardNo, @CardPassword, '10', 1, NULL, NULL, 1)";
+                        cardNo = GenerateUniqueNumber();
+                    }
+                    while (_context.Cards.Any(r => r.CardNo == cardNo) || cardNumbers.Contains(cardNo));
 
-                        using (SqlCommand command = new SqlCommand(sql, connection))
-                        {
-                            command.Parameters.AddWithValue("@CardNo", cardNo);
-                            command.Parameters.AddWithValue("@CardPassword", cardPassword);
-                            command.ExecuteNonQuery();
-                        }
+                    cardNumbers.Add(cardNo);
+
+                    if (passwords.Count < cardsToGenerate)
+                    {
+                        cardPassword = GenerateUniquePassword();
+                        passwords.Add(cardPassword);
+                    }
+                    else
+                    {
+                        cardPassword = passwords[i % passwords.Count];
                     }
 
-                }
-                    connection.Close();
-            }
+                    // SQL command to insert a record
+                    string sql = "INSERT INTO Cards (Card_No, Card_Password, Card_Price, Card_Status, User_ID, User_Name, Number_Of_Subjects) " +
+                                 "VALUES (@CardNo, @CardPassword, '10', 1, NULL, NULL, 1)";
 
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@CardNo", cardNo);
+                        command.Parameters.AddWithValue("@CardPassword", cardPassword);
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                connection.Close();
+            }
         }
 
-        private int[] GenerateUniqueNumbers(int count)
+        private int GenerateUniqueNumber()
         {
             // Generate unique numbers logic
             Random random = new Random();
             HashSet<int> uniqueNumbers = new HashSet<int>();
+            int newNumber = 0;
 
-            while (uniqueNumbers.Count < count)
+            while (uniqueNumbers.Count < 12)
             {
-                int newNumber = random.Next(1000000, 99999999); // Generate a 12-digit number
+                 newNumber = random.Next(1000000, 99999999); // Generate a 12-digit number
                 uniqueNumbers.Add(newNumber);
             }
 
-            return uniqueNumbers.ToArray();
+            return newNumber;
+            //return uniqueNumbers.ToArray();
         }
 
-        private string[] GenerateUniquePasswords(int count)
+        private string GenerateUniquePassword()
         {
             Random random = new Random();
-            string[] passwords = new string[count];
-            for (int i = 0; i < count; i++)
-            {
-                // Generate a random string with both digits and letters
-                passwords[i] = GenerateRandomString(random, 5);
-            }
-            return passwords;
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Include both digits and letters
+            return new string(Enumerable.Repeat(chars, 5)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         private string GenerateRandomString(Random random, int length)
@@ -668,6 +727,61 @@ namespace LMS_Learning_Management_System.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Include both digits and letters
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+
+        [HttpGet]
+        public IActionResult ExportToExcel()
+        {
+            var Cards = _context.Cards.Where(r=>r.UserId==null).ToList(); // Fetch data from your database
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Cards");
+                worksheet.Cells["A1"].Value = "رقم البطاقة";
+                worksheet.Cells["B1"].Value = "كلمة السر";
+                worksheet.Cells["C1"].Value = "عدد مواد البطاقة";
+                worksheet.Cells["D1"].Value = "سعر البطاقة";
+                worksheet.Cells["E1"].Value = "حالة البطاقة";
+
+                // Set header style
+                using (var range = worksheet.Cells["A1:E1"])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    // Set border for header
+                    range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                }
+
+                // Fill data
+                for (int i = 0; i < Cards.Count; i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = Cards[i].CardNo;
+                    worksheet.Cells[i + 2, 2].Value = Cards[i].CardPassword;
+                    worksheet.Cells[i + 2, 3].Value = Cards[i].NumberOfSubjects;
+                    //worksheet.Cells[i + 2, 3].Value = Cards[i].CreatedDate.ToString("yyyy-MM-dd");
+                    worksheet.Cells[i + 2, 4].Value = Cards[i].CardPrice;
+                    worksheet.Cells[i + 2, 5].Value = Cards[i].CardStatus ? "فعال" : "غير فعال";
+                    using (var range = worksheet.Cells[i + 2, 1, i + 2, 5])
+                    {
+                        // Set border for data rows
+                        range.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        range.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        range.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        range.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    }
+                }
+
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+                var content = stream.ToArray();
+
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "البطاقات الغير مباعة.xlsx");
+            }
         }
 
     }

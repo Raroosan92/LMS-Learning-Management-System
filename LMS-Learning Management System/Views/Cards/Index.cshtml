@@ -20,9 +20,17 @@
 
     /* Override the default styles for other notification types as needed */
 </style>
+<div class="row">
+
 <p style="background-color: darkseagreen;width: fit-content;border-radius: 5px;" id="ccards"></p>
+&nbsp;
+<p style="background-color: #c68282;width: fit-content;border-radius: 5px;" id="ccards2"></p>
+</div>
 <p>
     <a asp-action="Create" class="btn btn-success">اضافة جديدة</a>
+    <a href="@Url.Action("ExportToExcel", "Cards")" class="btn btn-primary">تصدير البطاقات الغير مستعملة</a>
+    <button type="button" class="btn btn-info" onclick="openGenerateCardsModal()">انشاء بطاقات جديدة</button>
+
 </p>
 <table id="classes" class="table table-striped table-bordered table-inverse table-responsive " style="font-size: 17px;">
     <thead>
@@ -62,6 +70,7 @@
 @section scripts {
     <script>
         var cardsWithUserDescCount = 0; // Define the external variable to store the count
+        var cardsWithoutUserDescCount = 0; // Define the external variable to store the count
 
         $(document).ready(function () {
             $("#classes").DataTable({
@@ -99,15 +108,59 @@
                         if (item.userdesc !== null && item.userdesc !== "") {
                             cardsWithUserDescCount++;
                         }
+                        if (item.userdesc == null || item.userdesc == "") {
+                            cardsWithoutUserDescCount++;
+                        }
                     });
                     $("#ccards").text("عدد البطاقات المباعة " + cardsWithUserDescCount);
+                    $("#ccards2").text("عدد البطاقات الغير المباعة " + cardsWithoutUserDescCount);
                 }
             });
         });
 
 
 
+        function openGenerateCardsModal() {
+            var formDiv = $('<div/>');
+            formDiv.html(`
+                        <form id="generateCardsForm">
+                            <div class="form-group">
+                                <label for="numberOfCards">عدد البطاقات المطلوب</label>
+                                <input type="number" class="form-control" id="numberOfCards" name="numberOfCards" min="1" required>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="generateCards()">انشاء البطاقات</button>
+                        </form>
+                    `);
 
+            Popup = formDiv.dialog({
+                autoOpen: true,
+                resizable: false,
+                title: 'انشاء بطاقات جديدة',
+                height: 300,
+                width: 400,
+                close: function () {
+                    Popup.dialog('destroy').remove();
+                }
+            });
+        }
+
+        function generateCards() {
+            var numberOfCards = $('#numberOfCards').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GenerateAndInsertCards", "Cards")',
+                data: { numberOfCards: numberOfCards },
+                success: function (response) {
+                    alert('تم انشاء البطاقات اضغط على زر تصدير البطاقات الغير مستعملة لعرض البطاقات الجديدة');
+                    $('#generateCardsModal').modal('hide');
+                    window.location.reload();
+                },
+                error: function (error) {
+                    alert('Error generating cards.');
+                }
+            });
+        }
 
 
 

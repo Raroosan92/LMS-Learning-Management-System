@@ -42,6 +42,7 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<VLessonsDesc> VLessonsDescs { get; set; }
         public virtual DbSet<VLessonsDocument> VLessonsDocuments { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
+        public virtual DbSet<VCardsDetail> VCardsDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,7 +61,34 @@ namespace LMS_Learning_Management_System.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
             });
+            modelBuilder.Entity<VCardsDetail>(entity =>
+            {
+                entity.HasNoKey();
 
+                entity.ToView("V_CardsDetails");
+
+                entity.Property(e => e.CardNo).HasColumnName("Card_No");
+
+                entity.Property(e => e.CardPassword)
+                    .IsRequired()
+                    .HasColumnName("Card_Password");
+
+                entity.Property(e => e.CardPrice).HasColumnName("Card_Price");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.NumberOfSubjects).HasColumnName("Number_Of_Subjects");
+
+                entity.Property(e => e.Status2)
+                    .IsRequired()
+                    .HasMaxLength(8);
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(450)
+                    .HasColumnName("User_ID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
             modelBuilder.Entity<Code>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");

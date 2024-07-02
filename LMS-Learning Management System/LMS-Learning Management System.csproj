@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.Authentication.Cookies.Owin" Version="1.0.0" />
+    <PackageReference Include="EPPlus" Version="7.2.1" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
