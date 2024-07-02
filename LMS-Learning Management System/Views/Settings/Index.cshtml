@@ -1,0 +1,35 @@
+﻿@model IEnumerable<LMS_Learning_Management_System.Models.Setting>
+
+@{
+    ViewData["Title"] = "الاعدادات";
+}
+
+<h1>الاعدادات</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @* @Html.DisplayNameFor(model => model.CheckSession) *@
+                فحص الدخول من اكثر من جهاز؟
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckSession)
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">تعديل</a> 
+                @* |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

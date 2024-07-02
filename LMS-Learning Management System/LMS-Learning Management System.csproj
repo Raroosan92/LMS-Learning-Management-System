@@ -31,6 +31,9 @@
     <Content Remove="Views\ActiveSessions\Create.cshtml" />
     <Content Remove="Views\ActiveSessions\Delete.cshtml" />
     <Content Remove="Views\ActiveSessions\Edit.cshtml" />
+    <Content Remove="Views\Settings\Create.cshtml" />
+    <Content Remove="Views\Settings\Delete.cshtml" />
+    <Content Remove="Views\Settings\Details.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +43,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.17">
       <PrivateAssets>all</PrivateAssets>

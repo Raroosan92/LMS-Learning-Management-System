@@ -144,6 +144,9 @@ namespace LMS_Learning_Management_System.Controllers
                     AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
                     var roles = await userManager.GetRolesAsync(appUser);
 
+
+                    var CheckSession = await _context.Settings.Select(x => x.CheckSession).FirstOrDefaultAsync();
+                    
                     if (roles[0].ToLower() == "admin" || roles[0].ToLower() == "teacher")
                     {
                         ActiveSessions = "Succeeded";
@@ -160,8 +163,15 @@ namespace LMS_Learning_Management_System.Controllers
 
 
                         //**********************************************************************************
-
+                        if (CheckSession == true)
+                        {
                         ActiveSessions = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
+                        }
+                        else
+                        {
+                            ActiveSessions = "Succeeded";
+
+                        }
                     }
 
                     if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
