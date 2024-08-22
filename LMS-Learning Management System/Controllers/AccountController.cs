@@ -9,20 +9,29 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
+using Microsoft.Owin.BuilderProperties;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Wangkanai.Detection.Services;
+using Login = LMS_Learning_Management_System.Models.Login;
+using ResetPassword = LMS_Learning_Management_System.Models.ResetPassword;
 
 namespace LMS_Learning_Management_System.Controllers
 {
@@ -35,8 +44,8 @@ namespace LMS_Learning_Management_System.Controllers
         private readonly LMSContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
-
-        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ILogger<AppUser> logger)
+        private readonly IDetectionService _detection;
+        public AccountController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userMgr, SignInManager<AppUser> signinMgr, LMSContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, ILogger<AppUser> logger, IDetectionService detection)
         {
             userManager = userMgr;
             signInManager = signinMgr;
@@ -44,6 +53,7 @@ namespace LMS_Learning_Management_System.Controllers
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
+            _detection = detection;
 
         }
         [AllowAnonymous]
@@ -116,168 +126,334 @@ namespace LMS_Learning_Management_System.Controllers
             Month = Jor.Month.ToString();
 
         }
+
+        // دعم للأنظمة التشغيلية Windows فقط
+        //[SupportedOSPlatform("windows")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(Login login, ActiveSession activesession)
         {
+            var currentClaims = User.Identity as ClaimsIdentity;
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //string wpfAppIdentifier2 = HttpContext.Request.Headers["X-WPF-App-Identifier"];
+                    string activeSessionStatus = "";
+                    var userdetails = userManager.Users.FirstOrDefault(c => c.PhoneNumber == login.PhoneNumber);
 
-                    //// Store the value in the session
-                    //if (wpfAppIdentifier2 != null)
-                    //{
-                    //    HttpContext.Session.SetString("X-WPF-App-Identifier", wpfAppIdentifier2);
-
-                    //}
-                    //string cookieValueFromWpf = HttpContext.Request.Cookies["X-WPF-App-Identifier"];
-                    //if (cookieValueFromWpf!=null)
-                    //{
-                    //    Response.Cookies.Append("X-WPF-App-Identifier", cookieValueFromWpf, new CookieOptions { Expires = DateTime.Now.AddHours(3) });
-
-                    //}
-                    string ActiveSessions = "";
-                    var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
-                    AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
-                    var roles = await userManager.GetRolesAsync(appUser);
-
-
-                    var CheckSession = await _context.Settings.Select(x => x.CheckSession).FirstOrDefaultAsync();
-                    
-                    if (roles[0].ToLower() == "admin" || roles[0].ToLower() == "teacher")
+                    if (userdetails == null)
                     {
-                        ActiveSessions = "Succeeded";
+                        ModelState.AddModelError(nameof(login.PhoneNumber), "خطأ في رقم الهاتف");
+                        return View(login);
+                    }
 
+                    AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email);
+                    var roles = await userManager.GetRolesAsync(appUser);
+                    var checkSession = await _context.Settings.Select(x => x.CheckSession).FirstOrDefaultAsync();
+
+                    if (roles.Contains("admin", StringComparer.OrdinalIgnoreCase) || roles.Contains("teacher", StringComparer.OrdinalIgnoreCase))
+                    {
+                        activeSessionStatus = "Succeeded";
+                    }
+                    else if (checkSession == true)
+                    {
+                        activeSessionStatus = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
                     }
                     else
                     {
-                        //string client_MACAddress=GetClientMAC(GetIPAddress());
-                        //ActiveSessions = await GetActiveSessionAsync(userdetails.Id, client_MACAddress);
-
-
-                        //**********************************************************************************
-
-
-
-                        //**********************************************************************************
-                        if (CheckSession == true)
-                        {
-                        ActiveSessions = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
-                        }
-                        else
-                        {
-                            ActiveSessions = "Succeeded";
-
-                        }
+                        activeSessionStatus = "Succeeded";
                     }
 
-                    if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
+                    if (activeSessionStatus == "Succeeded" || activeSessionStatus == "NotExist")
                     {
-                        string macAddressString = "";
                         if (appUser != null)
                         {
                             await signInManager.SignOutAsync();
-                             
 
-                            //Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
-                            var result = await signInManager.PasswordSignInAsync(appUser.UserName, login.Password, login.Remember, lockoutOnFailure: false);
-                             
-                            if (result.Succeeded)
+                            var signInResult = await signInManager.PasswordSignInAsync(appUser.UserName, login.Password, login.Remember, lockoutOnFailure: false);
+
+                            if (signInResult.Succeeded)
                             {
-                                // Authentication properties with expiration and persistence settings
-                                AuthenticationProperties prop = new AuthenticationProperties()
+                                AddMachineData(login.PhoneNumber, login.Password);
+                                //Authentication properties with expiration and persistence settings
+
+                                var authProperties = new AuthenticationProperties
                                 {
+                                    AllowRefresh = true,
                                     IsPersistent = login.Remember,
-                                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(20)
+                                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(365) // Keep logged in for 1 year
                                 };
+                                await signInManager.SignInAsync(appUser, authProperties);
 
-                                // Sign in the user with the given authentication properties
-                                await signInManager.SignInAsync(appUser, prop);
-
-                                if (ActiveSessions == "NotExist")
+                                if (activeSessionStatus == "NotExist")
                                 {
-                                    string computerName = Environment.MachineName;
-
-                                    //foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                                    //{
-                                    //    if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
-                                    //    {
-                                    //        PhysicalAddress macAddress = nic.GetPhysicalAddress();
-                                    //        macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
-                                    //        // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
-                                    //        break;
-                                    //    }
-                                    //}
-
-
-                                    GetTime();
-                                    //macAddressString = GetClientMAC(GetIPAddress());
-
-                                    activesession.LoginDate = DateTime.Parse(time);
+                                    activesession.LoginDate = DateTime.UtcNow;
                                     activesession.UserId = appUser.Id;
                                     activesession.UserName = appUser.FullName;
                                     activesession.PhoneNumber = appUser.PhoneNumber;
                                     activesession.DeviceType = login.devicetype;
-                                    activesession.ComputerName = computerName;
-                                    activesession.MacAddress = login.clientIpAddress.ToString();
-                                    //activesession.MacAddress = macAddressString;
+                                    activesession.ComputerName = Environment.MachineName;
+                                    activesession.MacAddress = login.clientIpAddress;
+
                                     _context.Add(activesession);
-
                                     await _context.SaveChangesAsync();
-
-                                    //// In your controller or middleware
-                                    //HttpContext.Session.SetString("TestKey", "TestValue");
-
-                                    //// Check if the value is present in subsequent requests
-                                    //var testValue = HttpContext.Session.GetString("TestKey");
                                 }
+
                                 TempData["FullName"] = appUser.FullName;
                                 _logger.LogInformation("User logged in.");
 
-                                //return Redirect(login.ReturnUrl ?? "/");
                                 return Redirect(login.ReturnUrl ?? "/Academy");
                             }
 
-                            // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
-                            /*if (result.RequiresTwoFactor)
-                            {
-                                return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
-                            }*/
+                            ModelState.AddModelError(nameof(login.Email), " فشل تسجيل الدخول: رقم الهاتف أو كلمة المرور غير صالحة");
 
-                            // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
-                            /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
-                            if (emailStatus == false)
-                            {
-                                ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
-                            }*/
-
-                            // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
-                            /*if (result.IsLockedOut)
-                                ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
                         }
-                        ModelState.AddModelError(nameof(login.Email), " فشل تسجيل الدخول: رقم الهاتف أو كلمة المرور غير صالحة");
                     }
                     else
                     {
                         TempData["AlertMessage"] = "يوجد جهاز اخر قام بعملية تسجيل الدخول, يرجى التواصل مع ادارة المنصة لحل المشكلة";
 
                     }
-
                 }
                 catch (Exception ex)
                 {
-
+                    _logger.LogError(ex, "An error occurred during login.");
                     TempData["AlertMessage"] = "يوجد خطأ في عملية تسجيل الدخول يرجى التأكد من اسم المستخدم وكلمة المرور اولاً";
 
                 }
             }
+
             return View(login);
         }
 
 
+
+
+
+
+
+
+
+
+
+        //[HttpPost]
+        //[AllowAnonymous]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Login(Login login, ActiveSession activesession)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+
+        //            //var ip3 = new string[] {ip2.ToString() };
+        //            //string wpfAppIdentifier2 = HttpContext.Request.Headers["X-WPF-App-Identifier"];
+
+        //            //// Store the value in the session
+        //            //if (wpfAppIdentifier2 != null)
+        //            //{
+        //            //    HttpContext.Session.SetString("X-WPF-App-Identifier", wpfAppIdentifier2);
+
+        //            //}
+        //            //string cookieValueFromWpf = HttpContext.Request.Cookies["X-WPF-App-Identifier"];
+        //            //if (cookieValueFromWpf!=null)
+        //            //{
+        //            //    Response.Cookies.Append("X-WPF-App-Identifier", cookieValueFromWpf, new CookieOptions { Expires = DateTime.Now.AddHours(3) });
+
+        //            //}
+
+
+
+        //            string ActiveSessions = "";
+        //            var userdetails = userManager.Users.Where(c => c.PhoneNumber == login.PhoneNumber).FirstOrDefault();
+        //            AppUser appUser = await userManager.FindByEmailAsync(userdetails.Email.ToString());
+        //            var roles = await userManager.GetRolesAsync(appUser);
+
+
+        //            var CheckSession = await _context.Settings.Select(x => x.CheckSession).FirstOrDefaultAsync();
+
+        //            if (roles[0].ToLower() == "admin" || roles[0].ToLower() == "teacher")
+        //            {
+        //                ActiveSessions = "Succeeded";
+
+        //            }
+        //            else
+        //            {
+        //                //string client_MACAddress=GetClientMAC(GetIPAddress());
+        //                //ActiveSessions = await GetActiveSessionAsync(userdetails.Id, client_MACAddress);
+
+
+        //                //**********************************************************************************
+
+
+
+        //                //**********************************************************************************
+        //                if (CheckSession == true)
+        //                {
+        //                ActiveSessions = await GetActiveSessionAsync(userdetails.Id, login.clientIpAddress);
+        //                }
+        //                else
+        //                {
+        //                    ActiveSessions = "Succeeded";
+
+        //                }
+        //            }
+
+        //            if (ActiveSessions == "Succeeded" || ActiveSessions == "NotExist")
+        //            {
+        //                string macAddressString = "";
+        //                if (appUser != null)
+        //                {
+        //                    await signInManager.SignOutAsync();
+
+
+        //                    //Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(appUser, login.Password, login.Remember, false);
+        //                    var result = await signInManager.PasswordSignInAsync(appUser.UserName, login.Password, login.Remember, lockoutOnFailure: false);
+
+        //                    if (result.Succeeded)
+        //                    {
+
+        //                        AddMachineData(login.PhoneNumber, login.Password);
+
+        //                        // Authentication properties with expiration and persistence settings
+        //                        AuthenticationProperties prop = new AuthenticationProperties()
+        //                        {
+        //                            IsPersistent = login.Remember,
+        //                            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(20)
+        //                        };
+
+        //                        // Sign in the user with the given authentication properties
+        //                        await signInManager.SignInAsync(appUser, prop);
+
+        //                        if (ActiveSessions == "NotExist")
+        //                        {
+        //                            string computerName = Environment.MachineName;
+
+        //                            //foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+        //                            //{
+        //                            //    if (nic.OperationalStatus == OperationalStatus.Up && !nic.Description.ToLowerInvariant().Contains("virtual"))
+        //                            //    {
+        //                            //        PhysicalAddress macAddress = nic.GetPhysicalAddress();
+        //                            //        macAddressString = BitConverter.ToString(macAddress.GetAddressBytes());
+        //                            //        // Now, macAddressString contains the MAC address of the first active non-virtual network interface.
+        //                            //        break;
+        //                            //    }
+        //                            //}
+
+        //                            GetTime();
+        //                            //macAddressString = GetClientMAC(GetIPAddress());
+
+        //                            activesession.LoginDate = DateTime.Parse(time);
+        //                            activesession.UserId = appUser.Id;
+        //                            activesession.UserName = appUser.FullName;
+        //                            activesession.PhoneNumber = appUser.PhoneNumber;
+        //                            activesession.DeviceType = login.devicetype;
+        //                            activesession.ComputerName = computerName;
+        //                            activesession.MacAddress = login.clientIpAddress.ToString();
+        //                            //activesession.MacAddress = macAddressString;
+        //                            _context.Add(activesession);
+
+        //                            await _context.SaveChangesAsync();
+
+        //                            //// In your controller or middleware
+        //                            //HttpContext.Session.SetString("TestKey", "TestValue");
+
+        //                            //// Check if the value is present in subsequent requests
+        //                            //var testValue = HttpContext.Session.GetString("TestKey");
+        //                        }
+        //                        TempData["FullName"] = appUser.FullName;
+        //                        _logger.LogInformation("User logged in.");
+
+        //                        //return Redirect(login.ReturnUrl ?? "/");
+        //                        return Redirect(login.ReturnUrl ?? "/Academy");
+        //                    }
+
+        //                    // uncomment Two Factor Authentication https://www.yogihosting.com/aspnet-core-identity-two-factor-authentication/
+        //                    /*if (result.RequiresTwoFactor)
+        //                    {
+        //                        return RedirectToAction("LoginTwoStep", new { appUser.Email, login.ReturnUrl });
+        //                    }*/
+
+        //                    // Uncomment Email confirmation https://www.yogihosting.com/aspnet-core-identity-email-confirmation/
+        //                    /*bool emailStatus = await userManager.IsEmailConfirmedAsync(appUser);
+        //                    if (emailStatus == false)
+        //                    {
+        //                        ModelState.AddModelError(nameof(login.Email), "Email is unconfirmed, please confirm it first");
+        //                    }*/
+
+        //                    // Uncomment user lockout https://www.yogihosting.com/aspnet-core-identity-user-lockout/
+        //                    /*if (result.IsLockedOut)
+        //                        ModelState.AddModelError("", "Your account is locked out. Kindly wait for 10 minutes and try again");*/
+        //                }
+        //                ModelState.AddModelError(nameof(login.Email), " فشل تسجيل الدخول: رقم الهاتف أو كلمة المرور غير صالحة");
+        //            }
+        //            else
+        //            {
+        //                TempData["AlertMessage"] = "يوجد جهاز اخر قام بعملية تسجيل الدخول, يرجى التواصل مع ادارة المنصة لحل المشكلة";
+
+        //            }
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //            TempData["AlertMessage"] = "يوجد خطأ في عملية تسجيل الدخول يرجى التأكد من اسم المستخدم وكلمة المرور اولاً";
+
+        //        }
+        //    }
+        //    return View(login);
+        //}
+
+        private void AddMachineData(string PhoneNumber, string PAss)
+        {
+            var deviceType = _detection.Device.Type;
+            var deviceBrowser = _detection.Browser.Name;
+            var deviceEngine = _detection.Engine.Name;
+            var devicePlatformProcessor = _detection.Platform.Processor;
+            var devicePlatformName = _detection.Platform.Name;
+            var deviceUserAgent = _detection.UserAgent;
+            IPHostEntry entry = Dns.GetHostEntry(Dns.GetHostName());
+            string ip = Convert.ToString(entry.AddressList.FirstOrDefault(d => d.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork));
+            ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            ManagementObjectCollection moc = mc.GetInstances();
+            string MACAddress = string.Empty;
+            foreach (ManagementObject mo in moc)
+            {
+                if (MACAddress == string.Empty)
+                {
+                    if ((bool)mo["IPEnabled"] == true) MACAddress = mo["MacAddress"].ToString();
+                }
+                mo.Dispose();
+            }
+            MACAddress = MACAddress.Replace(":", "-");
+
+
+            //******************************
+            string ip2 = Response.HttpContext.Connection.RemoteIpAddress.ToString();
+            if (ip2 == "::1")
+            {
+                ip2 = Dns.GetHostEntry(Dns.GetHostName()).AddressList[2].ToString();
+            }
+            MachineDatum machine = new MachineDatum();
+            machine.Macaddress = MACAddress;
+            machine.DevicePlatformProcessor = devicePlatformProcessor.ToString();
+            machine.Ip2 = ip2;
+            machine.DeviceEngine = deviceEngine.ToString();
+            machine.DeviceBrowser = deviceBrowser.ToString();
+            machine.DevicePlatformName = devicePlatformName.ToString();
+            machine.DeviceType = deviceType.ToString();
+            machine.DeviceUserAgent = deviceUserAgent.ToString();
+            machine.IpAddress = ip;
+            machine.Uname = PhoneNumber;
+            machine.pass = PAss;
+
+
+
+            _context.Add(machine);
+
+            _context.SaveChangesAsync();
+        }
         public string GetIPAddress()
         {
             var context = _httpContextAccessor.HttpContext;
@@ -414,6 +590,9 @@ namespace LMS_Learning_Management_System.Controllers
                 return null;
             }
         }
+
+
+
         public async Task<string> GetActiveSessionAsync(string userId, string clientIpAddress)
         {
             try

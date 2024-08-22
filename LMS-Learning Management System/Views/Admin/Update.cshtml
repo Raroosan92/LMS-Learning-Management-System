@@ -31,7 +31,8 @@
         <input name="password" class="form-control" />
     </div>
 
-
+    @if (User.IsInRole("teacher"))
+    {
     <div class="form-group row">
         <label asp-for="SelectedClasses" class="control-label"></label>
         <div class="col-sm-6">
@@ -40,7 +41,6 @@
         <span asp-validation-for="SelectedClasses" class="text-danger"></span>
     </div>
 
-
     <div class="form-group row">
         <label asp-for="SelectedSubjectes" class="control-label"></label>
         <div class="col-sm-6">
@@ -48,13 +48,17 @@
         </div>
         <span asp-validation-for="SelectedSubjectes" class="text-danger"></span>
     </div>
+    }
 
     <div class="form-group" id="Photo_D">
         <label asp-for="Photo" class="control-label"></label>
         <input asp-for="Photo" name="uploadedPhoto" id="uploadedPhoto" class="form-control file-input" type="file" />
         <span asp-validation-for="Photo" class="text-danger"></span>
         <br />
+         
+            
         <img id="previewImage" src="#" alt="Uploaded Image" style="max-width: 200px; max-height: 200px; display: none;" />
+        
     </div>
     <button type="submit" class="btn btn-primary">حفظ</button>
 </form>
@@ -66,7 +70,8 @@
 <script type="text/javascript">
     $(function () {
         var existingImageUrl = "../../@Model.Photo"; // Assuming you have a variable storing the URL of the existing image
-        if (existingImageUrl) {
+        alert(existingImageUrl)
+        if (!existingImageUrl.includes("NULL")) {
             var preview = document.getElementById('previewImage');
             if (preview) {
                 preview.src = existingImageUrl;

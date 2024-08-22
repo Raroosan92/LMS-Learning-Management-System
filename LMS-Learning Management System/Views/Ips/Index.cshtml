@@ -1,0 +1,95 @@
+﻿@model IEnumerable<LMS_Learning_Management_System.Models.MachineDatum>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceUserAgent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DevicePlatformName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DevicePlatformProcessor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceEngine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceBrowser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IpAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Macaddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ip2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.pass)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeviceUserAgent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DevicePlatformName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DevicePlatformProcessor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeviceEngine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeviceBrowser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeviceType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IpAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Macaddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ip2)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.pass)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
@@ -43,20 +44,44 @@ namespace LMS_Learning_Management_System.Models
         public virtual DbSet<VLessonsDocument> VLessonsDocuments { get; set; }
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<VCardsDetail> VCardsDetails { get; set; }
+        public virtual DbSet<MachineDatum> MachineData { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=LMS;Trusted_Connection=True;");
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                    //.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                string connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                optionsBuilder.UseSqlServer(connectionString);
+
             }
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+            modelBuilder.Entity<MachineDatum>(entity =>
+            {
+                entity.ToTable("Machine_Data");
 
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.DeviceBrowser).HasColumnName("deviceBrowser");
+                entity.Property(e => e.DeviceEngine).HasColumnName("deviceEngine");
+                entity.Property(e => e.DevicePlatformName).HasColumnName("devicePlatformName");
+                entity.Property(e => e.DevicePlatformProcessor).HasColumnName("devicePlatformProcessor");
+                entity.Property(e => e.DeviceType).HasColumnName("deviceType");
+                entity.Property(e => e.DeviceUserAgent).HasColumnName("deviceUserAgent");
+                entity.Property(e => e.Ip2).HasColumnName("ip2");
+                entity.Property(e => e.IpAddress).HasColumnName("ipAddress");
+                entity.Property(e => e.Macaddress).HasColumnName("MACAddress");
+                entity.Property(e => e.Uname).HasColumnName("Uname");
+                entity.Property(e => e.pass).HasColumnName("pass");
+            });
             modelBuilder.Entity<Setting>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");

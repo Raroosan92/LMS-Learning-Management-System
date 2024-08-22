@@ -1,0 +1,81 @@
+﻿@model LMS_Learning_Management_System.Models.MachineDatum
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>MachineDatum</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="DeviceUserAgent" class="control-label"></label>
+                <input asp-for="DeviceUserAgent" class="form-control" />
+                <span asp-validation-for="DeviceUserAgent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DevicePlatformName" class="control-label"></label>
+                <input asp-for="DevicePlatformName" class="form-control" />
+                <span asp-validation-for="DevicePlatformName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DevicePlatformProcessor" class="control-label"></label>
+                <input asp-for="DevicePlatformProcessor" class="form-control" />
+                <span asp-validation-for="DevicePlatformProcessor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeviceEngine" class="control-label"></label>
+                <input asp-for="DeviceEngine" class="form-control" />
+                <span asp-validation-for="DeviceEngine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeviceBrowser" class="control-label"></label>
+                <input asp-for="DeviceBrowser" class="form-control" />
+                <span asp-validation-for="DeviceBrowser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeviceType" class="control-label"></label>
+                <input asp-for="DeviceType" class="form-control" />
+                <span asp-validation-for="DeviceType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IpAddress" class="control-label"></label>
+                <input asp-for="IpAddress" class="form-control" />
+                <span asp-validation-for="IpAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Macaddress" class="control-label"></label>
+                <input asp-for="Macaddress" class="form-control" />
+                <span asp-validation-for="Macaddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ip2" class="control-label"></label>
+                <input asp-for="Ip2" class="form-control" />
+                <span asp-validation-for="Ip2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Uname" class="control-label"></label>
+                <input asp-for="Uname" class="form-control" />
+                <span asp-validation-for="Uname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="pass" class="control-label"></label>
+                <input asp-for="pass" class="form-control" />
+                <span asp-validation-for="pass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
